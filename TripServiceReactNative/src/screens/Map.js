@@ -1,16 +1,21 @@
 import React, { useState,useEffect } from "react";
-import { StyleSheet, Text, ScrollView , View ,Image} from "react-native";
+import { StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions} from "react-native";
 import MapView,{Marker} from "react-native-maps";
 import {
   Pusher,
+  PusherMember,
+  PusherChannel,
   PusherEvent,
 } from '@pusher/pusher-websocket-react-native';
 import Footer from "../components/Footer";
+import { TRIP_ICON } from "../images";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from "react-native-maps-directions";
 import {PROFILE_ICON } from '../images';
-import { Checkbox } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 const User = [
   {
       icon: PROFILE_ICON,
@@ -34,6 +39,30 @@ const User = [
   },
 
 ]
+
+const [distanceLocation, SetDistanceLocation] = useState(
+  [
+    {
+      locationName : "ABC",
+      latitude : 10.8002149,
+      longitude : 106.6673316,
+      distance : 123.2
+    },
+    {
+      locationName : "DEF",
+      latitude : 10.8002149,
+      longitude : 106.6673316,
+      distance : 123.2
+    },
+    {
+      locationName : "GHK",
+      latitude : 10.8002149,
+      longitude : 106.6673316,
+      distance : 123.2
+    }
+    
+  ]
+)
 const Map = () => {
   const [coordinates, setCoordinates] = useState([
     {
@@ -47,13 +76,13 @@ const Map = () => {
       longitude: 106.6793316,
     }
   ])
-  const [ownerLocation, setOwnerLocation] = useState(
+  const [ownerLocation, setOwnerLocation] = useState([
     {
       userId : ownerId,
       latitude: 10.8002149,
       longitude: 106.6673316,
     }
-  )
+  ])
   const groupId = "1";
   const ownerId= "1";
   const pusher = Pusher.getInstance();
@@ -99,7 +128,7 @@ const Map = () => {
     setInterval(() => {
       Geolocation.getCurrentPosition(
         (position) => {
-          axios.post('https://b12b-2001-ee0-5202-3e00-3c0e-d994-f63-a1ef.ap.ngrok.io/Location', {
+          var distances = axios.post('https://b12b-2001-ee0-5202-3e00-3c0e-d994-f63-a1ef.ap.ngrok.io/DistanceLocation', {
             latitude: position.coords.latitude,
             longtitude: position.coords.longitude,
             userId: ownerId
@@ -110,8 +139,14 @@ const Map = () => {
           .catch(function (error) {
             console.log(error);
           });
-        },
-      )
+          SetDistanceLocation(distanceLocation.map(
+            (distanceLocation) => {
+              return {...distanceLocation, 
+                distance : distances['distance'],
+                locationName : distances['locationName'] };
+            }
+          ))
+          })
     }, 500000);
   },[]);
   
@@ -133,17 +168,14 @@ const Map = () => {
         </View>
         <View style={styles.header.box}>
           <ScrollView>
-            {User.map((p, i) => (
-                <View style = {styles.info} key={i}>
-                    <Text style = {{marginLeft: 5,fontSize:12}}>Địa điểm 1</Text>
-                    <Text style = {{marginLeft: 10,marginRight: 10,fontSize:12}}>10 km</Text>
-                    <Checkbox
-                      color={'green'}
-                      uncheckColor={'red'}
-                    />
-                    
-                </View>
-            ))}
+                  {
+                    distanceLocation.map((x,i) =>
+                    <View style = {styles.info} key={i}>
+                      <Text style = {{marginLeft: 5,fontSize:12}}>{x.locationName}</Text>
+                      <Text style = {{marginLeft: 5,fontSize:12}}>{x.distance}</Text>
+                    </View>
+                    )
+                  }
           </ScrollView>
         </View>
       </View>
@@ -170,7 +202,7 @@ const Map = () => {
           />
           )
         } 
-        <MapViewDirections
+        {/* <MapViewDirections
           origin={{
             latitude: 10.8002149,
             longitude: 106.6673316,
@@ -182,7 +214,7 @@ const Map = () => {
           apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
           strokeWidth={4}
           strokeColor="rgb(0,139,241)"
-        />
+        /> */}
       </MapView>
       <Footer id="2"/>
     </View>
