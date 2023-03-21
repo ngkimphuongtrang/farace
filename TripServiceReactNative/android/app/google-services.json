@@ -1,0 +1,40 @@
+{
+    "project_info": {
+      "project_number": "910763898116",
+      "firebase_url": "https://tripservice-f5d9d-default-rtdb.firebaseio.com",
+      "project_id": "tripservice-f5d9d",
+      "storage_bucket": "tripservice-f5d9d.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:910763898116:android:241a505c7dc05348a48c51",
+          "android_client_info": {
+            "package_name": "com.trip.tripservice"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "910763898116-aabr9ckbgcnsla1af7dj804o3oedqh58.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAjCfCdnCXF4_yXmFqTTPY0ey1rYpqd2B4"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "910763898116-aabr9ckbgcnsla1af7dj804o3oedqh58.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
