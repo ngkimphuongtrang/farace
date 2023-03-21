@@ -1715,6 +1715,14 @@
     "opencollective-postinstall" "^2.0.1"
     "superstruct" "^0.6.2"
 
+"@react-native-material/core@^1.3.7":
+  "integrity" "sha512-N5d/zKrmL3+fVyWsc/jFRxsDl59N5t3tYx9RlxhV04tQlcFKo9UlyBqCWDZFlxrkLrq3JY5zTRCMJAM3yvOz5w=="
+  "resolved" "https://registry.npmjs.org/@react-native-material/core/-/core-1.3.7.tgz"
+  "version" "1.3.7"
+  dependencies:
+    "chroma-js" "^2.4.2"
+    "react-native-flex-layout" "^0.1.5"
+
 "@react-native/assets@1.0.0":
   "integrity" "sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ=="
   "resolved" "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -2635,6 +2643,11 @@
   "integrity" "sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw=="
   "resolved" "https://registry.npmjs.org/char-regex/-/char-regex-1.0.2.tgz"
   "version" "1.0.2"
+
+"chroma-js@^2.4.2":
+  "integrity" "sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A=="
+  "resolved" "https://registry.npmjs.org/chroma-js/-/chroma-js-2.4.2.tgz"
+  "version" "2.4.2"
 
 "ci-info@^2.0.0":
   "integrity" "sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ=="
@@ -6067,7 +6080,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@*", "prop-types@^15.6.0", "prop-types@^15.7.2", "prop-types@^15.8.1", "prop-types@latest":
+"prop-types@*", "prop-types@^15.5.10", "prop-types@^15.5.9", "prop-types@^15.6.0", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1", "prop-types@latest":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"
@@ -6098,6 +6111,21 @@
   "integrity" "sha512-t+x1zEHDjBwkDGY5v5ApnZ/utcd4XYDiJsaQQoptTXgUXX95sDg1elCdJghzicm7n2mbCBJ3uYWr6M22SO19rg=="
   "resolved" "https://registry.npmjs.org/pure-rand/-/pure-rand-6.0.1.tgz"
   "version" "6.0.1"
+
+"qs@~6.9.1":
+  "integrity" "sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw=="
+  "resolved" "https://registry.npmjs.org/qs/-/qs-6.9.7.tgz"
+  "version" "6.9.7"
+
+"query-string@^6.2.0":
+  "integrity" "sha512-XDxAeVmpfu1/6IjyT/gXHOl+S0vQ9owggJ30hhWKdHAsNPOcasn5o9BW0eejZqL2e4vMjhAxoW3jVHcD6mbcYw=="
+  "resolved" "https://registry.npmjs.org/query-string/-/query-string-6.14.1.tgz"
+  "version" "6.14.1"
+  dependencies:
+    "decode-uri-component" "^0.2.0"
+    "filter-obj" "^1.1.0"
+    "split-on-first" "^1.0.0"
+    "strict-uri-encode" "^2.0.0"
 
 "query-string@^7.1.3":
   "integrity" "sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg=="
@@ -6181,10 +6209,48 @@
     "jscodeshift" "^0.13.1"
     "nullthrows" "^1.1.1"
 
+"react-native-dropdown-autocomplete@^1.0.18":
+  "integrity" "sha512-C3urLi/iLaLT6gyrpjx0WFTXMLrHK5pxnd48H3TzmNKZ4A32irzTiAOIcIvXcHzN0z4675y00WLKMGr1Js+gyA=="
+  "resolved" "https://registry.npmjs.org/react-native-dropdown-autocomplete/-/react-native-dropdown-autocomplete-1.0.18.tgz"
+  "version" "1.0.18"
+  dependencies:
+    "prop-types" "^15.6.2"
+    "query-string" "^6.2.0"
+    "react-native-keyboard-aware-scroll-view" "^0.8.0"
+    "react-native-material-buttons" "^0.5.0"
+    "react-native-material-ripple" "^0.8.0"
+
+"react-native-flex-layout@^0.1.5":
+  "integrity" "sha512-DrLir5Wl0RhgJXHeDBSaa1Y1LdpNuoz0PEe5E1T1+xVWt2DAz/r+1N8bnhtVkTKJE6WrH6jIH2hoe8kogR0X+w=="
+  "resolved" "https://registry.npmjs.org/react-native-flex-layout/-/react-native-flex-layout-0.1.5.tgz"
+  "version" "0.1.5"
+
+"react-native-google-places-autocomplete@^2.5.1":
+  "integrity" "sha512-2FZZomogB18mLSC/N39UcpiVoJn/fFIpud1M2KZMom/pJhSMgfqV4qLjHuzaDyYIl7KBz/zpGDcbYgmtvvpkHQ=="
+  "resolved" "https://registry.npmjs.org/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-2.5.1.tgz"
+  "version" "2.5.1"
+  dependencies:
+    "lodash.debounce" "^4.0.8"
+    "prop-types" "^15.7.2"
+    "qs" "~6.9.1"
+
 "react-native-gradle-plugin@^0.71.16":
   "integrity" "sha512-H2BjG2zk7B7Wii9sXvd9qhCVRQYDAHSWdMw9tscmZBqSP62DkIWEQSk4/B2GhQ4aK9ydVXgtqR6tBeg3yy8TSA=="
   "resolved" "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.16.tgz"
   "version" "0.71.16"
+
+"react-native-iphone-x-helper@^1.0.3":
+  "integrity" "sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg=="
+  "resolved" "https://registry.npmjs.org/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
+  "version" "1.3.1"
+
+"react-native-keyboard-aware-scroll-view@^0.8.0":
+  "integrity" "sha512-gPfhgHQI/z7Cc5aeNOEmK0b250QkAeU6V+4oH8EC7mmFneEKn6MAIDjpoiwqt6bV+lFJPABXfx9MtrRmtCeJ/Q=="
+  "resolved" "https://registry.npmjs.org/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.8.0.tgz"
+  "version" "0.8.0"
+  dependencies:
+    "prop-types" "^15.6.2"
+    "react-native-iphone-x-helper" "^1.0.3"
 
 "react-native-linear-gradient@^2.6.2":
   "integrity" "sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ=="
@@ -6205,6 +6271,28 @@
   "version" "1.4.0"
   dependencies:
     "@types/geojson" "^7946.0.8"
+
+"react-native-material-buttons@^0.5.0":
+  "integrity" "sha512-WRQyCG1hd4ZvTr+YdMoyKwoyt/onaFAh8DmyC8BxZ0JT1gy/hs9qTYAilbYb8C1l+okTusalyJeqoPh5GzA1pQ=="
+  "resolved" "https://registry.npmjs.org/react-native-material-buttons/-/react-native-material-buttons-0.5.0.tgz"
+  "version" "0.5.0"
+  dependencies:
+    "prop-types" "^15.5.9"
+    "react-native-material-ripple" "^0.7.0"
+
+"react-native-material-ripple@^0.7.0":
+  "integrity" "sha512-pHUrmxuPQMBcOssFfr+kERfAwkLhHqiP2ZTJeUsC77W9h+k2IU17T/cOb184S1jkbZP3CFJcOLd9V7RW112YGQ=="
+  "resolved" "https://registry.npmjs.org/react-native-material-ripple/-/react-native-material-ripple-0.7.5.tgz"
+  "version" "0.7.5"
+  dependencies:
+    "prop-types" "^15.5.10"
+
+"react-native-material-ripple@^0.8.0":
+  "integrity" "sha512-ZgamZTJlrAPMg5Im8+ruK3zsSDHdPKgYA52qK7g0x/LJvzE/99M01kjmUVERqQAHxlVzOfIfVpxn9SjzNn6TEA=="
+  "resolved" "https://registry.npmjs.org/react-native-material-ripple/-/react-native-material-ripple-0.8.0.tgz"
+  "version" "0.8.0"
+  dependencies:
+    "prop-types" "^15.5.10"
 
 "react-native-paper@^5.5.0":
   "integrity" "sha512-vzT4LLi0SIYm8fvG/n5ikXp7YqkHw/86DAYhBYbfFNxtktmYRjmq9p2HeEKWbXh+/c9n+R8IWiXhPZjXtIRWQA=="
@@ -6241,7 +6329,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.52.1", "react-native@0.71.4":
+"react-native@*", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.52.1", "react-native@0.71.4":
   "integrity" "sha512-3hSYqvWrOdKhpV3HpEKp1/CkWx8Sr/N/miCrmUIAsVTSJUR7JW0VvIsrV9urDhUj/s6v2WF4n7qIEEJsmTCrPw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.71.4.tgz"
   "version" "0.71.4"

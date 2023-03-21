@@ -3,11 +3,10 @@ import Map from './src/screens/Map';
 import SignIn from './src/screens/SignIn';
 import { AuthProvider } from './src/contexts/Auth';
 import { Router } from './src/routes/Router';
+import AddJourneyScreen from './src/screens/AddJourneyScreen';
 const App = ()=> {
   return (
-        <AuthProvider>
-          <Router/>
-        </AuthProvider>
+     <AddJourneyScreen/>
   );
 };
 
