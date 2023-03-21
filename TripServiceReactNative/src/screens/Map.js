@@ -14,7 +14,6 @@ import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from "react-native-maps-directions";
 import {PROFILE_ICON } from '../images';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
 import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 const User = [
   {
@@ -40,30 +39,31 @@ const User = [
 
 ]
 
-const [distanceLocation, SetDistanceLocation] = useState(
-  [
-    {
-      locationName : "ABC",
-      latitude : 10.8002149,
-      longitude : 106.6673316,
-      distance : 123.2
-    },
-    {
-      locationName : "DEF",
-      latitude : 10.8002149,
-      longitude : 106.6673316,
-      distance : 123.2
-    },
-    {
-      locationName : "GHK",
-      latitude : 10.8002149,
-      longitude : 106.6673316,
-      distance : 123.2
-    }
-    
-  ]
-)
+
 const Map = () => {
+  const [distanceLocation, SetDistanceLocation] = useState(
+    [
+      {
+        locationName : "ABC",
+        latitude : 10.8002149,
+        longitude : 106.6673316,
+        distance : 123.2
+      },
+      {
+        locationName : "DEF",
+        latitude : 10.8002149,
+        longitude : 106.6673316,
+        distance : 123.2
+      },
+      {
+        locationName : "GHK",
+        latitude : 10.8002149,
+        longitude : 106.6673316,
+        distance : 123.2
+      }
+      
+    ]
+  )
   const [coordinates, setCoordinates] = useState([
     {
       userId : "1",
@@ -185,8 +185,8 @@ const Map = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: ownerLocation.latitude,
-          longitude: ownerLocation.longitude,
+          latitude: ownerLocation[0].latitude,
+          longitude: ownerLocation[0].longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }

@@ -1,9 +1,13 @@
 import React from 'react';
 import Map from './src/screens/Map';
 import SignIn from './src/screens/SignIn';
+import { AuthProvider } from './src/contexts/Auth';
+import { Router } from './src/routes/Router';
 const App = ()=> {
   return (
-        <Map />
+        <AuthProvider>
+          <Router/>
+        </AuthProvider>
   );
 };
 
