@@ -8,7 +8,7 @@ import MessageScreen from '../screens/MessageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { HOME_ICON, FRIENDS_ICON, MOTOR_ICON, CHAT_ICON, PROFILE_ICON } from '../assets/image';
 import { Image } from 'react-native';
-import { styles } from '../styles/FooterStyles';
+import { styles } from '../styles/CommonStyles';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddJourneyScreen from '../screens/AddJourneyScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,7 +21,7 @@ function BottomTab() {
     screenOptions={{
       tabBarActiveTintColor: primaryColor,
       headerShown: false,
-      
+
     }}
   >
     <Tab.Screen

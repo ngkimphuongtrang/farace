@@ -1,18 +1,16 @@
 import React from 'react';
 import {
     View,
-    Text,
     StyleSheet,
-    Image,
-    TouchableOpacity,
 } from 'react-native';
 
 
 import JourneyComponent from '../components/JourneyComponent.js';
-import { primaryColor } from '../constants/index.js';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ADD_ICON } from '../assets/image/index.js';
-import { styles } from '../styles/FooterStyles';
+import BackIconComponent from '../components/ImageButtonComponent.js';
+import HeaderComponent from '../components/HeaderComponent.js';
 
 const journeyData = [
     {
@@ -32,43 +30,23 @@ const journeyData = [
 ]
 const Tab = createBottomTabNavigator();
 
-const JourneyScreen = ({ navigation }) => {
+const JourneyScreen = ({ navigation: { goBack } }) => {
 
     return (
         <View style={mystyles.container}>
-            <View style={{
-                flex: 2,
-                backgroundColor: primaryColor,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}
-            >
-                <Text style={mystyles.text_header}>
-                    Danh sách hành trình
-                </Text>
-            </View>
-
+            <HeaderComponent text="Danh sách hành trình" style={{ flex: 2 }} goBack={goBack} />
             <View style={{ flex: 8 }}>
                 {journeyData.map((p, i) => (
                     <JourneyComponent key={i} data={p}></JourneyComponent>
                 ))}
-                {/* <Text style={
-                    { justifyContent: 'center', alignItems: 'center', }
-                }>Trang</Text> */}
+
             </View>
             <View style={[
                 { alignItems: 'center' },
                 { flex: 2 }]}
             >
-                <TouchableOpacity onPress={() => navigation.navigate("AddJourney")}>
-                    <Image source={ADD_ICON}
-                        style={
-                            {
-                                justifyContent: 'center',
-                                height: 80,
-                                width: 80,
-                            }
-                        }></Image></TouchableOpacity>
+                <BackIconComponent screen="AddJourney" image={ADD_ICON} />
+
             </View>
 
         </View>

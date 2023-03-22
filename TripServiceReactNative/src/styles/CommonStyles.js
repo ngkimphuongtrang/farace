@@ -1,6 +1,6 @@
-import {  StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { primaryColor } from '../constants';
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     greenText: {
         color: primaryColor
     },
@@ -30,6 +30,10 @@ const styles= StyleSheet.create({
         height: 38,
         marginLeft: 15,
         marginRight: 15,
-    }
+    }, text_header: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 30
+    },
 });
-export {styles};
+export { styles };

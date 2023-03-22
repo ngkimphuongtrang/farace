@@ -1,6 +1,6 @@
 import { ROUTE_ICON } from '../assets/image';
 import { View, Image, Text, StyleSheet } from 'react-native';
-import { styles } from '../styles/FooterStyles';
+import { styles } from '../styles/CommonStyles';
 
 
 const JourneyComponent = (props) => {
