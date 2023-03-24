@@ -16,10 +16,13 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
 
     return (
         <View style={mystyles.container}>
-            <HeaderComponent
-                text="Thêm mới hành trình"
-                goBack={goBack}
-            />
+            <View style={{ flex: 0.1 }}>
+                <HeaderComponent
+                    text="Thêm mới hành trình"
+                    goBack={goBack}
+                />
+            </View>
+
 
             <MapView
                 style={mystyles.map}
