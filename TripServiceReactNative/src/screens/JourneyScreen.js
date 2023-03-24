@@ -9,7 +9,7 @@ import JourneyComponent from '../components/JourneyComponent.js';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ADD_ICON } from '../assets/image/index.js';
-import BackIconComponent from '../components/ImageButtonComponent.js';
+import ImageButtonComponent from '../components/ImageButtonComponent.js';
 import HeaderComponent from '../components/HeaderComponent.js';
 
 const journeyData = [
@@ -45,7 +45,7 @@ const JourneyScreen = ({ navigation: { goBack } }) => {
                 { alignItems: 'center' },
                 { flex: 2 }]}
             >
-                <BackIconComponent screen="AddJourney" image={ADD_ICON} />
+                <ImageButtonComponent screen="AddJourney" image={ADD_ICON} />
 
             </View>
 

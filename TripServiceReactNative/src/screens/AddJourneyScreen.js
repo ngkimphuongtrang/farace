@@ -9,13 +9,16 @@ import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import HeaderComponent from '../components/HeaderComponent.js';
+import TextButtonComponent from '../components/TextButtonComponent.js';
+import { primaryColor } from '../constants/index.js';
 
 
 const AddJourneyScreen = ({ navigation: { goBack } }) => {
 
 
     return (
-        <View style={mystyles.container}>
+        <View style={mystyles.container
+        }>
             <View style={{ flex: 0.1 }}>
                 <HeaderComponent
                     text="Thêm mới hành trình"
@@ -98,7 +101,15 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                     }}
                 />
             </View>
-        </View>
+            <View style={{ alignItems: 'center' }}>
+
+                <TextButtonComponent
+                    screen="AddMember"
+                    text="Tiếp tục"
+                    backgroundColor={primaryColor}
+                    textColor={'white'} />
+            </View>
+        </View >
     );
 };
 

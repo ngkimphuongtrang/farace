@@ -2,7 +2,6 @@ import {
   View, Text,
 } from 'react-native';
 import { styles } from '../styles/CommonStyles';
-import { useNavigation } from '@react-navigation/native';
 import { primaryColor } from '../constants/index.js';
 import GoBackComponent from './GoBackComponent';
 

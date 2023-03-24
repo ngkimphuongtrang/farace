@@ -8,7 +8,7 @@ import {
     StyleSheet,
     StatusBar,
     Alert,
-    Image
+    Image, Button
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +17,7 @@ import { useTheme } from 'react-native-paper';
 import { primaryColor } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
-
+import TextButtonComponent, { textButtonStyles } from '../components/TextButtonComponent';
 const Users = [
     {
         id: 1,
@@ -213,28 +213,18 @@ const SignInScreen = () => {
 
 
                 <TouchableOpacity>
-                    <Text style={{ color: { primaryColor }, marginTop: 15 }}>Forgot password?</Text>
+                    <Text style={{ color: { primaryColor } }}>Forgot password?</Text>
                 </TouchableOpacity>
-                <View style={styles.button}>
-                    <TouchableOpacity
-                        onPress={() => { loginHandle(data.username, data.password) }}
-                    >
-                        <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff'
-                            }]}>Sign In</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+                <View style={[styles.button, { alignContent: 'space-between' }]}>
+                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+                        <Button
+                            onPress={() => { loginHandle(data.username, data.password) }}
+                            title="Đăng nhập"
+                            color={primaryColor}
+                        />
+                    </View>
+                    <TextButtonComponent screen="SignUpScreen" text="Đăng ký" textColor={primaryColor} backgroundColor={'white'} />
 
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('SignUpScreen')}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: primaryColor
-                        }]}>Sign Up</Text>
-                    </TouchableOpacity>
                 </View>
             </Animatable.View>
         </View>

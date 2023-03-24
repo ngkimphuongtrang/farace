@@ -1,10 +1,10 @@
 import {
- Image,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const BackIconComponent = (props) => {
+const ImageButtonComponent = (props) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity onPress={() => navigation.navigate(props.screen)}>
@@ -12,11 +12,11 @@ const BackIconComponent = (props) => {
         style={
           {
             justifyContent: 'center',
-            height: 80,
-            width: 80,
+            height: 50,
+            width: 50,
           }
         }></Image></TouchableOpacity>
   )
 }
-export default BackIconComponent;
+export default ImageButtonComponent;
 
