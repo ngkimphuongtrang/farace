@@ -12,9 +12,11 @@ import { styles } from '../styles/CommonStyles';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddJourneyScreen from '../screens/AddJourneyScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import AddMemberScreen from '../screens/AddMemberScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
 function BottomTab() {
   return (<Tab.Navigator
     initialRouteName="Home"
@@ -90,6 +92,7 @@ export const AppStack = () => {
         }}>
         <Stack.Screen name="BottomTab" component={BottomTab}></Stack.Screen>
         <Stack.Screen name="AddJourney" component={AddJourneyScreen}></Stack.Screen>
+        <Stack.Screen name="AddMember" component={AddMemberScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

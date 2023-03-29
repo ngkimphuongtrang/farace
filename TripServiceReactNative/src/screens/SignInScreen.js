@@ -22,8 +22,8 @@ const Users = [
     {
         id: 1,
         email: 'user1@email.com',
-        username: 'user1',
-        password: 'password',
+        username: 'aaaaa',
+        password: '11111111',
         userToken: 'token123'
     },
     {

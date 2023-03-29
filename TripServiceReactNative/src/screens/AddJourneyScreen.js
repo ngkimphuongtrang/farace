@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    View,
-    StyleSheet,
+    View, StyleSheet, Button
 } from 'react-native';
 
 
@@ -10,16 +9,13 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import HeaderComponent from '../components/HeaderComponent.js';
 import TextButtonComponent from '../components/TextButtonComponent.js';
-import { primaryColor } from '../constants/index.js';
-
 
 const AddJourneyScreen = ({ navigation: { goBack } }) => {
-
-
+    const [location, setLocation] = useState([]);
     return (
         <View style={mystyles.container
         }>
-            <View style={{ flex: 0.1 }}>
+            <View style={{ flex: 0.15 }}>
                 <HeaderComponent
                     text="Thêm mới hành trình"
                     goBack={goBack}
@@ -39,6 +35,8 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
             </MapView>
             <View style={mystyles.input}>
                 <GooglePlacesAutocomplete
+                    GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                    fetchDetails={true}
                     styles={{
                         textInputContainer: {
                             borderRadius: 5,
@@ -61,8 +59,9 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                     }}
                     placeholder='Chọn điểm bắt đầu'
                     onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
+                        var newLocation = JSON.stringify(details?.geometry?.location);
+                        console.log(newLocation);
+                        setLocation(oldArray => [...oldArray, newLocation]);
                     }}
                     query={{
                         key: 'AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8',
@@ -70,6 +69,8 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                     }}
                 />
                 <GooglePlacesAutocomplete
+                    GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                    fetchDetails={true}
                     styles={{
                         textInputContainer: {
                             borderRadius: 5,
@@ -92,8 +93,10 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                     }}
                     placeholder='Chọn điểm đến'
                     onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
+                        console.log("data:", data, details)
+                        var newLocation = JSON.stringify(details?.geometry?.location);
+                        console.log(newLocation);
+                        setLocation(oldArray => [...oldArray, newLocation]);
                     }}
                     query={{
                         key: 'AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8',
@@ -102,13 +105,16 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                 />
             </View>
             <View style={{ alignItems: 'center' }}>
-
-                <TextButtonComponent
+                <Button onPress={() => console.log("Location:", location)} title="Tiep tuc"></Button>
+                {/* <TextButtonComponent
                     screen="AddMember"
                     text="Tiếp tục"
                     backgroundColor={primaryColor}
-                    textColor={'white'} />
+                    textColor={'white'}
+                    onPress={() => console.log("Location:", location)} // TODO: Send api
+                /> */}
             </View>
+
         </View >
     );
 };
@@ -120,14 +126,12 @@ const mystyles = StyleSheet.create({
         flex: 1,
     },
     map: {
-        flex: 0.4
+        flex: 0.6
     },
     input: {
-        flex: 0.5
-    },
-    input: {
-        flex: 0.2,
+        flex: 0.25,
         flexDirection: 'column',
-    }
-
+        justifyContent: 'space-around',
+        flexGrow: 1,
+    },
 });

@@ -12,7 +12,7 @@ const TextButtonComponent = (props) => {
     <TouchableOpacity style={[textButtonStyles.appButtonContainer, {
       backgroundColor: props.backgroundColor,
     }]}
-      onPress={() => { navigation.navigate(props.screen) }}>
+      onPress={() => { props.onPress; navigation.navigate(props.screen); }}>
       <Text style={[textButtonStyles.appButtonText, {
         color: props.textColor,
       }]}>{props.text}</Text>
