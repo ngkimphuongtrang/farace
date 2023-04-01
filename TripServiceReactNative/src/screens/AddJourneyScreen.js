@@ -7,20 +7,24 @@ import {
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Header } from 'react-native/Libraries/NewAppScreen';
-import HeaderComponent from '../components/HeaderComponent.js';
-import TextButtonComponent from '../components/TextButtonComponent.js';
+import { primaryColor } from '../constants/index.js';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddJourneyScreen = ({ navigation: { goBack } }) => {
+    const navigation = useNavigation();
     const [location, setLocation] = useState([]);
+    const setLocationValue = async (location) => {
+        try {
+            await AsyncStorage.setItem('@location', JSON.stringify(location))
+        } catch (e) {
+            // save error
+        }
+        console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
+    }
     return (
         <View style={mystyles.container
         }>
-            <View style={{ flex: 0.15 }}>
-                <HeaderComponent
-                    text="Thêm mới hành trình"
-                    goBack={goBack}
-                />
-            </View>
 
 
             <MapView
@@ -105,14 +109,10 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                 />
             </View>
             <View style={{ alignItems: 'center' }}>
-                <Button onPress={() => console.log("Location:", location)} title="Tiep tuc"></Button>
-                {/* <TextButtonComponent
-                    screen="AddMember"
-                    text="Tiếp tục"
-                    backgroundColor={primaryColor}
-                    textColor={'white'}
-                    onPress={() => console.log("Location:", location)} // TODO: Send api
-                /> */}
+                <Button
+                    onPress={() => { setLocationValue(location); navigation.navigate("AddMember"); }}
+                    title="Tiếp tục">
+                </Button>
             </View>
 
         </View >

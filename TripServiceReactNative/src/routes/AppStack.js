@@ -13,8 +13,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddJourneyScreen from '../screens/AddJourneyScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import AddMemberScreen from '../screens/AddMemberScreen';
+import JourneySummaryScreen from '../screens/JourneySummaryScreen';
 
-const Stack = createNativeStackNavigator();
+
 const Tab = createBottomTabNavigator();
 
 function BottomTab() {
@@ -48,8 +49,8 @@ function BottomTab() {
             style={styles.image}></Image>),
       }} />
     <Tab.Screen
-      name="Journey"
-      component={JourneyScreen}
+      name="JourneyStack"
+      component={JourneyStackScreen}
       options={{
         tabBarLabel: 'Phượt',
         tabBarIcon: () => (
@@ -83,6 +84,54 @@ function BottomTab() {
     />
   </Tab.Navigator>)
 }
+const JourneyStack = createNativeStackNavigator();
+function JourneyStackScreen() {
+  return (
+    <JourneyStack.Navigator>
+      <JourneyStack.Screen
+        name="Journey"
+        component={JourneyScreen}
+        options={{
+          title: "Danh sách hành trình",
+          headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <JourneyStack.Screen name="AddJourney" component={AddJourneyScreen}
+        options={{
+          title: "Thêm mới hành trình", headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <JourneyStack.Screen name="AddMember" component={AddMemberScreen}
+        options={{
+          title: "Thêm thành viên", headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <JourneyStack.Screen name="JourneySummary" component={JourneySummaryScreen}
+        options={{
+          title: "Tổng quan hành trình", headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+    </JourneyStack.Navigator>
+  )
+}
+
+const Stack = createNativeStackNavigator();
 export const AppStack = () => {
   return (
     <NavigationContainer independent={true}>
@@ -90,9 +139,8 @@ export const AppStack = () => {
         screenOptions={{
           headerShown: false
         }}>
-        <Stack.Screen name="BottomTab" component={BottomTab}></Stack.Screen>
-        <Stack.Screen name="AddJourney" component={AddJourneyScreen}></Stack.Screen>
-        <Stack.Screen name="AddMember" component={AddMemberScreen}></Stack.Screen>
+        <Stack.Screen name="BottomTab" component={BottomTab} />
+        <Stack.Screen name="JourneyStackScreen" component={JourneyStackScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

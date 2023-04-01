@@ -12,7 +12,7 @@ export const ROUTE_ICON = require('./route.png')
 
 export const LOCATION_ICON = require('./location.png')
 
-export const LOGO_WHITE = require('./Farace.png')
+// export const LOGO_WHITE = require('./Farace.png')
 
 export const LOGO_GREEN = require('./Farace-green.png')
 

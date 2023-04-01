@@ -147,7 +147,7 @@ const SignInScreen = () => {
             <View style={styles.header}>
                 <Image
                     source={LOGO_GREEN}
-                    style={{ height: 50, width: 135 }}
+                    style={{ height: 100, width: 200 }}
                 ></Image>
 
             </View>

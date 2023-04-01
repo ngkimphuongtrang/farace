@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AuthData, authService } from '../services/authService';
 
@@ -58,7 +58,8 @@ const AuthProvider = ({ children }) => {
 
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
-    // AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+    AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+    
   };
 
   const signOut = async () => {

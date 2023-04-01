@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     View,
-    StyleSheet,
+    StyleSheet, TouchableOpacity, Image
 } from 'react-native';
 
 
@@ -9,8 +9,7 @@ import JourneyComponent from '../components/JourneyComponent.js';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ADD_ICON } from '../assets/image/index.js';
-import ImageButtonComponent from '../components/ImageButtonComponent.js';
-import HeaderComponent from '../components/HeaderComponent.js';
+import { useNavigation } from '@react-navigation/native';
 
 const journeyData = [
     {
@@ -31,10 +30,9 @@ const journeyData = [
 const Tab = createBottomTabNavigator();
 
 const JourneyScreen = ({ navigation: { goBack } }) => {
-
+    const navigation = useNavigation();
     return (
         <View style={mystyles.container}>
-            <HeaderComponent text="Danh sách hành trình" style={{ flex: 2 }} goBack={goBack} />
             <View style={{ flex: 8 }}>
                 {journeyData.map((p, i) => (
                     <JourneyComponent key={i} data={p}></JourneyComponent>
@@ -45,8 +43,15 @@ const JourneyScreen = ({ navigation: { goBack } }) => {
                 { alignItems: 'center' },
                 { flex: 2 }]}
             >
-                <ImageButtonComponent screen="AddJourney" image={ADD_ICON} />
-
+                <TouchableOpacity onPress={() => navigation.navigate("AddJourney")}>
+                    <Image source={ADD_ICON}
+                        style={
+                            {
+                                justifyContent: 'center',
+                                height: 50,
+                                width: 50,
+                            }
+                        }></Image></TouchableOpacity>
             </View>
 
         </View>
