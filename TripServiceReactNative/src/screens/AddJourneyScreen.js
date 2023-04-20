@@ -14,7 +14,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ADD_ICON, BACK_ICON } from '../assets/image/index.js';
 import { styles } from "../styles/FooterStyles";
 import MapView,{Marker} from "react-native-maps";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete, AppGoogleAutoComplete } from 'react-native-google-places-autocomplete';
 
 // import { enableLatestRenderer } from 'react-native-maps';
 

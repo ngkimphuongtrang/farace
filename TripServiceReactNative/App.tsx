@@ -6,7 +6,7 @@ import { Router } from './src/routes/Router';
 import AddJourneyScreen from './src/screens/AddJourneyScreen';
 const App = ()=> {
   return (
-     <AddJourneyScreen/>
+     <Map/>
   );
 };
 
