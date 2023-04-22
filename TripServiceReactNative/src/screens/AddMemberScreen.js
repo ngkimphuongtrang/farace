@@ -1,14 +1,14 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import {
     View, StyleSheet, Image, Text, Button
 } from 'react-native';
-import HeaderComponent from '../components/HeaderComponent';
 import { Card, CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
 import { PROFILE_ICON } from '../images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { getMembersDomain, postTripDomain } from '../constants';
+import axios from 'axios';
 var users = [
     {
         name: 'brynn',
@@ -20,49 +20,64 @@ var users = [
         avatar: PROFILE_ICON,
         checked: false,
     },
+    {},
 ];
 
 const AddMemberScreen = ({ navigation: { goBack } }) => {
+    var dict = {};
     const navigation = useNavigation();
+    const [location, setLocation] = useState();
+    const [members, setMembers] = useState([]);
 
     const [checkedState, setCheckedState] = useState(
         new Array(users.length).fill(false)
     );
-    // TODO: map index to username
     const handleOnChange = (position) => {
         const updatedCheckedState = checkedState.map((item, index) =>
             index === position ? !item : item
         ); setCheckedState(updatedCheckedState);
     }
-    const [member, setMember] = useState([]);
     const setMemberValue = async (member) => {
         try {
-            const members = checkedState.map((item, index) => checkedState[index] ? index : undefined);
-            await AsyncStorage.setItem('@member', JSON.stringify(members));
-            console.log('Set @member in AsyncStorage done:', members);
+            await AsyncStorage.setItem('@member', JSON.stringify(member));
+            console.log('Set @member in AsyncStorage done:', member);
         } catch (e) {
             // save error
         }
     }
+    const requestOptions = {
+        method: 'GET',
+    };
+
+    useEffect(() => {
+        var result = axios.get(getMembersDomain, {
+        })
+            .then(function (response) {
+                setMembers(response.data);
+                console.log("member response:", members);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, []);
     return (
         <View style={mystyles.container}>
             <View
                 style={{ flex: 8 }}
             >
                 <Card>
-                    <Card.Divider />
                     {
-                        users.map((u, i) => {
+                        members.map((member, i) => {
                             return (
                                 <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                                     <Image
                                         style={styles.image}
                                         resizeMode="cover"
-                                        source={u.avatar}
+                                        source={PROFILE_ICON}
                                     />
-                                    <Text >{u.name}</Text>
+                                    <Text >{member.orderId + 1}:{member.firstName} {member.lastName}</Text>
                                     <CheckBox
-                                        checked={checkedState[i]}
+                                        checked={checkedState[member.orderId]}
                                         onPress={() => handleOnChange(i)}
                                         iconType="material-community"
                                         checkedIcon="checkbox-outline"
@@ -77,9 +92,28 @@ const AddMemberScreen = ({ navigation: { goBack } }) => {
             </View>
             <View style={{ alignItems: 'center' }}>
                 <Button
-                    onPress={() => {
-                        setMemberValue(member);
-                        console.log("Location from Journey:", AsyncStorage.getItem('@location'));
+                    onPress={async () => {
+
+                        const locationSerialized = await AsyncStorage.getItem("@location");
+                        if (locationSerialized) {
+                            const _locationData = JSON.parse(locationSerialized);
+                            setLocation(_locationData);
+                            console.log("location:", _locationData, members, checkedState)
+                        }
+                        var chosenMembers = []
+                        var j = 0;
+                        for (let i = 0; i < members.length; i++) {
+                            if (checkedState[i]) {
+                                chosenMembers[j++] = members[0]
+                            }
+                        }
+                        setMemberValue(chosenMembers);
+                        const response = await axios.post(postTripDomain, {
+                            location,
+                            chosenMembers,
+                        }).then(function (response) {
+                            console.log(response.data);
+                        });
                         navigation.navigate("JourneySummary");
                     }}
                     title="Tiếp tục">
@@ -87,7 +121,7 @@ const AddMemberScreen = ({ navigation: { goBack } }) => {
             </View>
 
 
-        </View>
+        </View >
     );
 };
 

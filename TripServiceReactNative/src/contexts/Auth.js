@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
     try {
       //Try get the data from Async Storage
       // const authDataSerialized = await AsyncStorage.getItem('@AuthData');
-      const authDataSerialized = "";
+      const authDataSerialized = ""; // no need login every time starting app
       if (authDataSerialized) {
         //If there are data, it's converted to an Object and the state is updated.
         const _authData = JSON.parse(authDataSerialized);
@@ -59,7 +59,7 @@ const AuthProvider = ({ children }) => {
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
     AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
-    
+
   };
 
   const signOut = async () => {

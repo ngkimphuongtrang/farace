@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-
+import axios from 'axios';
 import { useTheme } from 'react-native-paper';
-import { primaryColor } from '../constants';
+import { loginDomain, primaryColor } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
 import TextButtonComponent, { textButtonStyles } from '../components/TextButtonComponent';
@@ -117,26 +117,66 @@ const SignInScreen = () => {
     }
 
     const loginHandle = (userName, password) => {
-
-        const foundUser = Users.filter(item => {
-            return userName == item.username && password == item.password;
-        });
-
-        if (data.username.length == 0 || data.password.length == 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                { text: 'Okay' }
-            ]);
-            return;
+        password = "cshhdhncdnhcshdchdncsd";
+        userName = "csdfvdsfds";
+        const dataX = {
+            "Email": userName,
+            "Password": password,
         }
+        const postExample = async () => {
+            console.log(JSON.stringify(dataX));
 
-        if (foundUser.length == 0) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                { text: 'Okay' }
-            ]);
-            return;
+            try {
+                await axios.post(loginDomain, {
+                    dataX
+                }).then(function (response) {
+                    console.log(response.data);
+                });
+
+            }
+            catch (error) {
+                console.error("Error LOGIN:", error);
+                const foundUser = Users.filter(item => {
+                    return userName == item.username && password == item.password;
+                });
+
+                if (data.username.length == 0 || data.password.length == 0) {
+                    Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+                        { text: 'Okay' }
+                    ]);
+                    return;
+                }
+
+                if (foundUser.length == 0) {
+                    Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+                        { text: 'Okay' }
+                    ]);
+                    return;
+                }
+                return signIn(userName, password);
+            };
+
         }
-        return signIn(userName, password);
-        navigation.navigate('HomeScreen')
+        postExample();
+        // const foundUser = Users.filter(item => {
+        //     return userName == item.username && password == item.password;
+        // });
+
+        // if (data.username.length == 0 || data.password.length == 0) {
+        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+        //         { text: 'Okay' }
+        //     ]);
+        //     return;
+        // }
+
+        // if (foundUser.length == 0) {
+        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+        //         { text: 'Okay' }
+        //     ]);
+        //     return;
+        // }
+        // return signIn(userName, password);
+        // navigation.navigate('HomeScreen')
     }
 
     const [number, onChangeNumber] = React.useState(null);
