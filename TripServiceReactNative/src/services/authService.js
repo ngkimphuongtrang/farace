@@ -1,22 +1,26 @@
-// export type AuthData = {
-//   token: string;
-//   email: string;
-//   name: string;
-// };
-const signIn = (email, _password) => {
+import axios from 'axios';
+import { loginDomain } from '../constants';
+const signIn = (Email, Password) => {
   // this is a mock of an API call, in a real app
   // will be need connect with some real API,
   // send email and password, and if credential is corret
   //the API will resolve with some token and another datas as the below
-  // return new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     resolve({
-  //       token: JWTTokenMock,
-  //       email: email,
-  //       name: 'Lucas Garcez',
+
+  // const postLogin = async () => {
+  //   try {
+  //     await axios.post(loginDomain, {
+  //       Email, Password
+  //     }).then(function (response) {
+  //       // console.log(response, response.data);
+  //       return response.data.authorization;
   //     });
-  //   }, 1000);
-  // });
+  //   }
+  //   catch (error) {
+  //     console.error("Error LOGIN:", error);
+  //   };
+
+  // }
+  // postLogin();
 
 };
 

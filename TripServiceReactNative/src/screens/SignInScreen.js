@@ -42,11 +42,12 @@ const Users = [
     },
 ];
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
+    // console.log(navigation);
     const auth = useAuth();
-    const signIn = async () => {
+    const signIn = async (email, password) => {
         // isLoading(true);
-        await auth.signIn();
+        await auth.signIn(email, password);
     };
     const [data, setData] = React.useState({
         username: '',
@@ -116,67 +117,28 @@ const SignInScreen = () => {
         }
     }
 
-    const loginHandle = (userName, password) => {
-        password = "cshhdhncdnhcshdchdncsd";
-        userName = "csdfvdsfds";
-        const dataX = {
-            "Email": userName,
-            "Password": password,
-        }
-        const postExample = async () => {
-            console.log(JSON.stringify(dataX));
-
+    const loginHandle = (username, password) => {
+        Email = username;
+        Password = password;
+        Email = "nkpt3";
+        Password = "11111111";
+        const postLogin = async () => {
             try {
                 await axios.post(loginDomain, {
-                    dataX
+                    Email, Password
                 }).then(function (response) {
-                    console.log(response.data);
-                });
+                    console.log(response);
+                    navigation.navigate("Home");
+                    // console.log(response.data.authorization);
 
+                });
             }
             catch (error) {
                 console.error("Error LOGIN:", error);
-                const foundUser = Users.filter(item => {
-                    return userName == item.username && password == item.password;
-                });
-
-                if (data.username.length == 0 || data.password.length == 0) {
-                    Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                        { text: 'Okay' }
-                    ]);
-                    return;
-                }
-
-                if (foundUser.length == 0) {
-                    Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                        { text: 'Okay' }
-                    ]);
-                    return;
-                }
-                return signIn(userName, password);
             };
 
         }
-        postExample();
-        // const foundUser = Users.filter(item => {
-        //     return userName == item.username && password == item.password;
-        // });
-
-        // if (data.username.length == 0 || data.password.length == 0) {
-        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
-
-        // if (foundUser.length == 0) {
-        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
-        // return signIn(userName, password);
-        // navigation.navigate('HomeScreen')
+        postLogin();
     }
 
     const [number, onChangeNumber] = React.useState(null);
@@ -223,8 +185,6 @@ const SignInScreen = () => {
                         <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
                     </Animatable.View>
                 }
-
-
                 <Text style={[styles.text_footer, {
                     color: colors.text,
                     marginTop: 35
@@ -253,18 +213,26 @@ const SignInScreen = () => {
 
 
                 <TouchableOpacity>
-                    <Text style={{ color: { primaryColor } }}>Forgot password?</Text>
+                    <Text style={{ color: { primaryColor } }}>Quên mật khẩu</Text>
                 </TouchableOpacity>
                 <View style={[styles.button, { alignContent: 'space-between' }]}>
                     <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
                         <Button
-                            onPress={() => { loginHandle(data.username, data.password) }}
+                            onPress={() => {
+                                navigation.navigate("BottomTab", { screen: 'Home' });
+                                // loginHandle(data.username, data.password);
+                            }}
                             title="Đăng nhập"
                             color={primaryColor}
                         />
                     </View>
-                    <TextButtonComponent screen="SignUpScreen" text="Đăng ký" textColor={primaryColor} backgroundColor={'white'} />
-
+                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+                        <Button
+                            onPress={() => { navigation.navigate("SignUpScreen"); }}
+                            title="Đăng ký"
+                            color={primaryColor}
+                        />
+                    </View>
                 </View>
             </Animatable.View>
         </View>

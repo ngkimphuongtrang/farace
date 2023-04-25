@@ -30,8 +30,8 @@ const AuthProvider = ({ children }) => {
   async function loadStorageData() {
     try {
       //Try get the data from Async Storage
-      // const authDataSerialized = await AsyncStorage.getItem('@AuthData');
-      const authDataSerialized = ""; // no need login every time starting app
+      const authDataSerialized = await AsyncStorage.getItem('@AuthData');
+      // const authDataSerialized = ""; // no need login every time starting app
       if (authDataSerialized) {
         //If there are data, it's converted to an Object and the state is updated.
         const _authData = JSON.parse(authDataSerialized);
@@ -47,25 +47,27 @@ const AuthProvider = ({ children }) => {
   const signIn = async (userName, password) => {
     //call the service passing credential (email and password).
     //In a real App this data will be provided by the user from some InputText components.
+    userName = "nkpt3";
+    password = "11111111";
     const _authData = await authService.signIn(
       userName,
       password,
     );
-
+    console.log("authdata:", _authData);
     //Set the data in the context, so the App can be notified
     //and send the user to the AuthStack
     setAuthData(_authData);
 
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
-    AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+    // AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
 
   };
 
   const signOut = async () => {
     //Remove data from context, so the App can be notified
     //and send the user to the AuthStack
-    setAuthData(undefined);
+    // setAuthData(undefined);
 
     //Remove the data from Async Storage
     //to NOT be recoverede in next session.
