@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import {
-    View, StyleSheet, Button, Text,ScrollView, StatusBar
+    View, StyleSheet, Button, Text, ScrollView, StatusBar
 } from 'react-native';
-
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ADD_ICON } from '../assets/image/index.js';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { primaryColor } from '../constants/index.js';
-const AddJourneyScreen = ({ navigation: { goBack } }) => {
-    const navigation = useNavigation();
+import { textButtonStyles } from './ProfileScreen.js';
+
+const AddJourneyScreen = ({ navigation }) => {
+    // const navigation = useNavigation();
     const [location, setLocation] = useState([]);
     const [locationName, setLocationName] = useState([]);
 
@@ -81,11 +81,14 @@ const AddJourneyScreen = ({ navigation: { goBack } }) => {
                 }}>
 
                     <ScrollView style={{
-                        backgroundColor: primaryColor,
                         marginHorizontal: 20,
                     }}>
 
-                        {locationName.map((l, i) => <Text>{i + 1} - {l} {'\n'}</Text>)}
+                        {locationName.map((l, i) =>
+                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, textButtonStyles.borderStyle]}>
+                                <Text>{i + 1} - {l}</Text>
+                            </View>
+                        )}
 
                     </ScrollView>
                 </SafeAreaView>

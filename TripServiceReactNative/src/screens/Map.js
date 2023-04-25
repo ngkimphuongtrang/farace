@@ -7,7 +7,6 @@ import {
   PusherChannel,
   PusherEvent,
 } from '@pusher/pusher-websocket-react-native';
-import Footer from "../components/Footer";
 import { TRIP_ICON } from "../images";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
@@ -216,7 +215,7 @@ const Map = () => {
           strokeColor="rgb(0,139,241)"
         /> */}
       </MapView>
-      <Footer id="2"/>
+      {/* <Footer id="2"/> */}
     </View>
   );
 }

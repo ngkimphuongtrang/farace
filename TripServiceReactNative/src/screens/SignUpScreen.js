@@ -11,36 +11,13 @@ import {
   Image, Button
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import { useTheme } from 'react-native-paper';
-import { loginDomain, primaryColor, registerDomain } from '../constants';
+import { primaryColor, registerDomain } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
-import TextButtonComponent, { textButtonStyles } from '../components/TextButtonComponent';
-const Users = [
-  {
-    id: 1,
-    email: 'user1@email.com',
-    username: 'aaaaa',
-    password: '11111111',
-    userToken: 'token123'
-  },
-  {
-    id: 2,
-    email: 'user2@email.com',
-    username: 'user2',
-    password: 'pass1234',
-    userToken: 'token12345'
-  },
-  {
-    id: 3,
-    email: 'testuser@email.com',
-    username: 'testuser',
-    password: 'testpass',
-    userToken: 'testtoken'
-  },
-];
+import { textButtonStyles } from '../components/TextButtonComponent';
+
 
 const SignUpScreen = () => {
   const auth = useAuth();

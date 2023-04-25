@@ -3,10 +3,7 @@ import {
     View,
     StyleSheet, TouchableOpacity, Image
 } from 'react-native';
-
-
 import JourneyComponent from '../components/JourneyComponent.js';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ADD_ICON } from '../assets/image/index.js';
 import { useNavigation } from '@react-navigation/native';
@@ -29,8 +26,8 @@ const journeyData = [
 ]
 const Tab = createBottomTabNavigator();
 
-const JourneyScreen = ({ navigation: { goBack } }) => {
-    const navigation = useNavigation();
+const JourneyScreen = ({ navigation }) => {
+    // const navigation = useNavigation();
     return (
         <View style={mystyles.container}>
             <View style={{ flex: 8 }}>

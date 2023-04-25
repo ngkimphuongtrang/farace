@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { getMembersDomain, postTripDomain } from '../constants';
 import axios from 'axios';
+
 var users = [
     {
         name: 'brynn',
@@ -24,7 +25,7 @@ var users = [
 ];
 
 const AddMemberScreen = ({ navigation: { goBack } }) => {
-    var dict = {};
+
     const navigation = useNavigation();
     const [location, setLocation] = useState();
     const [members, setMembers] = useState([]);
@@ -45,12 +46,9 @@ const AddMemberScreen = ({ navigation: { goBack } }) => {
             // save error
         }
     }
-    const requestOptions = {
-        method: 'GET',
-    };
 
     useEffect(() => {
-        var result = axios.get(getMembersDomain, {
+        axios.get(getMembersDomain, {
         })
             .then(function (response) {
                 setMembers(response.data);
@@ -93,7 +91,6 @@ const AddMemberScreen = ({ navigation: { goBack } }) => {
             <View style={{ alignItems: 'center' }}>
                 <Button
                     onPress={async () => {
-
                         const locationSerialized = await AsyncStorage.getItem("@location");
                         if (locationSerialized) {
                             const _locationData = JSON.parse(locationSerialized);
@@ -108,12 +105,14 @@ const AddMemberScreen = ({ navigation: { goBack } }) => {
                             }
                         }
                         setMemberValue(chosenMembers);
-                        const response = await axios.post(postTripDomain, {
-                            location,
-                            chosenMembers,
-                        }).then(function (response) {
-                            console.log(response.data);
-                        });
+
+                        // await axios.post(postTripDomain, {
+                        //     location,
+                        //     chosenMembers,
+                        // }).then(function (response) {
+                        //     console.log(response.data);
+                        // });
+
                         navigation.navigate("JourneySummary");
                     }}
                     title="Tiếp tục">

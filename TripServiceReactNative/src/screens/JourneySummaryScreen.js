@@ -4,9 +4,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { primaryColor } from '../constants';
-
+import { textButtonStyles } from '../components/TextButtonComponent';
+import { useNavigation } from '@react-navigation/native';
 
 const JourneySummaryScreen = ({ navigation: { goBack } }) => {
+  const navigation = useNavigation();
   const [location, setLocation] = useState([]);
   const [member, setMember] = useState([]);
   useEffect(() => {
@@ -29,18 +31,19 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
   }, [])
   return (
     <View style={mystyles.container}>
-      {/* <HeaderComponent text="Tổng quan hành trình" style={{ flex: 2 }} goBack={goBack} /> */}
       <SafeAreaView style={{
         flex: 1,
         paddingTop: StatusBar.currentHeight
       }}>
 
         <ScrollView style={{
-          backgroundColor: primaryColor,
           marginHorizontal: 20,
         }}>
 
-          {location.map((l, i) => <Text>{i + 1} - {l} {'\n'}</Text>)}
+          {location.map((l, i) =>
+            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, textButtonStyles.borderStyle]}>
+              <Text>{i + 1} - {l}</Text>
+            </View>)}
 
         </ScrollView>
       </SafeAreaView>
@@ -60,7 +63,8 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
       </SafeAreaView>
       <View style={{ alignItems: 'center' }}>
         <Button
-          title="Bắt đầu">
+          title="Bắt đầu"
+          onPress={() => navigation.navigate("LiveJourney")}>
         </Button>
       </View>
 

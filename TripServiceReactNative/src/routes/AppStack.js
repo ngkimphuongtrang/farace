@@ -14,6 +14,7 @@ import AddJourneyScreen from '../screens/AddJourneyScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import AddMemberScreen from '../screens/AddMemberScreen';
 import JourneySummaryScreen from '../screens/JourneySummaryScreen';
+import Map from '../screens/Map';
 
 
 const Tab = createBottomTabNavigator();
@@ -121,6 +122,15 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="JourneySummary" component={JourneySummaryScreen}
         options={{
           title: "Tổng quan hành trình", headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <JourneyStack.Screen name="LiveJourney" component={Map}
+        options={{
+          title: "Thực chiến", headerStyle: {
             backgroundColor: primaryColor,
           },
           headerTitleStyle: {
