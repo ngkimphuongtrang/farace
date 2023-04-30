@@ -1,166 +1,158 @@
 import React, { useState,useEffect } from "react";
-import { StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions} from "react-native";
+import { Animated, Vibration,StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions, Modal,TouchableOpacity} from "react-native";
 import MapView,{Marker} from "react-native-maps";
-import {
-  Pusher,
-  PusherMember,
-  PusherChannel,
-  PusherEvent,
-} from '@pusher/pusher-websocket-react-native';
-import { TRIP_ICON } from "../images";
+import Footer from "../components/Footer";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
-import MapViewDirections from "react-native-maps-directions";
-import {PROFILE_ICON } from '../images';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {ViewPropTypes} from 'deprecated-react-native-prop-types';
-const User = [
-  {
-      icon: PROFILE_ICON,
-      text: 'User1',
-  },
-  {
-      icon: PROFILE_ICON,
-      text: 'User2',
-  },
-  {
-      icon: PROFILE_ICON,
-      text: 'User3',
-  },
-  {
-      icon: PROFILE_ICON,
-      text: 'User4',
-  },
-  {
-      icon: PROFILE_ICON,
-      text: 'User5'
-  },
+import { Icon } from '@rneui/base';
+import { onChildChanged } from "firebase/database";
+import { ref } from "firebase/database";
+import { onValue } from "firebase/database";
+import { db} from "../services/firebase-config";
+import { CheckBox } from '@rneui/base';
+import Lottie from 'lottie-react-native';
+import { AnimationJson } from "../assets/image";
 
-]
+
 
 
 const Map = () => {
+  const groupId = "063cc4af-47a6-446a-a6a2-c7b95bacd5e3";
+  const ownerId= "3ff64-5717-4562-b3fc-2c963f66afa6";
+  const imgUrl = "https://bedental.vn/wp-content/uploads/2022/11/ce4f544cf302130777ecf32e24b1b9f8.png";
+  const firstName = "Hien";
   const [distanceLocation, SetDistanceLocation] = useState(
     [
       {
         locationName : "ABC",
         latitude : 10.8002149,
         longitude : 106.6673316,
-        distance : 123.2
+        distance : 123.2,
+        isCompleted : true
       },
       {
         locationName : "DEF",
         latitude : 10.8002149,
         longitude : 106.6673316,
-        distance : 123.2
+        distance : 123.2,
+        isCompleted : true
       },
       {
         locationName : "GHK",
         latitude : 10.8002149,
         longitude : 106.6673316,
-        distance : 123.2
+        distance : 123.2,
+        isCompleted : false
       }
       
     ]
   )
-  const [coordinates, setCoordinates] = useState([
+
+  const [distanceMember, setDistanceMember] = useState([
     {
-      userId : "1",
-      latitude: 10.8002149,
-      longitude: 106.6673316,
+        firstName: "abc",
+        imgUrl : imgUrl,
+        distance : 10
     },
     {
-      userId : "2",
-      latitude: 10.8002149,
-      longitude: 106.6793316,
-    }
-  ])
-  const [ownerLocation, setOwnerLocation] = useState([
+        imgUrl: imgUrl,
+        firstName: "abc",
+        distance : 10
+    },
     {
-      userId : ownerId,
-      latitude: 10.8002149,
-      longitude: 106.6673316,
+        imgUrl : imgUrl,
+        firstName: "abc",
+        distance : 10
     }
   ])
-  const groupId = "1";
-  const ownerId= "1";
-  const pusher = Pusher.getInstance();
 
-  pusher.init({
-    apiKey: "9ce4abce09e857dc02f8",
-    cluster: "ap1"
-  });
-  pusher.connect();
-  pusher.subscribe({
-    channelName: groupId, 
-    onEvent: (event: PusherEvent) => { 
-      console.log(event);
-        setCoordinates(coordinates.map(
-          (coordinate) => {
-            if(coordinate.userId == event.eventName) 
-            {
-              var coordinateJson = JSON.parse(event.data)
-              return { ...coordinate, latitude: parseFloat(coordinateJson['latitude']), longitude: parseFloat(coordinateJson['longitude'])};
-            }
-            else
-            {
-              return coordinate
-            }
-          }
-        )
-      )
+  const [coordinates, setCoordinates] = useState([
+    {
+      customerId : "ngvd-5717-4562-b3fc-2c963f66afa6",
+      latitude: 10.7112349,
+      longitude: 106.6673316,
+      ImgUrl:""
+    },
+    {
+      customerId : "dsfghg-5717-4562-b3fc-2c963f66afa6",
+      latitude: 10.7312149,
+      longitude: 106.6673316,
+      ImgUrl:""
     }
-  });
-
-  Geolocation.getCurrentPosition(
-    (position) => {
-      setOwnerLocation(preStage =>(
-        {
-          ...preStage,
-          latitude: position.coords.latitude,
-          longtitude: position.coords.longitude,
-        }
-      ))}
-  )
+  ])
+  const [ownerLocation, setOwnerLocation] = useState(
+    {
+      customerId : ownerId,
+      latitude: 10.7212249,
+      longitude: 106.6673316,
+    })
 
   useEffect(() => {
     setInterval(() => {
       Geolocation.getCurrentPosition(
         (position) => {
-          var distances = axios.post('https://b12b-2001-ee0-5202-3e00-3c0e-d994-f63-a1ef.ap.ngrok.io/DistanceLocation', {
+          console.log(position.coords.latitude)
+          console.log(position.coords.longitude)
+          var distances = axios.post(' https://7277-2001-ee0-51d1-e6e0-41c8-1910-37ff-563f.ngrok-free.app/api/v1/trip/realtime', {
             latitude: position.coords.latitude,
-            longtitude: position.coords.longitude,
-            userId: ownerId
+            longitude: position.coords.longitude,
+            customerId: ownerId,
+            groupId: groupId,
+            firstName : firstName,
+            imgUrl : imgUrl
           })
           .then(function (response) {
-            console.log(response);
+            console.log(response.data);
+            var responseData = response.data
+            SetDistanceLocation(responseData["locationRealtimes"])
+            setDistanceMember(responseData["customerRealtimes"])
+            setCoordinates(responseData["customerRealtimes"])
+            setOwnerLocation({customerId: ownerId, latitude: position.coords.latitude,longitude: position.coords.longitude})
           })
           .catch(function (error) {
             console.log(error);
           });
-          SetDistanceLocation(distanceLocation.map(
-            (distanceLocation) => {
-              return {...distanceLocation, 
-                distance : distances['distance'],
-                locationName : distances['locationName'] };
-            }
-          ))
           })
-    }, 500000);
+    }, 100000000);
   },[]);
+
+  const [dataFirebase, setDataFirebase] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    const notification = ref(db, 'group/'+ groupId+ '/user/'+ ownerId +'/event/arrived');
+    onChildChanged(
+      notification, (snapshot) => {
+        setShowPopup(true);
+        console.log(snapshot.val())
+      });
+
+    onValue(notification, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data)
+        if (data != null)
+        {
+          var text = data["text"]
+          setDataFirebase(text)
+          Vibration.vibrate([500, 1000, 500]);
+          console.log(text)
+        }
+      }); 
+  },[])
+
   
   return (
     <View style={styles.container}>
       <View style={styles.header} >
         <View style={styles.header.box}>
           <ScrollView>
-            {User.map((p, i) => (
+            {distanceMember.map((p, i) => (
                 <View style = {styles.info} key={i}>
-                    <Image
+                  <Image
                         style={styles.image}
-                        source={p.icon}></Image>
-                    <Text style = {{marginLeft: 10,fontSize:12}}>10 km</Text>
-                    <Text style = {{marginLeft: 10,fontSize:12}}>Di chuyển</Text>
+                        source={{uri : p.imgUrl}}></Image>
+                    <Text style = {{marginLeft: 10,fontSize:10}}>{p.firstName}</Text>
+                    <Text style = {{marginLeft: 10,fontSize:10}}>{p.distance}</Text>
                 </View>
             ))}
           </ScrollView>
@@ -170,8 +162,16 @@ const Map = () => {
                   {
                     distanceLocation.map((x,i) =>
                     <View style = {styles.info} key={i}>
-                      <Text style = {{marginLeft: 5,fontSize:12}}>{x.locationName}</Text>
-                      <Text style = {{marginLeft: 5,fontSize:12}}>{x.distance}</Text>
+                      <Text style = {{marginLeft: 10,fontSize:10, width : 55}}>{x.locationName}</Text>
+                      <Text style = {{marginLeft: 5,fontSize:10, width : 35}}>{x.distance}</Text>
+                      <CheckBox 
+                        checked ={x.isCompleted} 
+                        size={25} 
+                        checkedColor="#0F0" 
+                        uncheckedColor="#F00"
+                        style={styles.checkbox}
+                        containerStyle={styles.containerCheckBox}
+                        />
                     </View>
                     )
                   }
@@ -184,8 +184,8 @@ const Map = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: ownerLocation[0].latitude,
-          longitude: ownerLocation[0].longitude,
+          latitude: ownerLocation.latitude,
+          longitude: ownerLocation.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }
@@ -198,9 +198,18 @@ const Map = () => {
               latitude: coordinate.latitude,
               longitude: coordinate.longitude,
             }}
+            icon={coordinate.ImgUrl}
           />
           )
-        } 
+        }
+          <Marker
+            key={1}
+            coordinate={{
+              latitude: ownerLocation.latitude,
+              longitude: ownerLocation.longitude,
+            }}
+            pinColor = {'#269039'}
+          />
         {/* <MapViewDirections
           origin={{
             latitude: 10.8002149,
@@ -215,7 +224,31 @@ const Map = () => {
           strokeColor="rgb(0,139,241)"
         /> */}
       </MapView>
-      {/* <Footer id="2"/> */}
+      <Footer id="2"/>
+      <Modal
+        visible={showPopup}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropOpacity={0.5}
+        backdropColor="black"
+        transparent={true}
+        style={{ margin: 0 }}
+      >
+        <View style={styles.modalBackground}>
+          <Lottie
+            source={AnimationJson}
+            loop
+            autoPlay
+            style={{ width: 300, height: 300 }}
+          />
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{dataFirebase}</Text>
+            <TouchableOpacity style={styles.closeButton}  onPress={() => setShowPopup(false)}>
+              <Icon name="close" type="FontAwesome" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -234,7 +267,8 @@ const styles = StyleSheet.create({
       width: '40%', 
       backgroundColor: '#D9D9D9' ,
       borderRadius: 10,
-      margin: '5%'
+      margin: '5%',
+      padding : 10
     },
     
   },
@@ -246,12 +280,51 @@ const styles = StyleSheet.create({
     height: 30,
   },
   info:{
-    paddingTop:15,
-    paddingLeft:5,
-    paddingRight:5,
     flex: 1, 
     flexDirection: 'row',
     alignItems: 'center',
+    height: 50
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    paddingTop: 70
+  },
+  modalContent: {
+    backgroundColor: '#189F59',
+    padding: 10,
+    paddingBottom: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 10,
+    height : 50
+  },
+  closeButton: {
+    backgroundColor: '#9E93B6',
+    borderRadius: 5,
+    padding: 5
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  containerCheckBox: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    padding: 0,
+    margin: 0,
+  },
+  checkbox: {
+    width: 20,
+    height: 20
   }
 });
 export default Map;
