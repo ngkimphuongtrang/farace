@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { primaryColor } from '../constants';
-import { textButtonStyles } from '../components/TextButtonComponent';
+import { styles } from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
 
 const JourneySummaryScreen = ({ navigation: { goBack } }) => {
@@ -16,13 +16,13 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
       const locationSerialized = await AsyncStorage.getItem("@locationName");
       if (locationSerialized) {
         const _locationData = JSON.parse(locationSerialized);
-        console.log("location:", _locationData);
+        console.log("JourneySummaryScreen location:", _locationData);
         setLocation(_locationData);
       }
       const memberSerialized = await AsyncStorage.getItem('@member');
       if (memberSerialized) {
         const _memberData = JSON.parse(memberSerialized);
-        console.log("member:", _memberData);
+        console.log("JourneySummaryScreen member:", _memberData);
         setMember(_memberData);
       }
     }
@@ -30,7 +30,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
 
   }, [])
   return (
-    <View style={mystyles.container}>
+    <View style={styles.ContainerScreen}>
       <SafeAreaView style={{
         flex: 1,
         paddingTop: StatusBar.currentHeight
@@ -41,7 +41,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
         }}>
 
           {location.map((l, i) =>
-            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, textButtonStyles.borderStyle]}>
+            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, styles.BorderStyle]}>
               <Text>{i + 1} - {l}</Text>
             </View>)}
 
@@ -56,9 +56,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
           backgroundColor: primaryColor,
           marginHorizontal: 20,
         }}>
-
           {member.map((l, i) => <Text>{i + 1} - {l.firstName}{l.lastName} {'\n'}</Text>)}
-
         </ScrollView>
       </SafeAreaView>
       <View style={{ alignItems: 'center' }}>
@@ -67,27 +65,8 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
           onPress={() => navigation.navigate("LiveJourney")}>
         </Button>
       </View>
-
-
     </View>
   );
 };
 
 export default JourneySummaryScreen;
-
-const mystyles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50
-  },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-});

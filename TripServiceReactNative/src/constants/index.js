@@ -1,13 +1,37 @@
 export const primaryColor = '#009387';
 
-const userDomain = "https://e4d4-2001-ee0-51d1-e6e0-a15a-f66b-de7a-20cd.ngrok-free.app";
+export const genericColor1 = "#33AA88";
 
-const tripDomain = "https://2e26-2001-ee0-51d1-e6e0-a15a-f66b-de7a-20cd.ngrok-free.app";
+export const genericColor2 = "#5FC184";
 
-export const registerDomain = userDomain + "/api/v1/user/register";
+export const genericColor3 = "#8ED67D";
 
-export const loginDomain = userDomain + "/api/v1/user/login";
+export const genericColor4 = "#C1E875";
 
-export const getMembersDomain = userDomain + "/api/v1/user"
+export const genericColor5 = "#F9F871";
 
-export const postTripDomain = tripDomain + "/api/v1/trip";
+export const twistedPlot1 = "#FF79E2";
+
+export const twistedPlot2 = "#FFE5FF";
+
+export const spotColor1 = "#57CABC";
+
+export const spotColor2 = "#C2FCF3";
+
+const userDomain = "https://fa3f-27-66-49-50.ngrok-free.app/api/v1/user";
+
+const tripDomain = "https://a4db-27-66-49-50.ngrok-free.app/api/v1/trip";
+
+export const registerDomain = userDomain + "/register";
+
+export const loginDomain = userDomain + "/login";
+
+export const getMembersDomain = userDomain;
+
+export const getTripDomain = tripDomain + "/customer/";
+
+export const getTripDetailDomain = tripDomain + "/";
+
+export const postTripDomain = tripDomain;
+
+export const Google_API_Key = "AIzaSyD9ZpLS4jPei6Vo-UYrb7kXI9uWf4cZadg";

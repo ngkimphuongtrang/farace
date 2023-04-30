@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { primaryColor } from '../constants';
+
 const styles = StyleSheet.create({
     greenText: {
         color: primaryColor
@@ -34,6 +35,26 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 30
+    },
+    AppButtonContainer: {
+        elevation: 8,
+        borderRadius: 5,
+        paddingVertical: 8,
+        // paddingHorizontal: 40,
+        height: 40,
+        width: 140,
+    },
+    AppButtonText: {
+        alignSelf: "center",
+        textTransform: "uppercase",
+    },
+    BorderStyle: {
+        borderRadius: 10,
+        borderWidth: 3,
+        borderColor: primaryColor,
+    },
+    ContainerScreen: {
+        flex: 1,
     },
 });
 export { styles };

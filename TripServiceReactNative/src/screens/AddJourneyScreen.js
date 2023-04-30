@@ -4,18 +4,17 @@ import {
 } from 'react-native';
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { useNavigation } from '@react-navigation/native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { primaryColor } from '../constants/index.js';
-import { textButtonStyles } from './ProfileScreen.js';
+import { styles } from '../styles/CommonStyles.js';
 
 const AddJourneyScreen = ({ navigation }) => {
-    // const navigation = useNavigation();
     const [location, setLocation] = useState([]);
     const [locationName, setLocationName] = useState([]);
 
-    const setLocationValue = async (location) => {
+    const setLocationValue = async () => {
         try {
             await AsyncStorage.setItem('@location', JSON.stringify(location))
             await AsyncStorage.setItem('@locationName', JSON.stringify(locationName))
@@ -25,7 +24,7 @@ const AddJourneyScreen = ({ navigation }) => {
         console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
     }
     return (
-        <View style={mystyles.container
+        <View style={styles.ContainerScreen
         }>
             <MapView
                 style={mystyles.map}
@@ -64,9 +63,14 @@ const AddJourneyScreen = ({ navigation }) => {
                         }}
                         placeholder='Chọn địa điểm'
                         onPress={(data, details = null) => {
-                            var newLocation = JSON.stringify(details?.geometry?.location);
+                            var newLocation = details?.geometry?.location;
                             console.log(newLocation, data);
-                            setLocation(oldArray => [...oldArray, newLocation]);
+                            const location = {
+                                "latitude": newLocation.lat,
+                                "longitude": newLocation.lng,
+                                "name": data.description,
+                            }
+                            setLocation(oldArray => [...oldArray, location]);
                             setLocationName(oldArray => [...oldArray, data.description]);
                         }}
                         query={{
@@ -79,13 +83,11 @@ const AddJourneyScreen = ({ navigation }) => {
                     flex: 1,
                     paddingTop: StatusBar.currentHeight
                 }}>
-
                     <ScrollView style={{
                         marginHorizontal: 20,
                     }}>
-
                         {locationName.map((l, i) =>
-                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, textButtonStyles.borderStyle]}>
+                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, styles.BorderStyle]}>
                                 <Text>{i + 1} - {l}</Text>
                             </View>
                         )}
@@ -93,23 +95,23 @@ const AddJourneyScreen = ({ navigation }) => {
                     </ScrollView>
                 </SafeAreaView>
             </View>
-            <View style={{ alignItems: 'center' }}>
-                <Button
-                    onPress={() => { setLocationValue(location); navigation.navigate("AddMember"); }}
-                    title="Tiếp tục">
-                </Button>
-            </View>
+            <View style={[mystyles.button, { alignContent: 'space-between' }]}>
 
+                <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+                    <Button
+                        onPress={() => { setLocationValue(); navigation.navigate("AddMember"); }}
+                        title="Tiếp tục"
+                        color={primaryColor}
+                    />
+                </View>
+            </View>
         </View >
     );
 };
-
 export default AddJourneyScreen;
 
 const mystyles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
+
     map: {
         flex: 0.6
     },
@@ -118,5 +120,9 @@ const mystyles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
         flexGrow: 1,
+    },
+    button: {
+        alignItems: 'center',
+        marginTop: 50
     },
 });

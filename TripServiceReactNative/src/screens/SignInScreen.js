@@ -12,42 +12,17 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import axios from 'axios';
 import { useTheme } from 'react-native-paper';
 import { loginDomain, primaryColor } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
-import TextButtonComponent, { textButtonStyles } from '../components/TextButtonComponent';
-const Users = [
-    {
-        id: 1,
-        email: 'user1@email.com',
-        username: 'aaaaa',
-        password: '11111111',
-        userToken: 'token123'
-    },
-    {
-        id: 2,
-        email: 'user2@email.com',
-        username: 'user2',
-        password: 'pass1234',
-        userToken: 'token12345'
-    },
-    {
-        id: 3,
-        email: 'testuser@email.com',
-        username: 'testuser',
-        password: 'testpass',
-        userToken: 'testtoken'
-    },
-];
+import { styles } from '../styles/CommonStyles';
 
 const SignInScreen = ({ navigation }) => {
-    // console.log(navigation);
     const auth = useAuth();
     const signIn = async (email, password) => {
         // isLoading(true);
-        await auth.signIn(email, password);
+        return await auth.signIn(email, password);
     };
     const [data, setData] = React.useState({
         username: '',
@@ -117,36 +92,18 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
-    const loginHandle = (username, password) => {
-        Email = username;
-        Password = password;
-        Email = "nkpt3";
-        Password = "11111111";
-        const postLogin = async () => {
-            try {
-                await axios.post(loginDomain, {
-                    Email, Password
-                }).then(function (response) {
-                    console.log(response);
-                    navigation.navigate("Home");
-                    // console.log(response.data.authorization);
-
-                });
-            }
-            catch (error) {
-                console.error("Error LOGIN:", error);
-            };
-
-        }
-        postLogin();
-    }
-
-    const [number, onChangeNumber] = React.useState(null);
+    const signInFail = () =>
+        Alert.alert('Tài khoản không hợp lệ', "Thử lại", [
+            {
+                text: 'OK',
+                onPress: () => navigation.navigate("SignInScreen"),
+            },
+        ]);
 
     return (
-        <View style={styles.container}>
+        <View style={myStyles.container}>
             <StatusBar backgroundColor={primaryColor} barStyle="light-content" />
-            <View style={styles.header}>
+            <View style={myStyles.header}>
                 <Image
                     source={LOGO_GREEN}
                     style={{ height: 100, width: 200 }}
@@ -155,18 +112,18 @@ const SignInScreen = ({ navigation }) => {
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
-                style={[styles.footer, {
+                style={[myStyles.footer, {
                     backgroundColor: colors.background
                 }]}
             >
-                <Text style={[styles.text_footer, {
+                <Text style={[myStyles.text_footer, {
                     color: colors.text
                 }]}>Username</Text>
-                <View style={styles.action}>
+                <View style={myStyles.action}>
                     <TextInput
                         placeholder="Your Username"
                         placeholderTextColor="#666666"
-                        style={[styles.textInput, {
+                        style={[myStyles.textInput, {
                             color: colors.text
                         }]}
                         autoCapitalize="none"
@@ -182,19 +139,19 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={myStyles.errorMsg}>Username must be 4 characters long.</Text>
                     </Animatable.View>
                 }
-                <Text style={[styles.text_footer, {
+                <Text style={[myStyles.text_footer, {
                     color: colors.text,
                     marginTop: 35
                 }]}>Password</Text>
-                <View style={styles.action}>
+                <View style={myStyles.action}>
                     <TextInput
                         placeholder="Your Password"
                         placeholderTextColor="#666666"
                         secureTextEntry={data.secureTextEntry ? true : false}
-                        style={[styles.textInput, {
+                        style={[myStyles.textInput, {
                             color: colors.text
                         }]}
                         autoCapitalize="none"
@@ -207,7 +164,7 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidPassword ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+                        <Text style={myStyles.errorMsg}>Password must be 8 characters long.</Text>
                     </Animatable.View>
                 }
 
@@ -215,18 +172,23 @@ const SignInScreen = ({ navigation }) => {
                 <TouchableOpacity>
                     <Text style={{ color: { primaryColor } }}>Quên mật khẩu</Text>
                 </TouchableOpacity>
-                <View style={[styles.button, { alignContent: 'space-between' }]}>
-                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+                <View style={[myStyles.button, { alignContent: 'space-between' }]}>
+                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
                         <Button
-                            onPress={() => {
-                                navigation.navigate("BottomTab", { screen: 'Home' });
-                                // loginHandle(data.username, data.password);
+                            onPress={async () => {
+                                let success = await signIn(data.username, data.password);
+                                console.log("success:", success);
+                                if (success) {
+                                    navigation.navigate("BottomTab", { screen: 'Home' });
+                                } else {
+                                    signInFail();
+                                }
                             }}
                             title="Đăng nhập"
                             color={primaryColor}
                         />
                     </View>
-                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
                         <Button
                             onPress={() => { navigation.navigate("SignUpScreen"); }}
                             title="Đăng ký"
@@ -241,7 +203,7 @@ const SignInScreen = ({ navigation }) => {
 
 export default SignInScreen;
 
-const styles = StyleSheet.create({
+const myStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: primaryColor

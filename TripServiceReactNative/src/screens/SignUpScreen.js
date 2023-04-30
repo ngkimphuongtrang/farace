@@ -16,15 +16,12 @@ import { useTheme } from 'react-native-paper';
 import { primaryColor, registerDomain } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
-import { textButtonStyles } from '../components/TextButtonComponent';
+import { styles } from '../styles/CommonStyles';
+import { useNavigation } from '@react-navigation/native';
 
 
 const SignUpScreen = () => {
-  const auth = useAuth();
-  const signIn = async () => {
-    // isLoading(true);
-    await auth.signIn();
-  };
+  const navigation = useNavigation();
   const [FirstName, setFirstname] = useState("trang");
   const [LastName, setLastName] = useState("nguyen");
   const [registerInfo, setData] = useState({
@@ -93,17 +90,23 @@ const SignUpScreen = () => {
       });
     }
   }
+  const registerSuccessfullyNotifier = () =>
+    Alert.alert('Đăng ký tài khoản thành công', "Đăng nhập với tài khoản mới: " + registerInfo.username, [
+      {
+        text: 'OK',
+        onPress: () => navigation.navigate("SignInScreen"),
+      },
+    ]);
+
   const handleRegister = async () => {
-    email = registerInfo.username;
-    password = registerInfo.password;
-    Email = "nkpt4";
-    Password = "11111111";
+    Email = registerInfo.username;
+    Password = registerInfo.password;
     try {
       await axios.post(registerDomain, {
         Email, Password, FirstName, LastName
       }).then(function (response) {
         console.log(response);
-        navigation.navigate("SignInScreen");
+        registerSuccessfullyNotifier();
       })
     } catch (error) {
       console.log("ERROR register:", error.response)
@@ -111,9 +114,9 @@ const SignUpScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={myStyles.container}>
       <StatusBar backgroundColor={primaryColor} barStyle="light-content" />
-      <View style={styles.header}>
+      <View style={myStyles.header}>
         <Image
           source={LOGO_GREEN}
           style={{ height: 100, width: 200 }}
@@ -122,15 +125,15 @@ const SignUpScreen = () => {
       </View>
       <Animatable.View
         animation="fadeInUpBig"
-        style={[styles.footer, {
+        style={[myStyles.footer, {
           backgroundColor: colors.background
         }]}
       >
-        <View style={styles.action}>
+        <View style={myStyles.action}>
           <TextInput
             placeholder="Tên đăng nhập"
             placeholderTextColor="#666666"
-            style={[styles.textInput, {
+            style={[myStyles.textInput, {
               color: colors.text
             }]}
             autoCapitalize="none"
@@ -146,15 +149,15 @@ const SignUpScreen = () => {
         </View>
         {registerInfo.isValidUser ? null :
           <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+            <Text style={myStyles.errorMsg}>Tên đăng nhập có độ dài ít nhất 4</Text>
           </Animatable.View>
         }
-        <View style={styles.action}>
+        <View style={myStyles.action}>
           <TextInput
-            placeholder="Your Password"
+            placeholder="Mật khẩu"
             placeholderTextColor="#666666"
             secureTextEntry={registerInfo.secureTextEntry ? true : false}
-            style={[styles.textInput, {
+            style={[myStyles.textInput, {
               color: colors.text
             }]}
             autoCapitalize="none"
@@ -167,29 +170,28 @@ const SignUpScreen = () => {
         </View>
         {registerInfo.isValidPassword ? null :
           <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+            <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
           </Animatable.View>
         }
         <TextInput
-          placeholder="Tên"
+          placeholder="Nhập tên"
           onChangeText={(val) => setFirstname(val)} />
-        <TextInput placeholder='Họ' onChangeText={(val) => setLastName(val)} />
-        <View style={[styles.button, { alignContent: 'space-between' }]}>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+        <TextInput placeholder='Nhập họ' onChangeText={(val) => setLastName(val)} />
+        <View style={[myStyles.button, { alignContent: 'space-between' }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
             <Button
               onPress={() => handleRegister()}
               title="Đăng ký"
               color={primaryColor}
             />
           </View>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, textButtonStyles.borderStyle]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
               color={primaryColor}
             />
           </View>
-
         </View>
       </Animatable.View>
     </View>
@@ -198,7 +200,7 @@ const SignUpScreen = () => {
 
 export default SignUpScreen;
 
-const styles = StyleSheet.create({
+const myStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: primaryColor

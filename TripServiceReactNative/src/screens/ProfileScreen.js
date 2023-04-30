@@ -1,21 +1,27 @@
 import React from 'react';
-import {
-    View,
-    Text, TouchableOpacity, StyleSheet
+import { Text, TouchableOpacity
 } from 'react-native';
 import { primaryColor } from '../constants';
-
+import { useAuth } from '../contexts/Auth';
+import { styles } from '../styles/CommonStyles';
 const ProfileScreen = ({ navigation }) => {
-    // console.log("navigation:", navigation)
-    return (
 
+    const auth = useAuth();
+    const logOut = async () => {
+        // isLoading(true);
+        await auth.signOut();
+    };
+    return (
         <TouchableOpacity
-            style={[textButtonStyles.appButtonContainer, {
+            style={[styles.AppButtonContainer, {
                 backgroundColor: primaryColor
             }]}
-        // onPress={() => navigation.navigate("SignInScreen") } 
+            onPress={() => {
+                logOut();
+                navigation.navigate("SignInScreen");
+            }}
         >
-            <Text style={[textButtonStyles.appButtonText, {
+            <Text style={[styles.AppButtonText, {
                 color: 'white',
             }]}>Đăng xuất</Text>
         </TouchableOpacity >
@@ -24,22 +30,3 @@ const ProfileScreen = ({ navigation }) => {
 
 export default ProfileScreen;
 
-export const textButtonStyles = StyleSheet.create({
-    borderStyle: {
-        borderRadius: 10,
-        borderWidth: 3,
-        borderColor: primaryColor,
-    },
-    appButtonContainer: {
-        elevation: 8,
-        borderRadius: 5,
-        paddingVertical: 8,
-        // paddingHorizontal: 40,
-        height: 40,
-        width: 140,
-    },
-    appButtonText: {
-        alignSelf: "center",
-        textTransform: "uppercase",
-    }
-});
