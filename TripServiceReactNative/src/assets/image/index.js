@@ -19,3 +19,5 @@ export const LOGO_GREEN = require('./Farace-green.png')
 export const ADD_ICON = require('./add.png')
 
 export const BACK_ICON = require('./back.png')
+
+export const AnimationJson = require('./lf20_fnjH1K.json')
