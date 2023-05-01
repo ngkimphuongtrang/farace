@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Animated, Vibration,StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions, Modal,TouchableOpacity} from "react-native";
 import MapView,{Marker} from "react-native-maps";
-import Footer from "../components/Footer";
+//import Footer from "../components/Footer";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import { Icon } from '@rneui/base';
@@ -224,7 +224,7 @@ const Map = () => {
           strokeColor="rgb(0,139,241)"
         /> */}
       </MapView>
-      <Footer id="2"/>
+      {/* <Footer id="2"/> */}
       <Modal
         visible={showPopup}
         animationIn="fadeIn"
