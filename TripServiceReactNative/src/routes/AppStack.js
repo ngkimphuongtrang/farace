@@ -2,7 +2,6 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import JourneyScreen from '../screens/JourneyScreen';
-import { primaryColor } from '../constants';
 import FriendScreen from '../screens/FriendScreen';
 import MessageScreen from '../screens/MessageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -17,13 +16,15 @@ import JourneySummaryScreen from '../screens/JourneySummaryScreen';
 import Map from '../screens/Map';
 import JourneyDetailScreen from '../screens/JourneyDetailScreen';
 
+import { colors } from '../constants';
+
 const Tab = createBottomTabNavigator();
 
 function BottomTab() {
   return (<Tab.Navigator
     initialRouteName="Home"
     screenOptions={{
-      tabBarActiveTintColor: primaryColor,
+      tabBarActiveTintColor: colors.primary,
       headerShown: false,
 
     }}
@@ -81,6 +82,9 @@ function BottomTab() {
           <Image
             source={PROFILE_ICON}
             style={styles.image}></Image>),
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       }}
     />
   </Tab.Navigator>)
@@ -95,7 +99,7 @@ function JourneyStackScreen() {
         options={{
           title: "Danh sách hành trình",
           headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -104,7 +108,7 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="AddJourney" component={AddJourneyScreen}
         options={{
           title: "Thêm mới hành trình", headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -113,7 +117,7 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="AddMember" component={AddMemberScreen}
         options={{
           title: "Thêm thành viên", headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -122,7 +126,7 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="JourneySummary" component={JourneySummaryScreen}
         options={{
           title: "Tổng quan hành trình", headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -131,7 +135,7 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="LiveJourney" component={Map}
         options={{
           title: "Thực chiến", headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -140,10 +144,11 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="JourneyDetailScreen" component={JourneyDetailScreen}
         options={{
           title: "Chi tiết hành trình", headerStyle: {
-            backgroundColor: primaryColor,
+            backgroundColor: colors.primary,
           },
           headerTitleStyle: {
             fontWeight: 'bold',
+
           },
         }} />
     </JourneyStack.Navigator>

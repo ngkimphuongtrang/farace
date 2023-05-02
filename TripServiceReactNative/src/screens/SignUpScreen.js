@@ -13,12 +13,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
 import { useTheme } from 'react-native-paper';
-import { primaryColor, registerDomain } from '../constants';
+import { endpoints } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
-import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
-
+import { colors } from '../constants';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -102,7 +101,7 @@ const SignUpScreen = () => {
     Email = registerInfo.username;
     Password = registerInfo.password;
     try {
-      await axios.post(registerDomain, {
+      await axios.post(endpoints.register, {
         Email, Password, FirstName, LastName
       }).then(function (response) {
         console.log(response);
@@ -115,7 +114,7 @@ const SignUpScreen = () => {
 
   return (
     <View style={myStyles.container}>
-      <StatusBar backgroundColor={primaryColor} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <View style={myStyles.header}>
         <Image
           source={LOGO_GREEN}
@@ -182,14 +181,14 @@ const SignUpScreen = () => {
             <Button
               onPress={() => handleRegister()}
               title="Đăng ký"
-              color={primaryColor}
+              color={colors.primary}
             />
           </View>
           <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
-              color={primaryColor}
+              color={colors.primary}
             />
           </View>
         </View>
@@ -203,7 +202,7 @@ export default SignUpScreen;
 const myStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: primaryColor
+    backgroundColor: colors.primary
   },
   header: {
     flex: 1,

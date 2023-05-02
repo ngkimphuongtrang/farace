@@ -1,14 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthData, authService } from '../services/authService';
-
-// type AuthContextData = {
-//   authData?: AuthData;
-//   loading: boolean;
-//   signIn(): Promise<void>;
-//   signOut(): void;
-// };
+import { authService } from '../services/authService';
+import { userIdKey, usernameKey } from '../constants';
 
 //Create the Auth Context with the data type specified
 //and a empty object
@@ -34,20 +28,21 @@ const AuthProvider = ({ children }) => {
       console.log("auth:", _authData);
       setAuthData(_authData);
     } catch (error) {
+      console.log("Load Storage Data fail");
     } finally {
       //loading finished
       setLoading(false);
     }
   }
 
-  const signIn = async (userName, password) => {
+  const signIn = async (username, password) => {
     //call the service passing credential (email and password).
     //In a real App this data will be provided by the user from some InputText components.
     const result = await authService.signIn(
-      userName,
+      username,
       password,
     );
-    if (result == undefined) return false;
+    if (!result) return false;
     const loginToken = result[0];
     const userId = result[1];
     console.log("authdata:", loginToken, userId);
@@ -58,15 +53,16 @@ const AuthProvider = ({ children }) => {
 
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
-    storeData(loginToken, userId);
+    storeData(loginToken, userId, username);
     console.log("go here");
     return true;
 
   };
-  const storeData = async (loginToken, userId) => {
+  const storeData = async (loginToken, userId, username) => {
     try {
       await AsyncStorage.setItem('@MyAuthData', loginToken);
-      await AsyncStorage.setItem('@userId', userId);
+      await AsyncStorage.setItem(userIdKey, userId);
+      await AsyncStorage.setItem(usernameKey, username);
     } catch (error) {
       console.log("store Data fail", error)
     }

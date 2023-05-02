@@ -7,8 +7,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { primaryColor } from '../constants/index.js';
 import { styles } from '../styles/CommonStyles.js';
+import { colors } from '../constants/index.js';
 
 const AddJourneyScreen = ({ navigation }) => {
     const [location, setLocation] = useState([]);
@@ -23,6 +23,17 @@ const AddJourneyScreen = ({ navigation }) => {
         }
         console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
     }
+    const handlePlaceSelected = (data, details = null) => {
+        const newLocation = details?.geometry?.location;
+        console.log(newLocation, data);
+        const locationObj = {
+            latitude: newLocation.lat,
+            longitude: newLocation.lng,
+            name: data.description,
+        };
+        setLocation((oldArray) => [...oldArray, locationObj]);
+        setLocationName((oldArray) => [...oldArray, data.description]);
+    };
     return (
         <View style={styles.ContainerScreen
         }>
@@ -34,7 +45,12 @@ const AddJourneyScreen = ({ navigation }) => {
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }
-                }>
+                }>{location.map((loc) => (
+                    <Marker
+                        key={`${loc.latitude}-${loc.longitude}`}
+                        coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+                        title={loc.name}
+                    />))}
             </MapView>
             <View style={[mystyles.input, { flex: 0.8 }]}>
                 <View style={[mystyles.input]}>
@@ -62,17 +78,7 @@ const AddJourneyScreen = ({ navigation }) => {
                             }
                         }}
                         placeholder='Chọn địa điểm'
-                        onPress={(data, details = null) => {
-                            var newLocation = details?.geometry?.location;
-                            console.log(newLocation, data);
-                            const location = {
-                                "latitude": newLocation.lat,
-                                "longitude": newLocation.lng,
-                                "name": data.description,
-                            }
-                            setLocation(oldArray => [...oldArray, location]);
-                            setLocationName(oldArray => [...oldArray, data.description]);
-                        }}
+                        onPress={handlePlaceSelected}
                         query={{
                             key: 'AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8',
                             language: 'en',
@@ -87,7 +93,7 @@ const AddJourneyScreen = ({ navigation }) => {
                         marginHorizontal: 20,
                     }}>
                         {locationName.map((l, i) =>
-                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, styles.BorderStyle]}>
+                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.primary }, styles.BorderStyle]}>
                                 <Text>{i + 1} - {l}</Text>
                             </View>
                         )}
@@ -101,7 +107,7 @@ const AddJourneyScreen = ({ navigation }) => {
                     <Button
                         onPress={() => { setLocationValue(); navigation.navigate("AddMember"); }}
                         title="Tiếp tục"
-                        color={primaryColor}
+                        color={colors.primary}
                     />
                 </View>
             </View>

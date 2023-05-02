@@ -1,11 +1,11 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, StyleSheet, Button, SafeAreaView, ScrollView, StatusBar, Text
+  View, Button, SafeAreaView, ScrollView, StatusBar, Text
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { primaryColor } from '../constants';
 import { styles } from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
+import { colors } from '../constants';
 
 const JourneySummaryScreen = ({ navigation: { goBack } }) => {
   const navigation = useNavigation();
@@ -41,7 +41,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
         }}>
 
           {location.map((l, i) =>
-            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: primaryColor }, styles.BorderStyle]}>
+            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.primary }, styles.BorderStyle]}>
               <Text>{i + 1} - {l}</Text>
             </View>)}
 
@@ -53,7 +53,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
       }}>
 
         <ScrollView style={{
-          backgroundColor: primaryColor,
+          backgroundColor: colors.primary,
           marginHorizontal: 20,
         }}>
           {member.map((l, i) => <Text>{i + 1} - {l.firstName}{l.lastName} {'\n'}</Text>)}

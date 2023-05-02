@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { loginDomain } from '../constants';
+import { endpoints } from '../constants';
 
 const signIn = (Email, Password) => {
   // this is a mock of an API call, in a real app
@@ -10,7 +10,7 @@ const signIn = (Email, Password) => {
   const postLogin = async () => {
     var token;
     try {
-      await axios.post(loginDomain, {
+      await axios.post(endpoints.login, {
         Email, Password
       }).then(function (response) {
         console.log(response, response.data, response.data.authorization);

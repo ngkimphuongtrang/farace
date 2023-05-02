@@ -4,18 +4,19 @@ import {
 	StyleSheet, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Text
 } from 'react-native';
 import { ADD_ICON } from '../assets/image/index.js';
-import { genericColor3, genericColor2, genericColor4, getTripDomain, primaryColor, primaryColor2, primaryColor3, genericColor1 } from '../constants/index.js';
+import { endpoints, keys } from '../constants/index.js';
 import axios from 'axios';
-import { getMyUserId } from '../components/util.js';
+import { getDataFromAsyncStorage } from '../components/util.js';
 import { styles } from '../styles/CommonStyles.js';
+import { colors } from '../constants/index.js';
 
 const JourneyScreen = ({ navigation }) => {
 	const [trips, setTrips] = useState(null);
 	const getTripOfUserDomain = async () => {
-		const userId = await getMyUserId();
+		const userId = await getDataFromAsyncStorage(keys.userId);
 		if (userId) {
-			console.log("userId", userId, getTripDomain + userId);
-			return getTripDomain + userId;
+			console.log("userId", userId, endpoints.trip + userId);
+			return endpoints.trip + userId;
 		}
 		console.log("get trip of user domain failed");
 	}
@@ -64,20 +65,23 @@ const JourneyScreen = ({ navigation }) => {
 					}}>
 						{trips != undefined ? trips.map((l, i) =>
 							<TouchableOpacity onPress={() => handleOnTripDetail(l.groupId)}>
-								<View style={{ flexDirection: 'row' }}>
+								<View style={{ flexDirection: 'row', width: 310 }}>
 
-									<View style={[{ width: 30, height: 40, backgroundColor: genericColor1, alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
-										<Text>{i + 1}</Text>
+									<View style={[
+										{ width: 30, height: 30, backgroundColor: colors.generic1, alignContent: 'center', marginBottom: 5, justifyContent: 'center' },
+										styles.BorderStyle,
+									]}>
+										<Text style={{ textAlign: 'center' }}>{i + 1}</Text>
 									</View>
 
 									<View style={[
-										{ alignContent: 'center', marginBottom: 5, backgroundColor: genericColor2, justifyContent: 'space-around' },
+										{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic2, justifyContent: 'space-around' },
 										styles.BorderStyle,
-										{ borderColor: genericColor2 }]}>
+										{ borderColor: colors.generic2 }]}>
 										<View style={[
-											{ alignContent: 'center', marginBottom: 5, backgroundColor: genericColor3 },
+											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic3 },
 											styles.BorderStyle,
-											{ borderColor: genericColor3 }]
+											{ borderColor: colors.generic3 }]
 										}>
 											<Text style={{ fontWeight: 'bold', color: 'black' }}>
 												{l.start}
@@ -85,9 +89,9 @@ const JourneyScreen = ({ navigation }) => {
 										</View>
 
 										<View style={[
-											{ alignContent: 'center', marginBottom: 5, backgroundColor: genericColor4 },
+											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic4 },
 											styles.BorderStyle,
-											{ borderColor: genericColor4 }]}>
+											{ borderColor: colors.generic4 }]}>
 											<Text style={{ fontWeight: 'bold', color: 'black' }}>
 												{l.end}
 											</Text>
@@ -100,7 +104,7 @@ const JourneyScreen = ({ navigation }) => {
 			</View>
 			<View style={[
 				{ alignItems: 'center' },
-				{ flex: 2 }]}
+				{ flex: 1 }]}
 			>
 				<TouchableOpacity onPress={() => navigation.navigate("AddJourney")}>
 					<Image source={ADD_ICON}
@@ -113,7 +117,7 @@ const JourneyScreen = ({ navigation }) => {
 						}></Image></TouchableOpacity>
 			</View>
 
-		</View>
+		</View >
 	);
 };
 export default JourneyScreen;

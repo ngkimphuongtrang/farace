@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { primaryColor } from '../constants';
+import { colors } from '../constants';
 
 const styles = StyleSheet.create({
     greenText: {
-        color: primaryColor
+        color: colors.primary
     },
     bottomContainer: {
         flex: 1,
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         borderColor: '#ddd',
         borderBottomWidth: 0,
-        shadowColor: primaryColor,
+        shadowColor: colors.primary,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     BorderStyle: {
         borderRadius: 10,
         borderWidth: 3,
-        borderColor: primaryColor,
+        borderColor: colors.primary,
     },
     ContainerScreen: {
         flex: 1,

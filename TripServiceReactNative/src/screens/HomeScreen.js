@@ -5,8 +5,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import { LOGO_GREEN } from '../assets/image/index.js';
-
-import { primaryColor } from '../constants/index.js';
+import { colors } from '../constants/index.js';
 
 const HomeScreen = ({ navigation }) => {
     console.log("navigation:", navigation)
@@ -17,10 +16,10 @@ const HomeScreen = ({ navigation }) => {
 
             </View>
 
-            <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={styles.logoContainer}>
                 <Image
                     source={LOGO_GREEN}
-                    style={{ height: 50, width: 50 * 2.7 }}
+                    style={styles.logo}
                 ></Image>
             </View>
             <View style={{
@@ -37,17 +36,21 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: primaryColor,
+        backgroundColor: colors.primary,
     },
-    header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
+    // header: {
+    //     flex: 1,
+    //     justifyContent: 'flex-end',
+    //     paddingHorizontal: 20,
+    //     paddingBottom: 50
+    // },
+    logo: {
+        height: 50,
+        width: 50 * 2.7,
     },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 30
+    logoContainer: {
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

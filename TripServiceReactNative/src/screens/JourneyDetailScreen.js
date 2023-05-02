@@ -1,8 +1,8 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, StyleSheet, Button, SafeAreaView, ScrollView, StatusBar, Text
+  View, Button, SafeAreaView, ScrollView, StatusBar, Text, StyleSheet
 } from 'react-native';
-import { genericColor3, genericColor4, getTripDetailDomain, spotColor1, spotColor2 } from '../constants';
+import { colors, endpoints } from '../constants';
 import { styles } from '../styles/CommonStyles';
 import axios from 'axios';
 
@@ -13,9 +13,9 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     let groupIdValue = JSON.stringify(groupId);
     groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
-    console.log("GET:", getTripDetailDomain + groupIdValue + "/detail", typeof groupIdValue);
+    console.log("GET:", endpoints.tripDetail + groupIdValue + "/detail", typeof groupIdValue);
     async function getData() {
-      axios.get(getTripDetailDomain + groupIdValue + "/detail")
+      axios.get(`${endpoints.tripDetail}${groupId}/detail`)
         .then(function (response) {
           console.log("Journey Detail Screen:", response, response.data);
           setLocation(response.data.locations);
@@ -25,70 +25,49 @@ const JourneyDetailScreen = ({ route, navigation }) => {
     getData()
 
   }, [])
+  const renderLocations = () => {
+    return location.map((l, i) => (
+      <View
+        key={i}
+        style={[
+          styles.locationContainer,
+          { backgroundColor: i % 2 === 0 ? colors.generic3 : colors.generic4 }
+        ]}
+      >
+        <Text style={styles.locationText}>{`${i + 1} - ${l.name}`}</Text>
+      </View>
+    ));
+  };
+
+  const renderMembers = () => {
+    return member.map((m, i) => (
+      <View
+        key={i}
+        style={[
+          styles.memberContainer,
+          { backgroundColor: i % 2 === 0 ? colors.spot1 : colors.spot2 }
+        ]}
+      >
+        <Text style={styles.memberText}>{`${i + 1} - ${m.firstName} ${m.lastName} - ${m.email}\n`}</Text>
+      </View>
+    ));
+  };
+
   return (
     <View style={styles.ContainerScreen}>
-      <SafeAreaView style={[{
-        flex: 1,
-        paddingTop: StatusBar.currentHeight,
-        margin: 10,
-      }, styles.BorderStyle]}>
+      <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
-        <ScrollView style={{
-          marginHorizontal: 20,
-        }}>
-          {location.map((l, i) =>
-            i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: genericColor3
-                },
-                styles.BorderStyle, { borderColor: genericColor3 }
-              ]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View> :
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: genericColor4
-                },
-                styles.BorderStyle,
-                { borderColor: genericColor4 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View>)
-          }
+        <ScrollView style={myStyles.scrollViewContainer}>
+          {renderLocations}
         </ScrollView>
       </SafeAreaView>
-      <SafeAreaView style={{
-        flex: 1,
-        paddingTop: StatusBar.currentHeight
-      }}>
+      <SafeAreaView style={myStyles.safeAreaViewContainer}>
 
-        <ScrollView style={{
-          marginHorizontal: 20,
-        }}>
-          {member.map((l, i) =>
-            i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center',
-                  //  marginBottom: 5,
-                  backgroundColor: spotColor1
-                },
-                styles.BorderStyle, { borderColor: spotColor1 }
-              ]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
-              </View> :
-              <View style={[
-                { alignContent: 'center', marginBottom: 5, backgroundColor: spotColor2 },
-                styles.BorderStyle,
-                { borderColor: spotColor2 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} - {l.email} {'\n'}</Text>
-              </View>)
-          }
+        <ScrollView style={myStyles.scrollViewContainer}>
+          {renderMembers}
         </ScrollView>
       </SafeAreaView>
-      <View style={{ alignItems: 'center' }}>
+      <View style={myStyles.buttonContainer}>
         <Button
           title="Bắt đầu"
           onPress={() => navigation.navigate("LiveJourney")}>
@@ -99,19 +78,16 @@ const JourneyDetailScreen = ({ route, navigation }) => {
 };
 export default JourneyDetailScreen;
 
-const mystyles = StyleSheet.create({
-  container: {
+const myStyles = StyleSheet.create({
+  safeAreaViewContainer: {
     flex: 1,
+    paddingTop: StatusBar.currentHeight,
+    margin: 10,
   },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50
+  scrollViewContainer: {
+    marginHorizontal: 20,
   },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-});
+  buttonContainer: {
+    alignItems: 'center'
+  }
+})

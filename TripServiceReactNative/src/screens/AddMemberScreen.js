@@ -6,9 +6,9 @@ import { CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
 import { PROFILE_ICON } from '../images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getMembersDomain, postTripDomain } from '../constants';
+import { endpoints, keys, colors } from '../constants';
 import axios from 'axios';
-import { getMyUserId } from '../components/util';
+import { getDataFromAsyncStorage } from '../components/util';
 
 const AddMemberScreen = ({ navigation }) => {
     const [members, setMembers] = useState([]);
@@ -36,7 +36,7 @@ const AddMemberScreen = ({ navigation }) => {
         }
     }
     useEffect(() => {
-        axios.get(getMembersDomain)
+        axios.get(endpoints.members)
             .then(function (response) {
                 setMembers(response.data);
                 console.log("/api/v1/user response:", members);
@@ -59,13 +59,13 @@ const AddMemberScreen = ({ navigation }) => {
                 customers[j++] = members[i]
             }
         }
-        let myUserId = await getMyUserId();
+        let myUserId = await getDataFromAsyncStorage(keys.userId);
         customers[j++] = { "id": myUserId }
 
         let locations = _locationData;
         storeMembers(customers);
         console.log("payload", { locations, customers });
-        await axios.post(postTripDomain, {
+        await axios.post(endpoints.postTrip, {
             locations,
             customers,
         }).then(function (response) {
@@ -92,7 +92,9 @@ const AddMemberScreen = ({ navigation }) => {
                                         resizeMode="cover"
                                         source={PROFILE_ICON}
                                     />
-                                    <Text >{member.orderId + 1}:{member.firstName} {member.lastName}</Text>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text style={{ fontWeight: 'bold' }} >{member.orderId + 1}:{member.firstName} {member.lastName}</Text>
+                                        <Text>{member.email}</Text></View>
                                     <CheckBox
                                         checked={checkedState[member.orderId]}
                                         onPress={() => handleOnCheckbox(i)}
@@ -106,12 +108,22 @@ const AddMemberScreen = ({ navigation }) => {
                     }
                 </ScrollView>
             </SafeAreaView>
-            <View style={{ alignItems: 'center' }}>
+            <View style={[mystyles.button, { alignContent: 'space-between' }]}>
+
+                <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+                    <Button
+                        onPress={() => postTripHandle()}
+                        title="Tiếp tục"
+                        color={colors.primary}
+                    />
+                </View>
+            </View>
+            {/* <View style={{ alignItems: 'center' }}>
                 <Button
                     onPress={() => postTripHandle()}
                     title="Tiếp tục">
                 </Button>
-            </View>
+            </View> */}
         </View >
     );
 };

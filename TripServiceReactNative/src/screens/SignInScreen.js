@@ -13,10 +13,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from 'react-native-paper';
-import { loginDomain, primaryColor } from '../constants';
+// import { endpoints } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
+import { colors } from '../constants';
 
 const SignInScreen = ({ navigation }) => {
     const auth = useAuth();
@@ -102,7 +103,7 @@ const SignInScreen = ({ navigation }) => {
 
     return (
         <View style={myStyles.container}>
-            <StatusBar backgroundColor={primaryColor} barStyle="light-content" />
+            <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
             <View style={myStyles.header}>
                 <Image
                     source={LOGO_GREEN}
@@ -118,10 +119,10 @@ const SignInScreen = ({ navigation }) => {
             >
                 <Text style={[myStyles.text_footer, {
                     color: colors.text
-                }]}>Username</Text>
+                }]}>Tên đăng nhập</Text>
                 <View style={myStyles.action}>
                     <TextInput
-                        placeholder="Your Username"
+                        placeholder="Tên đăng nhập của bạn"
                         placeholderTextColor="#666666"
                         style={[myStyles.textInput, {
                             color: colors.text
@@ -139,16 +140,16 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={myStyles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={myStyles.errorMsg}>Tên đăng nhập có độ dài ít nhất 4</Text>
                     </Animatable.View>
                 }
                 <Text style={[myStyles.text_footer, {
                     color: colors.text,
                     marginTop: 35
-                }]}>Password</Text>
+                }]}>Mật khẩu</Text>
                 <View style={myStyles.action}>
                     <TextInput
-                        placeholder="Your Password"
+                        placeholder="Mật khẩu của bạn"
                         placeholderTextColor="#666666"
                         secureTextEntry={data.secureTextEntry ? true : false}
                         style={[myStyles.textInput, {
@@ -164,13 +165,13 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidPassword ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={myStyles.errorMsg}>Password must be 8 characters long.</Text>
+                        <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
                     </Animatable.View>
                 }
 
 
                 <TouchableOpacity>
-                    <Text style={{ color: { primaryColor } }}>Quên mật khẩu</Text>
+                    <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
                 </TouchableOpacity>
                 <View style={[myStyles.button, { alignContent: 'space-between' }]}>
                     <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
@@ -185,14 +186,17 @@ const SignInScreen = ({ navigation }) => {
                                 }
                             }}
                             title="Đăng nhập"
-                            color={primaryColor}
+                            color={colors.primary}
                         />
                     </View>
-                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+                    <View style={[
+                        { width: "40%", alignContent: 'center', marginBottom: 5 },
+                        styles.BorderStyle,
+                        { borderColor: colors.generic1 }]}>
                         <Button
                             onPress={() => { navigation.navigate("SignUpScreen"); }}
                             title="Đăng ký"
-                            color={primaryColor}
+                            color={colors.generic1}
                         />
                     </View>
                 </View>
@@ -206,7 +210,7 @@ export default SignInScreen;
 const myStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: primaryColor
+        backgroundColor: colors.primary
     },
     header: {
         flex: 1,
