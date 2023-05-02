@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import {
     View, StyleSheet, Button, Text, ScrollView, StatusBar
 } from 'react-native';
@@ -9,10 +9,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '../styles/CommonStyles.js';
 import { colors } from '../constants/index.js';
-
+import Geolocation from "@react-native-community/geolocation";
 const AddJourneyScreen = ({ navigation }) => {
     const [location, setLocation] = useState([]);
     const [locationName, setLocationName] = useState([]);
+    const [coordinate, setCoordinate] = useState(
+        {
+          latitude: 10.7212249,
+          longitude: 106.6673316,
+        })    
+    useEffect(() => {
+        Geolocation.getCurrentPosition(
+            (position) => {
+                setCoordinate({latitude: position.coords.latitude,longitude: position.coords.longitude})
+                })
+        },[]);
 
     const setLocationValue = async () => {
         try {
@@ -24,8 +35,8 @@ const AddJourneyScreen = ({ navigation }) => {
         console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
     }
     const handlePlaceSelected = (data, details = null) => {
+        
         const newLocation = details?.geometry?.location;
-        console.log(newLocation, data);
         const locationObj = {
             latitude: newLocation.lat,
             longitude: newLocation.lng,
@@ -34,24 +45,57 @@ const AddJourneyScreen = ({ navigation }) => {
         setLocation((oldArray) => [...oldArray, locationObj]);
         setLocationName((oldArray) => [...oldArray, data.description]);
     };
+    console.log(location)
     return (
-        <View style={styles.ContainerScreen
-        }>
-            <MapView
-                style={mystyles.map}
-                initialRegion={{
-                    latitude: 10.8002149,
-                    longitude: 106.6673316,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }
-                }>{location.map((loc) => (
+        <View style={styles.ContainerScreen}>
+            {
+                location.length === 0 ? 
+                (
+                <MapView
+                    style={mystyles.map}
+                    initialRegion={
+                    {
+                        latitude: coordinate.latitude,
+                        longitude: coordinate.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }
+                    }>
+                </MapView>
+                ) : 
+                (<MapView
+                    style={mystyles.map}
+                    initialRegion={
+                        {
+                            latitude: coordinate.latitude,
+                            longitude: coordinate.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }
+                    }
+                        region={{
+                        latitude: location[location.length-1].latitude,
+                        longitude: location[location.length-1].longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                        }
+                    }>
+                {
+                    location.map((coordinate,index) =>
                     <Marker
-                        key={`${loc.latitude}-${loc.longitude}`}
-                        coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-                        title={loc.name}
-                    />))}
-            </MapView>
+                        key={index}
+                        coordinate={{
+                        latitude: coordinate["latitude"],
+                        longitude: coordinate["longitude"],
+                        }}
+                        draggable
+                    />
+                    )
+                }
+                </MapView>
+                )
+            }
+            
             <View style={[mystyles.input, { flex: 0.8 }]}>
                 <View style={[mystyles.input]}>
                     <GooglePlacesAutocomplete
