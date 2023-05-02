@@ -42,7 +42,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
                   backgroundColor: colors.generic3
                 },
                 styles.BorderStyle, { borderColor: colors.generic3 }
-              ]}>
+              ]} key={i}>
                 <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
               </View> :
               <View style={[
@@ -69,7 +69,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
                   backgroundColor: colors.spot1
                 },
                 styles.BorderStyle, { borderColor: colors.spot1 }
-              ]}>
+              ]}key={i}>
                 <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
               </View> :
               <View style={[

@@ -34,8 +34,6 @@ const SignUpScreen = () => {
     isValidPassword: true,
   });
 
-  const { colors } = useTheme();
-
   const textInputChange = (val) => {
     if (val.trim().length >= 4) {
       setData({
@@ -96,7 +94,13 @@ const SignUpScreen = () => {
         onPress: () => navigation.navigate("SignInScreen"),
       },
     ]);
-
+  const registerFailNotifier = () =>
+    Alert.alert('Tên đăng nhập đã tồn tại', "Chọn một tên đăng nhập khác", [
+      {
+        text: 'OK',
+        onPress: () => console.log("OK pressed"),
+      },
+    ]);
   const handleRegister = async () => {
     Email = registerInfo.username;
     Password = registerInfo.password;
@@ -108,7 +112,8 @@ const SignUpScreen = () => {
         registerSuccessfullyNotifier();
       })
     } catch (error) {
-      console.log("ERROR register:", error.response)
+      console.log("ERROR register:", error.response);
+      registerFailNotifier();
     }
   }
 
@@ -157,7 +162,7 @@ const SignUpScreen = () => {
             placeholderTextColor="#666666"
             secureTextEntry={registerInfo.secureTextEntry ? true : false}
             style={[myStyles.textInput, {
-              color: colors.text
+              // color: colors.text
             }]}
             autoCapitalize="none"
             onChangeText={(val) => handlePasswordChange(val)}
@@ -177,18 +182,18 @@ const SignUpScreen = () => {
           onChangeText={(val) => setFirstname(val)} />
         <TextInput placeholder='Nhập họ' onChangeText={(val) => setLastName(val)} />
         <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
             <Button
               onPress={() => handleRegister()}
               title="Đăng ký"
-              color={colors.primary}
+              color={colors.generic2}
             />
           </View>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic1 }]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
-              color={colors.primary}
+              color={colors.generic1}
             />
           </View>
         </View>

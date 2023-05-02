@@ -68,7 +68,7 @@ const JourneyScreen = ({ navigation }) => {
 						marginHorizontal: 20,
 					}}>
 						{trips != undefined ? trips.map((l, i) =>
-							<TouchableOpacity onPress={() => handleOnTripDetail(l.groupId)}>
+							<TouchableOpacity onPress={() => handleOnTripDetail(l.groupId)} key={i}>
 								<View style={{ flexDirection: 'row', width: 310 }}>
 
 									<View style={[

@@ -13,7 +13,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
   const [member, setMember] = useState([]);
   useEffect(() => {
     async function getData() {
-      const locationSerialized = await AsyncStorage.getItem("@locationName");
+      const locationSerialized = await AsyncStorage.getItem("@location");
       if (locationSerialized) {
         const _locationData = JSON.parse(locationSerialized);
         console.log("JourneySummaryScreen location:", _locationData);
@@ -71,7 +71,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
                   backgroundColor: colors.generic3
                 },
                 styles.BorderStyle, { borderColor: colors.generic3 }
-              ]}>
+              ]} key={i}>
                 <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
               </View> :
               <View style={[
@@ -98,7 +98,7 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
                   backgroundColor: colors.spot1
                 },
                 styles.BorderStyle, { borderColor: colors.spot1 }
-              ]}>
+              ]} key={i}>
                 <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
               </View> :
               <View style={[
