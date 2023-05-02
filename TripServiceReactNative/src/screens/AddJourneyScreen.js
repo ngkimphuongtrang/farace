@@ -10,6 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '../styles/CommonStyles.js';
 import { colors } from '../constants/index.js';
 import Geolocation from "@react-native-community/geolocation";
+import MapViewDirections from 'react-native-maps-directions';
+
 const AddJourneyScreen = ({ navigation }) => {
     const [location, setLocation] = useState([]);
     const [locationName, setLocationName] = useState([]);
@@ -25,6 +27,23 @@ const AddJourneyScreen = ({ navigation }) => {
                 })
         },[]);
 
+    const [routes, setRoutes] = useState([]);
+    useEffect(() => {
+        calculateRoutes();
+      }, [location]);
+    const calculateRoutes = () => {
+        const routes = [];
+        for (let i = 0; i < location.length - 1; i++) {
+            const origin = location[i];
+            const destination = location[i + 1];
+            routes.push({
+            origin,
+            destination,
+            waypoints: [],
+            });
+        }        
+        setRoutes(routes);
+    };
     const setLocationValue = async () => {
         try {
             await AsyncStorage.setItem('@location', JSON.stringify(location))
@@ -80,18 +99,29 @@ const AddJourneyScreen = ({ navigation }) => {
                         longitudeDelta: 0.0421,
                         }
                     }>
-                {
+                    {
                     location.map((coordinate,index) =>
-                    <Marker
-                        key={index}
-                        coordinate={{
-                        latitude: coordinate["latitude"],
-                        longitude: coordinate["longitude"],
-                        }}
-                        draggable
-                    />
-                    )
-                }
+                        <Marker
+                            key={index}
+                            coordinate={{
+                            latitude: coordinate["latitude"],
+                            longitude: coordinate["longitude"],
+                            }}
+                            draggable
+                        />
+                        )
+                    }
+                    {routes.map((route, index) => (
+                        <MapViewDirections
+                            key={index}
+                            origin={route.origin}
+                            waypoints={route.waypoints}
+                            destination={route.destination}
+                            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+                            strokeWidth={4}
+                            strokeColor="rgb(0,139,241)"
+                        />
+                    ))}
                 </MapView>
                 )
             }
