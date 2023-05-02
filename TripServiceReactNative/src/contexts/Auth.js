@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
 
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
-    storeData(loginToken, userId, username);
+    await storeData(loginToken, userId, username);
     console.log("go here");
     return true;
 
@@ -61,8 +61,8 @@ const AuthProvider = ({ children }) => {
   const storeData = async (loginToken, userId, username) => {
     try {
       await AsyncStorage.setItem('@MyAuthData', loginToken);
-      await AsyncStorage.setItem(userIdKey, userId);
-      await AsyncStorage.setItem(usernameKey, username);
+      await AsyncStorage.setItem('@userId', userId);
+      await AsyncStorage.setItem('@username', username);
     } catch (error) {
       console.log("store Data fail", error)
     }
