@@ -14,13 +14,15 @@ const JourneyScreen = ({ navigation }) => {
 	const [trips, setTrips] = useState(null);
 	const getTripOfUserDomain = async () => {
 		const userId = await getDataFromAsyncStorage(keys.userId);
+		console.log(userId)
 		if (userId) {
 			console.log("userId", userId, endpoints.trip + userId);
 			return endpoints.trip + userId;
 		}
 		console.log("get trip of user domain failed");
 	}
-	useEffect(async () => {
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
 		async function getData() {
 			axios.get(await getTripOfUserDomain())
 				.then(function (response) {
@@ -47,6 +49,8 @@ const JourneyScreen = ({ navigation }) => {
 				});
 		}
 		getData();
+	});
+	return unsubscribe;
 	}, []);
 	const handleOnTripDetail = (groupId) => {
 		console.log("on press", groupId);
