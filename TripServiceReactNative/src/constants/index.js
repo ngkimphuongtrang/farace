@@ -55,10 +55,8 @@ export const colors = {
 };
 
 // Define domain constants
-const API_USER_DOMAIN = 'https://5958-171-255-142-154.ngrok-free.app/api/v1/user';
-const API_TRIP_DOMAIN = 'https://c995-171-255-142-154.ngrok-free.app/api/v1/trip';
-const USER_DOMAIN = `${API_USER_DOMAIN}/user`;
-const TRIP_DOMAIN = `${API_TRIP_DOMAIN}/trip`;
+const USER_DOMAIN = 'https://5958-171-255-142-154.ngrok-free.app/api/v1/user';
+const TRIP_DOMAIN = 'https://c995-171-255-142-154.ngrok-free.app/api/v1/trip';
 
 export const endpoints = {
   register: `${USER_DOMAIN}/register`,

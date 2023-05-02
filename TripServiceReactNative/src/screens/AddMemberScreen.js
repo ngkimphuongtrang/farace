@@ -8,7 +8,6 @@ import { PROFILE_ICON } from '../images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { endpoints, keys, colors } from '../constants';
 import axios from 'axios';
-import { getDataFromAsyncStorage } from '../components/util';
 
 const AddMemberScreen = ({ navigation }) => {
     const [members, setMembers] = useState([]);
@@ -59,8 +58,8 @@ const AddMemberScreen = ({ navigation }) => {
                 customers[j++] = members[i]
             }
         }
-        let myUserId = await getDataFromAsyncStorage(keys.userId);
-        customers[j++] = { "id": myUserId }
+        // let myUserId = await getDataFromAsyncStorage(keys.userId);
+        // customers[j++] = { "id": myUserId }
 
         let locations = _locationData;
         storeMembers(customers);

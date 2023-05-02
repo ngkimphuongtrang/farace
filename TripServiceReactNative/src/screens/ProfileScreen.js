@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     Text, TouchableOpacity, View
 } from 'react-native';
-import {usernameKey } from '../constants';
+import { keys } from '../constants';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
 import { getDataFromAsyncStorage } from '../components/util';
@@ -17,16 +17,11 @@ const ProfileScreen = ({ navigation }) => {
     };
     useEffect(() => {
         async function getData() {
-            let myUsername = await getDataFromAsyncStorage(usernameKey);
+            let myUsername = await getDataFromAsyncStorage(keys.username);
             setUsername(myUsername)
         }
         getData()
     }, [])
-    // async function getData() {
-    //     let myUsername = await getDataFromAsyncStorage(usernameKey);
-    //     console.log("username", myUsername);
-    //     setUsername(myUsername)
-    // }
     return (
         <View>
             {/* <TouchableOpacity

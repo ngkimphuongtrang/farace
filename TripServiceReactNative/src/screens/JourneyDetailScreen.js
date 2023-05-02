@@ -13,58 +13,72 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     let groupIdValue = JSON.stringify(groupId);
     groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
-    console.log("GET:", endpoints.tripDetail + groupIdValue + "/detail", typeof groupIdValue);
+    console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
+
     async function getData() {
-      axios.get(`${endpoints.tripDetail}${groupId}/detail`)
+      axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
         .then(function (response) {
           console.log("Journey Detail Screen:", response, response.data);
           setLocation(response.data.locations);
           setMember(response.data.customers);
+
+          console.log(location, member);
         })
     }
     getData()
 
   }, [])
-  const renderLocations = () => {
-    return location.map((l, i) => (
-      <View
-        key={i}
-        style={[
-          styles.locationContainer,
-          { backgroundColor: i % 2 === 0 ? colors.generic3 : colors.generic4 }
-        ]}
-      >
-        <Text style={styles.locationText}>{`${i + 1} - ${l.name}`}</Text>
-      </View>
-    ));
-  };
-
-  const renderMembers = () => {
-    return member.map((m, i) => (
-      <View
-        key={i}
-        style={[
-          styles.memberContainer,
-          { backgroundColor: i % 2 === 0 ? colors.spot1 : colors.spot2 }
-        ]}
-      >
-        <Text style={styles.memberText}>{`${i + 1} - ${m.firstName} ${m.lastName} - ${m.email}\n`}</Text>
-      </View>
-    ));
-  };
 
   return (
     <View style={styles.ContainerScreen}>
       <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-          {renderLocations}
+          {location.map((l, i) =>
+            i % 2 == 0 ?
+              <View style={[
+                {
+                  alignContent: 'center', marginBottom: 5,
+                  backgroundColor: colors.generic3
+                },
+                styles.BorderStyle, { borderColor: colors.generic3 }
+              ]}>
+                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
+              </View> :
+              <View style={[
+                {
+                  alignContent: 'center', marginBottom: 5,
+                  backgroundColor: colors.generic4
+                },
+                styles.BorderStyle,
+                { borderColor: colors.generic4 }]}>
+                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
+              </View>)
+          }
         </ScrollView>
       </SafeAreaView>
       <SafeAreaView style={myStyles.safeAreaViewContainer}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-          {renderMembers}
+          {member.map((l, i) =>
+            i % 2 == 0 ?
+              <View style={[
+                {
+                  alignContent: 'center',
+                  //  marginBottom: 5,
+                  backgroundColor: colors.spot1
+                },
+                styles.BorderStyle, { borderColor: colors.spot1 }
+              ]}>
+                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
+              </View> :
+              <View style={[
+                { alignContent: 'center', backgroundColor: colors.spot2 },
+                styles.BorderStyle,
+                { borderColor: colors.spot2 }]}>
+                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} - {l.email} {'\n'}</Text>
+              </View>)
+          }
         </ScrollView>
       </SafeAreaView>
       <View style={myStyles.buttonContainer}>

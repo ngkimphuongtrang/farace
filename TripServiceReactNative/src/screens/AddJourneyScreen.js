@@ -1,6 +1,6 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    View, StyleSheet, Button, Text, ScrollView, StatusBar
+    View, StyleSheet, Button, Text, ScrollView, StatusBar, Alert
 } from 'react-native';
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -17,31 +17,31 @@ const AddJourneyScreen = ({ navigation }) => {
     const [locationName, setLocationName] = useState([]);
     const [coordinate, setCoordinate] = useState(
         {
-          latitude: 10.7212249,
-          longitude: 106.6673316,
-        })    
+            latitude: 10.7212249,
+            longitude: 106.6673316,
+        })
     useEffect(() => {
         Geolocation.getCurrentPosition(
             (position) => {
-                setCoordinate({latitude: position.coords.latitude,longitude: position.coords.longitude})
-                })
-        },[]);
+                setCoordinate({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+            })
+    }, []);
 
     const [routes, setRoutes] = useState([]);
     useEffect(() => {
         calculateRoutes();
-      }, [location]);
+    }, [location]);
     const calculateRoutes = () => {
         const routes = [];
         for (let i = 0; i < location.length - 1; i++) {
             const origin = location[i];
             const destination = location[i + 1];
             routes.push({
-            origin,
-            destination,
-            waypoints: [],
+                origin,
+                destination,
+                waypoints: [],
             });
-        }        
+        }
         setRoutes(routes);
     };
     const setLocationValue = async () => {
@@ -54,7 +54,7 @@ const AddJourneyScreen = ({ navigation }) => {
         console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
     }
     const handlePlaceSelected = (data, details = null) => {
-        
+
         const newLocation = details?.geometry?.location;
         const locationObj = {
             latitude: newLocation.lat,
@@ -64,68 +64,81 @@ const AddJourneyScreen = ({ navigation }) => {
         setLocation((oldArray) => [...oldArray, locationObj]);
         setLocationName((oldArray) => [...oldArray, data.description]);
     };
+    const handleAddLocations = () => {
+        if (location.length < 2) {
+            Alert.alert('Chọn địa điểm không hợp lệ', "Hành trình chứa ít nhất 2 địa điểm.", [
+                {
+                    text: 'Thử lại',
+                    onPress: () => console.log('OK Pressed'),
+                },
+            ]);
+            return;
+        }
+        setLocationValue();
+        navigation.navigate("AddMember");
+    }
     console.log(location)
     return (
         <View style={styles.ContainerScreen}>
             {
-                location.length === 0 ? 
-                (
-                <MapView
-                    style={mystyles.map}
-                    initialRegion={
-                    {
-                        latitude: coordinate.latitude,
-                        longitude: coordinate.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }
-                    }>
-                </MapView>
-                ) : 
-                (<MapView
-                    style={mystyles.map}
-                    initialRegion={
-                        {
-                            latitude: coordinate.latitude,
-                            longitude: coordinate.longitude,
+                location.length === 0 ?
+                    (
+                        <MapView
+                            style={mystyles.map}
+                            initialRegion={
+                                {
+                                    latitude: coordinate.latitude,
+                                    longitude: coordinate.longitude,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }
+                            }>
+                        </MapView>
+                    ) :
+                    (<MapView
+                        style={mystyles.map}
+                        initialRegion={
+                            {
+                                latitude: coordinate.latitude,
+                                longitude: coordinate.longitude,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }
+                        }
+                        region={{
+                            latitude: location[location.length - 1].latitude,
+                            longitude: location[location.length - 1].longitude,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }
-                    }
-                        region={{
-                        latitude: location[location.length-1].latitude,
-                        longitude: location[location.length-1].longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        }>
+                        {
+                            location.map((coordinate, index) =>
+                                <Marker
+                                    key={index}
+                                    coordinate={{
+                                        latitude: coordinate["latitude"],
+                                        longitude: coordinate["longitude"],
+                                    }}
+                                    draggable
+                                />
+                            )
                         }
-                    }>
-                    {
-                    location.map((coordinate,index) =>
-                        <Marker
-                            key={index}
-                            coordinate={{
-                            latitude: coordinate["latitude"],
-                            longitude: coordinate["longitude"],
-                            }}
-                            draggable
-                        />
-                        )
-                    }
-                    {routes.map((route, index) => (
-                        <MapViewDirections
-                            key={index}
-                            origin={route.origin}
-                            waypoints={route.waypoints}
-                            destination={route.destination}
-                            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
-                            strokeWidth={4}
-                            strokeColor="rgb(0,139,241)"
-                        />
-                    ))}
-                </MapView>
-                )
+                        {routes.map((route, index) => (
+                            <MapViewDirections
+                                key={index}
+                                origin={route.origin}
+                                waypoints={route.waypoints}
+                                destination={route.destination}
+                                apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+                                strokeWidth={4}
+                                strokeColor="rgb(0,139,241)"
+                            />
+                        ))}
+                    </MapView>
+                    )
             }
-            
+
             <View style={[mystyles.input, { flex: 0.8 }]}>
                 <View style={[mystyles.input]}>
                     <GooglePlacesAutocomplete
@@ -179,7 +192,7 @@ const AddJourneyScreen = ({ navigation }) => {
 
                 <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
                     <Button
-                        onPress={() => { setLocationValue(); navigation.navigate("AddMember"); }}
+                        onPress={handleAddLocations}
                         title="Tiếp tục"
                         color={colors.primary}
                     />

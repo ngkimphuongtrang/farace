@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from 'react-native-paper';
-// import { endpoints } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
@@ -34,7 +32,6 @@ const SignInScreen = ({ navigation }) => {
         isValidPassword: true,
     });
 
-    const { colors } = useTheme();
 
     //const { signIn } = React.useContext(AuthContext);
 
@@ -174,7 +171,7 @@ const SignInScreen = ({ navigation }) => {
                     <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
                 </TouchableOpacity>
                 <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
                         <Button
                             onPress={async () => {
                                 let success = await signIn(data.username, data.password);
@@ -186,7 +183,7 @@ const SignInScreen = ({ navigation }) => {
                                 }
                             }}
                             title="Đăng nhập"
-                            color={colors.primary}
+                            color={colors.generic2}
                         />
                     </View>
                     <View style={[

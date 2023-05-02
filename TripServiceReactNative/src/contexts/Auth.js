@@ -1,9 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { authService } from '../services/authService';
-import { userIdKey, usernameKey } from '../constants';
 import { keys } from '../constants';
+
 //Create the Auth Context with the data type specified
 //and a empty object
 const AuthContext = createContext();
@@ -61,13 +60,8 @@ const AuthProvider = ({ children }) => {
   const storeData = async (loginToken, userId, username) => {
     try {
       await AsyncStorage.setItem('@MyAuthData', loginToken);
-<<<<<<< HEAD
       await AsyncStorage.setItem(keys.userId, userId);
       await AsyncStorage.setItem(keys.username, username);
-=======
-      await AsyncStorage.setItem('@userId', userId);
-      await AsyncStorage.setItem('@username', username);
->>>>>>> a04e3c767f96c4e2a1c63ea08dcf8a55be85abcc
     } catch (error) {
       console.log("store Data fail", error)
     }
