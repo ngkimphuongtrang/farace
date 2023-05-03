@@ -4,17 +4,22 @@ import {
     Image,
     StyleSheet,
 } from 'react-native';
-import { LOGO_GREEN } from '../assets/image/index.js';
+import { BACKGROUND_HOME, LOGO_GREEN } from '../assets/image/index.js';
 import { colors } from '../constants/index.js';
 
 const HomeScreen = ({ navigation }) => {
     console.log("navigation:", navigation)
     return (
         <View style={styles.container}>
-            <View style={{ flex: 1 }}>
+            <Image source={BACKGROUND_HOME} style={{
+                width: '100%',
+                height: '100%',
+                // aspectRatio: 1,
+            }}></Image>
+            {/* <View style={{ flex: 1 }}>
 
 
-            </View>
+            </View> */}
 
             <View style={styles.logoContainer}>
                 <Image
@@ -22,12 +27,11 @@ const HomeScreen = ({ navigation }) => {
                     style={styles.logo}
                 ></Image>
             </View>
-            <View style={{
-                flex: 3,
-            }}
-            >
-            </View>
-        </View>
+            {/* <View style={{
+                 flex: 3,
+             }}
+             </View>  */}
+        </View >
     );
 };
 
@@ -38,19 +42,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.primary,
     },
-    // header: {
-    //     flex: 1,
-    //     justifyContent: 'flex-end',
-    //     paddingHorizontal: 20,
-    //     paddingBottom: 50
-    // },
     logo: {
-        height: 50,
-        width: 50 * 2.7,
+        height: 60,
+        width: 60 * 2.7,
+
     },
     logoContainer: {
+        marginTop: 320,
+        marginLeft: 30,
         flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute',
     },
 });

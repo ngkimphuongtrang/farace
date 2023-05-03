@@ -4,13 +4,16 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from '../styles/CommonStyles';
-import { useNavigation } from '@react-navigation/native';
 import { colors } from '../constants';
+import MapView, { Marker } from "react-native-maps";
+import { BLUE_MARKER_ICON } from '../assets/image';
+import MapViewDirections from 'react-native-maps-directions';
 
-const JourneySummaryScreen = ({ navigation: { goBack } }) => {
-  const navigation = useNavigation();
+const JourneySummaryScreen = ({ navigation }) => {
+  // const navigation = useNavigation();
   const [location, setLocation] = useState([]);
   const [member, setMember] = useState([]);
+  const [routes, setRoutes] = useState([]);
   useEffect(() => {
     async function getData() {
       const locationSerialized = await AsyncStorage.getItem("@location");
@@ -29,8 +32,70 @@ const JourneySummaryScreen = ({ navigation: { goBack } }) => {
     getData()
 
   }, [])
+
+  useEffect(() => {
+    calculateRoutes();
+  }, [location]);
+  const calculateRoutes = () => {
+    const routes = [];
+    for (let i = 0; i < location.length - 1; i++) {
+      const origin = location[i];
+      const destination = location[i + 1];
+      routes.push({
+        origin,
+        destination,
+        waypoints: [],
+      });
+    }
+    setRoutes(routes);
+  };
+  console.log(location);
   return (
     <View style={styles.ContainerScreen}>
+      <MapView
+        style={myStyles.map}
+        region={{
+          latitude: location && location.length > 0 ? location[location.length - 1].latitude : 0,
+          longitude: location && location.length > 0 ? location[location.length - 1].longitude : 0,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }
+        }>
+        {
+          location.map((coordinate, index) =>
+            index == location.length - 1 ? <Marker
+              key={index}
+              coordinate={{
+                latitude: coordinate["latitude"],
+                longitude: coordinate["longitude"],
+              }}
+              draggable
+
+            /> : <Marker
+              key={index}
+              coordinate={{
+                latitude: coordinate["latitude"],
+                longitude: coordinate["longitude"],
+              }}
+              draggable
+              image={BLUE_MARKER_ICON} // red is destination
+            />
+
+
+          )
+        }
+        {routes.map((route, index) => (
+          <MapViewDirections
+            key={index}
+            origin={route.origin}
+            waypoints={route.waypoints}
+            destination={route.destination}
+            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+            strokeWidth={4}
+            strokeColor="rgb(0,139,241)"
+          />
+        ))}
+      </MapView>
       {/* <SafeAreaView style={{
         flex: 1,
         paddingTop: StatusBar.currentHeight
@@ -133,5 +198,8 @@ const myStyles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center'
-  }
+  },
+  map: {
+    flex: 3
+  },
 })

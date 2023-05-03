@@ -97,7 +97,16 @@ const SignInScreen = ({ navigation }) => {
                 onPress: () => navigation.navigate("SignInScreen"),
             },
         ]);
-
+    const handleLogIn = async () => {
+        let success = await signIn(data.username, data.password);
+        console.log("success:", success);
+        if (success) {
+            // navigation.navigate("BottomTab", { screen: 'Home' });
+            navigation.navigate('Home');
+        } else {
+            signInFail();
+        }
+    }
     return (
         <View style={myStyles.container}>
             <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
@@ -171,17 +180,12 @@ const SignInScreen = ({ navigation }) => {
                     <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
                 </TouchableOpacity>
                 <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-                    <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
+                    <View style={[
+                        { width: "40%", alignContent: 'center', marginBottom: 5 },
+                        styles.BorderStyle,
+                        { borderColor: colors.generic2 }]}>
                         <Button
-                            onPress={async () => {
-                                let success = await signIn(data.username, data.password);
-                                console.log("success:", success);
-                                if (success) {
-                                    navigation.navigate("BottomTab", { screen: 'Home' });
-                                } else {
-                                    signInFail();
-                                }
-                            }}
+                            onPress={handleLogIn}
                             title="Đăng nhập"
                             color={colors.generic2}
                         />
@@ -189,11 +193,11 @@ const SignInScreen = ({ navigation }) => {
                     <View style={[
                         { width: "40%", alignContent: 'center', marginBottom: 5 },
                         styles.BorderStyle,
-                        { borderColor: colors.generic1 }]}>
+                        { borderColor: colors.generic3 }]}>
                         <Button
                             onPress={() => { navigation.navigate("SignUpScreen"); }}
                             title="Đăng ký"
-                            color={colors.generic1}
+                            color={colors.generic3}
                         />
                     </View>
                 </View>

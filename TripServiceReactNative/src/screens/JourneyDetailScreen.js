@@ -5,11 +5,20 @@ import {
 import { colors, endpoints } from '../constants';
 import { styles } from '../styles/CommonStyles';
 import axios from 'axios';
+import MapViewDirections from 'react-native-maps-directions';
+import { BLUE_MARKER_ICON } from '../assets/image/index.js';
+import MapView, { Marker } from "react-native-maps";
 
 const JourneyDetailScreen = ({ route, navigation }) => {
   const { groupId } = route.params;
   const [location, setLocation] = useState([]);
   const [member, setMember] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [coordinate, setCoordinate] = useState(
+    {
+      latitude: 10.7212249,
+      longitude: 106.6673316,
+    })
   useEffect(() => {
     let groupIdValue = JSON.stringify(groupId);
     groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
@@ -28,9 +37,93 @@ const JourneyDetailScreen = ({ route, navigation }) => {
     getData()
 
   }, [])
-
+  useEffect(() => {
+    calculateRoutes();
+  }, [location]);
+  const calculateRoutes = () => {
+    const routes = [];
+    for (let i = 0; i < location.length - 1; i++) {
+      const origin = location[i];
+      const destination = location[i + 1];
+      routes.push({
+        origin,
+        destination,
+        waypoints: [],
+      });
+    }
+    setRoutes(routes);
+  };
   return (
     <View style={styles.ContainerScreen}>
+      {
+        location.length === 0 ?
+          (
+            <MapView
+              style={myStyles.map}
+              initialRegion={
+                {
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }
+              }>
+            </MapView>
+          ) :
+          (<MapView
+            style={myStyles.map}
+            initialRegion={
+              {
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }
+            }
+            region={{
+              latitude: location[location.length - 1].latitude,
+              longitude: location[location.length - 1].longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }
+            }>
+            {
+              location.map((coordinate, index) =>
+                index == location.length - 1 ? <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: coordinate["latitude"],
+                    longitude: coordinate["longitude"],
+                  }}
+                  draggable
+
+                /> : <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: coordinate["latitude"],
+                    longitude: coordinate["longitude"],
+                  }}
+                  draggable
+                  image={BLUE_MARKER_ICON} // red is destination
+                />
+
+
+              )
+            }
+            {routes.map((route, index) => (
+              <MapViewDirections
+                key={index}
+                origin={route.origin}
+                waypoints={route.waypoints}
+                destination={route.destination}
+                apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+                strokeWidth={4}
+                strokeColor="rgb(0,139,241)"
+              />
+            ))}
+          </MapView>
+          )
+      }
       <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
@@ -69,7 +162,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
                   backgroundColor: colors.spot1
                 },
                 styles.BorderStyle, { borderColor: colors.spot1 }
-              ]}key={i}>
+              ]} key={i}>
                 <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
               </View> :
               <View style={[
@@ -103,5 +196,8 @@ const myStyles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center'
+  },
+  map: {
+    flex: 3
   }
 })

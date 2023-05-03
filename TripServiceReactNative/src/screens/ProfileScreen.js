@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, TouchableOpacity, View
+    Text, TouchableOpacity, View, Image, StyleSheet
 } from 'react-native';
 import { keys } from '../constants';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
 import { getDataFromAsyncStorage } from '../components/util';
 import { colors } from '../constants';
+import { BACKGROUND_PROFILE } from '../assets/image';
 
 const ProfileScreen = ({ navigation }) => {
     const [username, setUsername] = useState();
@@ -23,22 +24,20 @@ const ProfileScreen = ({ navigation }) => {
         getData()
     }, [])
     return (
-        <View>
-            {/* <TouchableOpacity
-                style={[styles.AppButtonContainer, {
-                    backgroundColor: primaryColor
-                }]}
-                onPress={() => {
-                    getData()
-                }}
-            > */}
-            <Text style={[styles.AppButtonText, {
-                color: 'black',
-            }]}>{username}</Text>
-            {/* </TouchableOpacity > */}
+        <View style={myStyles.container}>
+            <Image source={BACKGROUND_PROFILE} style={{
+                width: '100%',
+                height: '100%',
+                // aspectRatio: 1,
+            }}></Image>
+            <View style={{ position: 'absolute' }}>
+                <Text style={{
+                    color: 'white', fontWeight: 'bold'
+                }}>{username}</Text>
+            </View>
             <TouchableOpacity
-                style={[styles.AppButtonContainer, {
-                    backgroundColor: colors.primary
+                style={[styles.AppButtonContainer, myStyles.container, {
+                    backgroundColor: colors.primary, position: 'absolute',
                 }]}
                 onPress={() => {
                     logOut();
@@ -48,9 +47,20 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={[styles.AppButtonText, {
                     color: 'white',
                 }]}>Đăng xuất</Text>
-            </TouchableOpacity ></View>
+                <Text style={{
+                    color: 'white', fontWeight: 'bold'
+                }}>{username}</Text>
+            </TouchableOpacity >
+        </View>
     );
 };
 
 export default ProfileScreen;
+
+const myStyles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+})
 

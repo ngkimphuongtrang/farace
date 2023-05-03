@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, StyleSheet, Button, Text, ScrollView, StatusBar, Alert
+    View, StyleSheet, Button, Text, ScrollView, StatusBar, Alert, TouchableOpacity
 } from 'react-native';
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -11,10 +11,10 @@ import { styles } from '../styles/CommonStyles.js';
 import { colors } from '../constants/index.js';
 import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from 'react-native-maps-directions';
+import { BLUE_MARKER_ICON } from '../assets/image/index.js';
 
 const AddJourneyScreen = ({ navigation }) => {
     const [location, setLocation] = useState([]);
-    const [locationName, setLocationName] = useState([]);
     const [coordinate, setCoordinate] = useState(
         {
             latitude: 10.7212249,
@@ -46,15 +46,14 @@ const AddJourneyScreen = ({ navigation }) => {
     };
     const setLocationValue = async () => {
         try {
+
             await AsyncStorage.setItem('@location', JSON.stringify(location))
-            await AsyncStorage.setItem('@locationName', JSON.stringify(locationName))
         } catch (e) {
             // save error
         }
-        console.log('Set @location in AsyncStorage done:', JSON.stringify(location))
+        console.log('Set @location in AsyncStorage done:', JSON.stringify(location));
     }
     const handlePlaceSelected = (data, details = null) => {
-
         const newLocation = details?.geometry?.location;
         const locationObj = {
             latitude: newLocation.lat,
@@ -62,7 +61,6 @@ const AddJourneyScreen = ({ navigation }) => {
             name: data.description,
         };
         setLocation((oldArray) => [...oldArray, locationObj]);
-        setLocationName((oldArray) => [...oldArray, data.description]);
     };
     const handleAddLocations = () => {
         if (location.length < 2) {
@@ -77,14 +75,34 @@ const AddJourneyScreen = ({ navigation }) => {
         setLocationValue();
         navigation.navigate("AddMember");
     }
-    console.log(location)
+    const handleClickLocation = (index) => {
+        Alert.alert('Xóa địa điểm này?', "", [
+            {
+                text: 'Xóa',
+                onPress: () => {
+                    let chosenLocation = []
+                    let j = 0
+                    for (let i = 0; i < location.length; i++) {
+                        if (i != index) {
+                            chosenLocation[j++] = location[i]
+                        }
+                    }
+                    setLocation(chosenLocation);
+                },
+            },
+            {
+                text: 'Quay lại',
+                onPress: () => console.log('Go Back Pressed'),
+            }
+        ]);
+    }
     return (
         <View style={styles.ContainerScreen}>
             {
                 location.length === 0 ?
                     (
                         <MapView
-                            style={mystyles.map}
+                            style={myStyles.map}
                             initialRegion={
                                 {
                                     latitude: coordinate.latitude,
@@ -96,7 +114,7 @@ const AddJourneyScreen = ({ navigation }) => {
                         </MapView>
                     ) :
                     (<MapView
-                        style={mystyles.map}
+                        style={myStyles.map}
                         initialRegion={
                             {
                                 latitude: coordinate.latitude,
@@ -114,14 +132,25 @@ const AddJourneyScreen = ({ navigation }) => {
                         }>
                         {
                             location.map((coordinate, index) =>
-                                <Marker
+                                index == location.length - 1 ? <Marker
                                     key={index}
                                     coordinate={{
                                         latitude: coordinate["latitude"],
                                         longitude: coordinate["longitude"],
                                     }}
                                     draggable
+
+                                /> : <Marker
+                                    key={index}
+                                    coordinate={{
+                                        latitude: coordinate["latitude"],
+                                        longitude: coordinate["longitude"],
+                                    }}
+                                    draggable
+                                    image={BLUE_MARKER_ICON} // red is destination
                                 />
+
+
                             )
                         }
                         {routes.map((route, index) => (
@@ -139,8 +168,8 @@ const AddJourneyScreen = ({ navigation }) => {
                     )
             }
 
-            <View style={[mystyles.input, { flex: 0.8 }]}>
-                <View style={[mystyles.input]}>
+            <View style={[myStyles.input, { flex: 0.8 }]}>
+                <View style={[myStyles.input]}>
                     <GooglePlacesAutocomplete
                         GooglePlacesDetailsQuery={{ fields: "geometry" }}
                         fetchDetails={true}
@@ -179,17 +208,24 @@ const AddJourneyScreen = ({ navigation }) => {
                     <ScrollView style={{
                         marginHorizontal: 20,
                     }}>
-                        {locationName.map((l, i) =>
-                            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.primary }, styles.BorderStyle]}>
-                                <Text>{i + 1} - {l}</Text>
-                            </View>
+                        {location.map((l, i) =>
+                            <TouchableOpacity onPress={() => handleClickLocation(i)}>
+
+
+                                <View style={[
+                                    { alignContent: 'center', marginBottom: 5, backgroundColor: colors.spot1, flexDirection: 'row' },
+                                    myStyles.BorderStyle]}>
+                                    <Text style={{ fontStyle: 'italic' }}>{i + 1}, </Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{l.name}</Text>
+                                </View></TouchableOpacity>
                         )}
 
                     </ScrollView>
                 </SafeAreaView>
             </View>
-            <View style={[mystyles.button, { alignContent: 'space-between' }]}>
-
+            <View style={[
+                myStyles.button,
+                { alignContent: 'space-between', flex: 0.2 }]}>
                 <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
                     <Button
                         onPress={handleAddLocations}
@@ -203,13 +239,12 @@ const AddJourneyScreen = ({ navigation }) => {
 };
 export default AddJourneyScreen;
 
-const mystyles = StyleSheet.create({
-
+const myStyles = StyleSheet.create({
     map: {
         flex: 0.6
     },
     input: {
-        flex: 0.25,
+        flex: 3,
         flexDirection: 'column',
         justifyContent: 'space-around',
         flexGrow: 1,
@@ -217,5 +252,10 @@ const mystyles = StyleSheet.create({
     button: {
         alignItems: 'center',
         marginTop: 50
+    },
+    BorderStyle: {
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.primary,
     },
 });

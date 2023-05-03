@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
-import { useTheme } from 'react-native-paper';
 import { endpoints } from '../constants';
 import { LOGO_GREEN } from '../assets/image';
 import { styles } from '../styles/CommonStyles';
@@ -26,12 +25,14 @@ const SignUpScreen = () => {
   const [registerInfo, setData] = useState({
     username: '',
     password: '',
+    rePassword: '',
     firstName: '',
     lastName: '',
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
+    isValidRePassword: true,
   });
 
   const textInputChange = (val) => {
@@ -64,6 +65,21 @@ const SignUpScreen = () => {
         ...registerInfo,
         password: val,
         isValidPassword: false
+      });
+    }
+  }
+  const handleRePasswordChange = (val) => {
+    if (val == registerInfo.password) {
+      setData({
+        ...registerInfo,
+        rePassword: val,
+        isValidRePassword: true
+      });
+    } else {
+      setData({
+        ...registerInfo,
+        rePassword: val,
+        isValidRePassword: false
       });
     }
   }
@@ -136,10 +152,10 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Tên đăng nhập"
-            placeholderTextColor="#666666"
-            style={[myStyles.textInput, {
-              color: colors.text
-            }]}
+            // placeholderTextColor="#666666"
+            // style={[myStyles.textInput, {
+            //   color: colors.text
+            // }]}
             autoCapitalize="none"
             onChangeText={(val) => textInputChange(val)}
             onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
@@ -159,7 +175,7 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Mật khẩu"
-            placeholderTextColor="#666666"
+            // placeholderTextColor="#666666"
             secureTextEntry={registerInfo.secureTextEntry ? true : false}
             style={[myStyles.textInput, {
               // color: colors.text
@@ -177,23 +193,45 @@ const SignUpScreen = () => {
             <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
           </Animatable.View>
         }
+
+        <View style={myStyles.action}>
+          <TextInput
+            placeholder="Nhập lại mật khẩu"
+            // placeholderTextColor="#666666"
+            secureTextEntry={registerInfo.secureTextEntry ? true : false}
+            style={[myStyles.textInput, {
+              // color: colors.text
+            }]}
+            autoCapitalize="none"
+            onChangeText={(val) => handleRePasswordChange(val)}
+          />
+          <TouchableOpacity
+            onPress={updateSecureTextEntry}
+          >
+          </TouchableOpacity>
+        </View>
+        {registerInfo.isValidRePassword ? null :
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={myStyles.errorMsg}>Nhập lại mật khẩu không khớp với mật khẩu</Text>
+          </Animatable.View>
+        }
         <TextInput
           placeholder="Nhập tên"
           onChangeText={(val) => setFirstname(val)} />
         <TextInput placeholder='Nhập họ' onChangeText={(val) => setLastName(val)} />
         <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic3 }]}>
             <Button
               onPress={() => handleRegister()}
               title="Đăng ký"
-              color={colors.generic2}
+              color={colors.generic3}
             />
           </View>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic1 }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
-              color={colors.generic1}
+              color={colors.generic2}
             />
           </View>
         </View>

@@ -21,3 +21,11 @@ export const ADD_ICON = require('./add.png')
 export const BACK_ICON = require('./back.png')
 
 export const AnimationJson = require('./lf20_fnjH1K.json')
+
+export const BLUE_MARKER_ICON = require('./pin.png');
+
+export const BACKGROUND_HOME = require('./jairph-1XLyzi17Z2M-unsplash.jpg');
+
+export const BACKGROUND_FRIEND = require('./michael-henry-8TNbGM3iu9o-unsplash.jpg');
+
+export const BACKGROUND_PROFILE = require('./arya-dubey-8eYI8qcEFxI-unsplash.jpg');
