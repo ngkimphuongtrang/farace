@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, Button, SafeAreaView, ScrollView, StatusBar, Text, StyleSheet
+  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from '../styles/CommonStyles';
@@ -8,6 +8,8 @@ import { colors } from '../constants';
 import MapView, { Marker } from "react-native-maps";
 import { BLUE_MARKER_ICON } from '../assets/image';
 import MapViewDirections from 'react-native-maps-directions';
+import MemberComponent from '../components/MemberComponent';
+import LocationComponent from '../components/LocationComponent';
 
 const JourneySummaryScreen = ({ navigation }) => {
   // const navigation = useNavigation();
@@ -51,7 +53,7 @@ const JourneySummaryScreen = ({ navigation }) => {
   };
   console.log(location);
   return (
-    <View style={styles.ContainerScreen}>
+    <SafeAreaView style={styles.ContainerScreen}>
       <MapView
         style={myStyles.map}
         region={{
@@ -96,58 +98,33 @@ const JourneySummaryScreen = ({ navigation }) => {
           />
         ))}
       </MapView>
-      {/* <SafeAreaView style={{
-        flex: 1,
-        paddingTop: StatusBar.currentHeight
-      }}>
-
-        <ScrollView style={{
-          marginHorizontal: 20,
-        }}>
-
-          {location.map((l, i) =>
-            <View style={[{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.primary }, styles.BorderStyle]}>
-              <Text>{i + 1} - {l}</Text>
-            </View>)}
-
-        </ScrollView>
-      </SafeAreaView>
-      <SafeAreaView style={{
-        flex: 1,
-        paddingTop: StatusBar.currentHeight
-      }}>
-
-        <ScrollView style={{
-          backgroundColor: colors.primary,
-          marginHorizontal: 20,
-        }}>
-          {member.map((l, i) => <Text>{i + 1} - {l.firstName}{l.lastName} {'\n'}</Text>)}
-        </ScrollView>
-      </SafeAreaView> */}
-
       <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
           {location.map((l, i) =>
             i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: colors.generic3
-                },
-                styles.BorderStyle, { borderColor: colors.generic3 }
-              ]} key={i}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View> :
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: colors.generic4
-                },
-                styles.BorderStyle,
-                { borderColor: colors.generic4 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View>)
+              <LocationComponent location={l} i={i} backgroundColor={colors.generic3} />
+              // <View style={[
+              //   {
+              //     alignContent: 'center', marginBottom: 5,
+              //     backgroundColor: colors.generic3
+              //   },
+              //   styles.BorderStyle, { borderColor: colors.generic3 }
+              // ]} key={i}>
+              //   <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
+              // </View> 
+              :
+              <LocationComponent location={l} i={i} backgroundColor={colors.generic4} />
+            // <View style={[
+            //   {
+            //     alignContent: 'center', marginBottom: 5,
+            //     backgroundColor: colors.generic4
+            //   },
+            //   styles.BorderStyle,
+            //   { borderColor: colors.generic4 }]}>
+            //   <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
+            // </View>
+          )
           }
         </ScrollView>
       </SafeAreaView>
@@ -156,22 +133,25 @@ const JourneySummaryScreen = ({ navigation }) => {
         <ScrollView style={myStyles.scrollViewContainer}>
           {member.map((l, i) =>
             i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center',
-                  //  marginBottom: 5,
-                  backgroundColor: colors.spot1
-                },
-                styles.BorderStyle, { borderColor: colors.spot1 }
-              ]} key={i}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
-              </View> :
-              <View style={[
-                { alignContent: 'center', backgroundColor: colors.spot2 },
-                styles.BorderStyle,
-                { borderColor: colors.spot2 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} - {l.email} {'\n'}</Text>
-              </View>)
+              <MemberComponent member={l} i={i} backgroundColor={colors.spot1} />
+              // <View style={[
+              //   {
+              //     alignContent: 'center',
+              //     //  marginBottom: 5,
+              //     backgroundColor: colors.spot1
+              //   },
+              //   styles.BorderStyle, { borderColor: colors.spot1 }
+              // ]} key={i}>
+              //   <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
+              // </View> 
+              : <MemberComponent member={l} i={i} backgroundColor={colors.spot2} />
+            // <View style={[
+            //   { alignContent: 'center', backgroundColor: colors.spot2 },
+            //   styles.BorderStyle,
+            //   { borderColor: colors.spot2 }]}>
+            //   <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} - {l.email} {'\n'}</Text>
+            // </View>
+          )
           }
         </ScrollView>
       </SafeAreaView>
@@ -181,7 +161,7 @@ const JourneySummaryScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("LiveJourney")}>
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

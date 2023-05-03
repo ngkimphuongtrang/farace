@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, StyleSheet, Button, Text, ScrollView, StatusBar, Alert, TouchableOpacity
+    View, StyleSheet, Button, ScrollView, StatusBar, Alert, TouchableOpacity, Image
 } from 'react-native';
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -12,6 +12,8 @@ import { colors } from '../constants/index.js';
 import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from 'react-native-maps-directions';
 import { BLUE_MARKER_ICON } from '../assets/image/index.js';
+import { REMOVE_ICON } from '../assets/image/index.js';
+import LocationComponent from '../components/LocationComponent';
 
 const AddJourneyScreen = ({ navigation }) => {
     const [location, setLocation] = useState([]);
@@ -61,6 +63,7 @@ const AddJourneyScreen = ({ navigation }) => {
             name: data.description,
         };
         setLocation((oldArray) => [...oldArray, locationObj]);
+        placeholder = "";
     };
     const handleAddLocations = () => {
         if (location.length < 2) {
@@ -97,7 +100,7 @@ const AddJourneyScreen = ({ navigation }) => {
         ]);
     }
     return (
-        <View style={styles.ContainerScreen}>
+        <SafeAreaView style={styles.ContainerScreen}>
             {
                 location.length === 0 ?
                     (
@@ -173,35 +176,19 @@ const AddJourneyScreen = ({ navigation }) => {
                     <GooglePlacesAutocomplete
                         GooglePlacesDetailsQuery={{ fields: "geometry" }}
                         fetchDetails={true}
-                        styles={{
-                            textInputContainer: {
-                                borderRadius: 5,
-                                borderWidth: 1,
-                                flexDirection: 'row',
-                                height: 40,
-                            },
-                            textInput: {
-                                height: 38,
-                                color: '#A11919',
-                                fontSize: 15,
-                                flex: 1,
-                                backgroundColor: "#F9F0F0"
-                            },
-                            container: {
-                                margin: 20,
-                                flex: 1,
-                                marginBottom: 5
-                            }
-                        }}
+                        styles={myStyles.autocomplete}
                         placeholder='Chọn địa điểm'
                         onPress={handlePlaceSelected}
                         query={{
                             key: 'AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8',
                             language: 'en',
                         }}
+                    // textInputProps={{
+                    //     InputComp: Input,
+                    // }}
                     />
                 </View>
-                <SafeAreaView style={{
+                <View style={{
                     flex: 1,
                     paddingTop: StatusBar.currentHeight
                 }}>
@@ -209,19 +196,20 @@ const AddJourneyScreen = ({ navigation }) => {
                         marginHorizontal: 20,
                     }}>
                         {location.map((l, i) =>
-                            <TouchableOpacity onPress={() => handleClickLocation(i)}>
-
-
-                                <View style={[
-                                    { alignContent: 'center', marginBottom: 5, backgroundColor: colors.spot1, flexDirection: 'row' },
+                            <View key={i} style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+                                <LocationComponent location={l} i={i} backgroundColor={colors.spot1} otherStyle={{ maxWidth: 320 }} />
+                                {/* <View style={[
+                                    { alignContent: 'center', marginBottom: 5, backgroundColor: colors.spot1, flexDirection: 'row', maxWidth: 320 },
                                     myStyles.BorderStyle]}>
                                     <Text style={{ fontStyle: 'italic' }}>{i + 1}, </Text>
                                     <Text style={{ fontWeight: 'bold' }}>{l.name}</Text>
-                                </View></TouchableOpacity>
+                                </View> */}
+                                <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
+                            </View>
                         )}
 
                     </ScrollView>
-                </SafeAreaView>
+                </View>
             </View>
             <View style={[
                 myStyles.button,
@@ -234,7 +222,7 @@ const AddJourneyScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
-        </View >
+        </SafeAreaView >
     );
 };
 export default AddJourneyScreen;
@@ -258,4 +246,24 @@ const myStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.primary,
     },
+    autocomplete: {
+        textInputContainer: {
+            borderRadius: 5,
+            borderWidth: 1,
+            flexDirection: 'row',
+            height: 40,
+        },
+        textInput: {
+            height: 38,
+            color: '#A11919',
+            fontSize: 15,
+            flex: 1,
+            backgroundColor: "#F9F0F0"
+        },
+        container: {
+            margin: 20,
+            flex: 1,
+            marginBottom: 5
+        }
+    }
 });

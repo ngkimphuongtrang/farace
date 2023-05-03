@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, Button, SafeAreaView, ScrollView, StatusBar, Text, StyleSheet
+  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet
 } from 'react-native';
 import { colors, endpoints } from '../constants';
 import { styles } from '../styles/CommonStyles';
@@ -8,6 +8,8 @@ import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
 import { BLUE_MARKER_ICON } from '../assets/image/index.js';
 import MapView, { Marker } from "react-native-maps";
+import MemberComponent from '../components/MemberComponent';
+import LocationComponent from '../components/LocationComponent';
 
 const JourneyDetailScreen = ({ route, navigation }) => {
   const { groupId } = route.params;
@@ -106,8 +108,6 @@ const JourneyDetailScreen = ({ route, navigation }) => {
                   draggable
                   image={BLUE_MARKER_ICON} // red is destination
                 />
-
-
               )
             }
             {routes.map((route, index) => (
@@ -129,24 +129,10 @@ const JourneyDetailScreen = ({ route, navigation }) => {
         <ScrollView style={myStyles.scrollViewContainer}>
           {location.map((l, i) =>
             i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: colors.generic3
-                },
-                styles.BorderStyle, { borderColor: colors.generic3 }
-              ]} key={i}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View> :
-              <View style={[
-                {
-                  alignContent: 'center', marginBottom: 5,
-                  backgroundColor: colors.generic4
-                },
-                styles.BorderStyle,
-                { borderColor: colors.generic4 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.name}</Text>
-              </View>)
+              <LocationComponent location={l} i={i} backgroundColor={colors.generic3} />
+              :
+              <LocationComponent location={l} i={i} backgroundColor={colors.generic4} />
+          )
           }
         </ScrollView>
       </SafeAreaView>
@@ -155,22 +141,16 @@ const JourneyDetailScreen = ({ route, navigation }) => {
         <ScrollView style={myStyles.scrollViewContainer}>
           {member.map((l, i) =>
             i % 2 == 0 ?
-              <View style={[
-                {
-                  alignContent: 'center',
-                  //  marginBottom: 5,
-                  backgroundColor: colors.spot1
-                },
-                styles.BorderStyle, { borderColor: colors.spot1 }
-              ]} key={i}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} -  {l.email} {'\n'}</Text>
-              </View> :
-              <View style={[
-                { alignContent: 'center', backgroundColor: colors.spot2 },
-                styles.BorderStyle,
-                { borderColor: colors.spot2 }]}>
-                <Text style={{ fontWeight: 'bold' }}>{i + 1} - {l.firstName}{l.lastName} - {l.email} {'\n'}</Text>
-              </View>)
+              <MemberComponent
+                member={l}
+                i={i}
+                backgroundColor={colors.spot1} />
+              :
+              <MemberComponent
+                member={l}
+                i={i}
+                backgroundColor={colors.spot2} />
+          )
           }
         </ScrollView>
       </SafeAreaView>
@@ -180,7 +160,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           onPress={() => navigation.navigate("LiveJourney")}>
         </Button>
       </View>
-    </View>
+    </View >
   );
 };
 export default JourneyDetailScreen;

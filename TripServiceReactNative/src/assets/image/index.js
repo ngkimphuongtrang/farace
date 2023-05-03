@@ -29,3 +29,5 @@ export const BACKGROUND_HOME = require('./jairph-1XLyzi17Z2M-unsplash.jpg');
 export const BACKGROUND_FRIEND = require('./michael-henry-8TNbGM3iu9o-unsplash.jpg');
 
 export const BACKGROUND_PROFILE = require('./arya-dubey-8eYI8qcEFxI-unsplash.jpg');
+
+export const REMOVE_ICON = require('./x.png');
