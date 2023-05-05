@@ -5,14 +5,13 @@ import JourneyScreen from '../screens/JourneyScreen';
 import FriendScreen from '../screens/FriendScreen';
 import MessageScreen from '../screens/MessageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { HOME_ICON, FRIENDS_ICON, MOTOR_ICON, CHAT_ICON, PROFILE_ICON } from '../assets/image';
+import { bottomTabIcon } from '../assets/image';
 import { Image } from 'react-native';
 import { styles } from '../styles/CommonStyles';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddJourneyScreen from '../screens/AddJourneyScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import AddMemberScreen from '../screens/AddMemberScreen';
-import JourneySummaryScreen from '../screens/JourneySummaryScreen';
 import Map from '../screens/Map';
 import JourneyDetailScreen from '../screens/JourneyDetailScreen';
 
@@ -36,7 +35,7 @@ function BottomTab() {
         tabBarLabel: 'Trang chủ',
         tabBarIcon: () => (
           <Image
-            source={HOME_ICON}
+            source={bottomTabIcon.home}
             style={styles.image}></Image>),
       }}
     />
@@ -47,7 +46,7 @@ function BottomTab() {
         tabBarLabel: 'Bạn bè',
         tabBarIcon: () => (
           <Image
-            source={FRIENDS_ICON}
+            source={bottomTabIcon.friend}
             style={styles.image}></Image>),
       }} />
     <Tab.Screen
@@ -57,7 +56,7 @@ function BottomTab() {
         tabBarLabel: 'Phượt',
         tabBarIcon: () => (
           <Image
-            source={MOTOR_ICON}
+            source={bottomTabIcon.motor}
             style={styles.image}></Image>),
       }}
     />
@@ -69,7 +68,7 @@ function BottomTab() {
         tabBarBadge: 3,
         tabBarIcon: () => (
           <Image
-            source={CHAT_ICON}
+            source={bottomTabIcon.chat}
             style={styles.image}></Image>),
       }}
     />
@@ -80,7 +79,7 @@ function BottomTab() {
         tabBarLabel: 'Cá nhân',
         tabBarIcon: () => (
           <Image
-            source={PROFILE_ICON}
+            source={bottomTabIcon.profile}
             style={styles.image}></Image>),
         headerTitleStyle: {
           fontWeight: 'bold',
@@ -117,15 +116,6 @@ function JourneyStackScreen() {
       <JourneyStack.Screen name="AddMember" component={AddMemberScreen}
         options={{
           title: "Thêm thành viên", headerStyle: {
-            backgroundColor: colors.primary,
-          },
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }} />
-      <JourneyStack.Screen name="JourneySummary" component={JourneySummaryScreen}
-        options={{
-          title: "Tổng quan hành trình", headerStyle: {
             backgroundColor: colors.primary,
           },
           headerTitleStyle: {

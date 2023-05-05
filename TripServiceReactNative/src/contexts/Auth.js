@@ -41,8 +41,8 @@ const AuthProvider = ({ children }) => {
       username,
       password,
     );
-    if (!result) return false;
     const loginToken = result[0];
+    if (!loginToken) return false;
     const userId = result[1];
     console.log("authdata:", loginToken, userId);
 

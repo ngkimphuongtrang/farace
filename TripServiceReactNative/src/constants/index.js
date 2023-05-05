@@ -55,8 +55,8 @@ export const colors = {
 };
 
 // Define domain constants
-const USER_DOMAIN = 'https://92e1-171-255-143-79.ngrok-free.app/api/v1/user';
-const TRIP_DOMAIN = 'https://df09-171-255-143-79.ngrok-free.app/api/v1/trip';
+const USER_DOMAIN = 'https://ce85-58-187-184-83.ngrok-free.app/api/v1/user';
+const TRIP_DOMAIN = 'https://32db-58-187-184-83.ngrok-free.app/api/v1/trip';
 
 export const endpoints = {
   register: `${USER_DOMAIN}/register`,
@@ -71,5 +71,7 @@ export const keys = {
   googleApiKey: 'AIzaSyD9ZpLS4jPei6Vo-UYrb7kXI9uWf4cZadg',
   userId: '@userId',
   username: '@username',
+  location: '@location',
+  member: '@member',
 };
 

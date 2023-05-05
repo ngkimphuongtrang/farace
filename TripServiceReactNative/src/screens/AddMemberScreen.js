@@ -6,7 +6,7 @@ import { CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
 import { PROFILE_ICON } from '../images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { endpoints,  colors } from '../constants';
+import { endpoints, colors } from '../constants';
 import axios from 'axios';
 
 const AddMemberScreen = ({ navigation }) => {
@@ -77,7 +77,7 @@ const AddMemberScreen = ({ navigation }) => {
         } catch (error) {
             console.log("ERROR post trip:", error);
         }
-        navigation.navigate("JourneySummary");
+        navigation.navigate("JourneyDetailScreen");
     }
     return (
         <View style={styles.ContainerScreen}>
@@ -126,12 +126,6 @@ const AddMemberScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
-            {/* <View style={{ alignItems: 'center' }}>
-                <Button
-                    onPress={() => postTripHandle()}
-                    title="Tiếp tục">
-                </Button>
-            </View> */}
         </View >
     );
 };

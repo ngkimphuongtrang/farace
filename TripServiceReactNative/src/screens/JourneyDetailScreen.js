@@ -2,7 +2,7 @@ import { React, useEffect, useState } from 'react';
 import {
   View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet
 } from 'react-native';
-import { colors, endpoints } from '../constants';
+import { colors, endpoints, keys } from '../constants';
 import { styles } from '../styles/CommonStyles';
 import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
@@ -10,9 +10,13 @@ import { BLUE_MARKER_ICON } from '../assets/image/index.js';
 import MapView, { Marker } from "react-native-maps";
 import MemberComponent from '../components/MemberComponent';
 import LocationComponent from '../components/LocationComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const JourneyDetailScreen = ({ route, navigation }) => {
-  const { groupId } = route.params;
+  let groupId;
+  if (route.params) {
+     groupId  = route.params;
+  }
   const [location, setLocation] = useState([]);
   const [member, setMember] = useState([]);
   const [routes, setRoutes] = useState([]);
@@ -22,11 +26,11 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       longitude: 106.6673316,
     })
   useEffect(() => {
-    let groupIdValue = JSON.stringify(groupId);
-    groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
-    console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
-
     async function getData() {
+      const { groupId } = route.params;
+      let groupIdValue = JSON.stringify(groupId);
+      groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
+      console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
       axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
         .then(function (response) {
           console.log("Journey Detail Screen:", response, response.data);
@@ -36,7 +40,24 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           console.log(location, member);
         })
     }
-    getData()
+    async function getData2() {
+      const locationSerialized = await AsyncStorage.getItem(keys.location);
+      if (locationSerialized) {
+        const _locationData = JSON.parse(locationSerialized);
+        console.log("JourneySummaryScreen location:", _locationData);
+        setLocation(_locationData);
+      }
+      const memberSerialized = await AsyncStorage.getItem(keys.member);
+      if (memberSerialized) {
+        const _memberData = JSON.parse(memberSerialized);
+        console.log("JourneySummaryScreen member:", _memberData);
+        setMember(_memberData);
+      }
+    }
+    if (groupId)
+      getData()
+    else
+      getData2()
 
   }, [])
   useEffect(() => {
@@ -58,7 +79,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   return (
     <View style={styles.ContainerScreen}>
       {
-        location.length === 0 ?
+        location === undefined || location.length === 0 ?
           (
             <MapView
               style={myStyles.map}

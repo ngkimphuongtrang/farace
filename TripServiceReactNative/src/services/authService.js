@@ -8,7 +8,7 @@ const signIn = (Email, Password) => {
   //the API will resolve with some token and another datas as the below
 
   const postLogin = async () => {
-    var token;
+    var token, userId;
     try {
       await axios.post(endpoints.login, {
         Email, Password
