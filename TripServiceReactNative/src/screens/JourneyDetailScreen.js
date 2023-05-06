@@ -204,7 +204,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       <View style={myStyles.buttonContainer}>
         <Button
           title="Bắt đầu"
-          onPress={() => navigation.navigate("LiveJourney")}>
+          onPress={() => navigation.navigate("LiveJourney", { groupId: groupId })}>
         </Button>
       </View>
     </View >
