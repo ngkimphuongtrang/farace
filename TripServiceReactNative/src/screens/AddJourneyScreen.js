@@ -106,14 +106,18 @@ const AddJourneyScreen = ({ navigation }) => {
                     (
                         <MapView
                             style={myStyles.map}
-                            initialRegion={
-                                {
-                                    latitude: coordinate.latitude,
-                                    longitude: coordinate.longitude,
-                                    latitudeDelta: 0.0922,
-                                    longitudeDelta: 0.0421,
-                                }
-                            }>
+                            initialRegion={{
+                                latitude: coordinate.latitude,
+                                longitude: coordinate.longitude,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }}
+                            onPress={(e) => {
+                                console.log("press:", e.nativeEvent, e.nativeEvent.coordinate);
+                                setLocation((oldArray) => [...oldArray, e.nativeEvent.coordinate]);
+                                // setLocation({ markers: [...location, e.nativeEvent.coordinate}] })
+                                console.log(location);
+                            }}>
                         </MapView>
                     ) :
                     (<MapView
@@ -131,8 +135,12 @@ const AddJourneyScreen = ({ navigation }) => {
                             longitude: location[location.length - 1].longitude,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
-                        }
-                        }>
+                        }}
+                        onPress={(e) => {
+                            console.log("press:", e.nativeEvent);
+                            setLocation({ markers: [...location, { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.latitude }] }
+                            )
+                        }}>
                         {
                             location.map((coordinate, index) =>
                                 index == location.length - 1 ? <Marker
@@ -183,9 +191,6 @@ const AddJourneyScreen = ({ navigation }) => {
                             key: 'AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8',
                             language: 'en',
                         }}
-                    // textInputProps={{
-                    //     InputComp: Input,
-                    // }}
                     />
                 </View>
                 <View style={{
@@ -198,12 +203,6 @@ const AddJourneyScreen = ({ navigation }) => {
                         {location.map((l, i) =>
                             <View key={i} style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                                 <LocationComponent location={l} i={i} backgroundColor={colors.spot1} otherStyle={{ maxWidth: 320 }} />
-                                {/* <View style={[
-                                    { alignContent: 'center', marginBottom: 5, backgroundColor: colors.spot1, flexDirection: 'row', maxWidth: 320 },
-                                    myStyles.BorderStyle]}>
-                                    <Text style={{ fontStyle: 'italic' }}>{i + 1}, </Text>
-                                    <Text style={{ fontWeight: 'bold' }}>{l.name}</Text>
-                                </View> */}
                                 <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
                             </View>
                         )}

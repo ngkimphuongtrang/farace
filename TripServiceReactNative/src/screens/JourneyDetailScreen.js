@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet
+  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text
 } from 'react-native';
 import { colors, endpoints, keys } from '../constants';
 import { styles } from '../styles/CommonStyles';
@@ -15,16 +15,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const JourneyDetailScreen = ({ route, navigation }) => {
   let groupId;
   if (route.params) {
-     groupId  = route.params;
+    groupId = route.params;
   }
-  const [location, setLocation] = useState([]);
-  const [member, setMember] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [members, setMembers] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [coordinate, setCoordinate] = useState(
     {
       latitude: 10.7212249,
       longitude: 106.6673316,
     })
+  const [distances, setDistances] = useState([]);
+  const [travelTimes, setTravelTimes] = useState([]);
   useEffect(() => {
     async function getData() {
       const { groupId } = route.params;
@@ -34,10 +36,10 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
         .then(function (response) {
           console.log("Journey Detail Screen:", response, response.data);
-          setLocation(response.data.locations);
-          setMember(response.data.customers);
+          setLocations(response.data.locations);
+          setMembers(response.data.customers);
 
-          console.log(location, member);
+          console.log(locations, members);
         })
     }
     async function getData2() {
@@ -45,29 +47,50 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       if (locationSerialized) {
         const _locationData = JSON.parse(locationSerialized);
         console.log("JourneySummaryScreen location:", _locationData);
-        setLocation(_locationData);
+        setLocations(_locationData);
       }
       const memberSerialized = await AsyncStorage.getItem(keys.member);
       if (memberSerialized) {
         const _memberData = JSON.parse(memberSerialized);
         console.log("JourneySummaryScreen member:", _memberData);
-        setMember(_memberData);
+        setMembers(_memberData);
       }
+    }
+    async function getDistance() {
+      let n = locations.length;
+      var Distances = [];
+      var TravelTimes = [];
+      for (let i = 0; i < n - 1; i++) {
+        const request = `${endpoints.getDistance}?travel_mode=driving&origin_lng=${locations[i].longitude}&destination_lat=${locations[i + 1].latitude}&destination_lng=${locations[i + 1].longitude}&origin_lat=${locations[i].latitude}`;
+        console.log('GET request distance', request);
+        axios.get(request)
+          .then(function (response) {
+            console.log("GET distance:", response, response.data.route);
+            Distances.push(response.data["route"]["distance"]);
+            TravelTimes.push(response.data["route"]["travel_time"]);
+          })
+      }
+      // source to destination
+      setDistances(Distances);
+      setTravelTimes(TravelTimes);
     }
     if (groupId)
       getData()
     else
       getData2()
+    console.log("length location:", locations.length);
+    // getDistance();
+    // console.log(distances, travelTimes);
 
   }, [])
   useEffect(() => {
     calculateRoutes();
-  }, [location]);
+  }, [locations]);
   const calculateRoutes = () => {
     const routes = [];
-    for (let i = 0; i < location.length - 1; i++) {
-      const origin = location[i];
-      const destination = location[i + 1];
+    for (let i = 0; i < locations.length - 1; i++) {
+      const origin = locations[i];
+      const destination = locations[i + 1];
       routes.push({
         origin,
         destination,
@@ -79,7 +102,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   return (
     <View style={styles.ContainerScreen}>
       {
-        location === undefined || location.length === 0 ?
+        locations === undefined || locations.length === 0 ?
           (
             <MapView
               style={myStyles.map}
@@ -104,15 +127,15 @@ const JourneyDetailScreen = ({ route, navigation }) => {
               }
             }
             region={{
-              latitude: location[location.length - 1].latitude,
-              longitude: location[location.length - 1].longitude,
+              latitude: locations[locations.length - 1].latitude,
+              longitude: locations[locations.length - 1].longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }
             }>
             {
-              location.map((coordinate, index) =>
-                index == location.length - 1 ? <Marker
+              locations.map((coordinate, index) =>
+                index == locations.length - 1 ? <Marker
                   key={index}
                   coordinate={{
                     latitude: coordinate["latitude"],
@@ -148,19 +171,22 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-          {location.map((l, i) =>
+
+          {locations.map((l, i) =>
             i % 2 == 0 ?
-              <LocationComponent location={l} i={i} backgroundColor={colors.generic3} />
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.generic3} />
               :
-              <LocationComponent location={l} i={i} backgroundColor={colors.generic4} />
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.generic4} />
           )
           }
+          {/* {distances.map((d, i) => <Text key={i + locations.length}>{d}</Text>)} */}
+          {/* {travelTimes.map((d, i) => <Text key={i}>{d}</Text>)} */}
         </ScrollView>
       </SafeAreaView>
       <SafeAreaView style={myStyles.safeAreaViewContainer}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-          {member.map((l, i) =>
+          {members.map((l, i) =>
             i % 2 == 0 ?
               <MemberComponent
                 member={l}

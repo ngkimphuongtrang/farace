@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
-import { PROFILE_ICON } from '../images';
+import { bottomTabIcon } from '../assets/image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { endpoints, colors } from '../constants';
 import axios from 'axios';
@@ -95,7 +95,7 @@ const AddMemberScreen = ({ navigation }) => {
                                     <Image
                                         style={styles.image}
                                         resizeMode="cover"
-                                        source={PROFILE_ICON}
+                                        source={bottomTabIcon.profile}
                                     />
                                     <View style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
                                         <View style={{ flexDirection: 'row' }}>

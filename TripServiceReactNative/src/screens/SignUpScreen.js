@@ -146,7 +146,7 @@ const SignUpScreen = () => {
       <Animatable.View
         animation="fadeInUpBig"
         style={[myStyles.footer, {
-          backgroundColor: colors.background
+          // backgroundColor: colors.background
         }]}
       >
         <View style={myStyles.action}>
@@ -215,23 +215,29 @@ const SignUpScreen = () => {
             <Text style={myStyles.errorMsg}>Nhập lại mật khẩu không khớp với mật khẩu</Text>
           </Animatable.View>
         }
-        <TextInput
-          placeholder="Nhập tên"
-          onChangeText={(val) => setFirstname(val)} />
-        <TextInput placeholder='Nhập họ' onChangeText={(val) => setLastName(val)} />
+        <View style={myStyles.action}>
+          <TextInput
+            placeholder="Nhập tên"
+            style={myStyles.textInput}
+            onChangeText={(val) => setFirstname(val)} /></View>
+        <View style={myStyles.action}>
+          <TextInput
+            placeholder='Nhập họ'
+            style={myStyles.textInput}
+            onChangeText={(val) => setLastName(val)} /></View>
         <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic3 }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.primary }]}>
             <Button
               onPress={() => handleRegister()}
               title="Đăng ký"
-              color={colors.generic3}
+              color={colors.primary}
             />
           </View>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.generic2 }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.spot1 }]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
-              color={colors.generic2}
+              color={colors.spot1}
             />
           </View>
         </View>
@@ -261,21 +267,12 @@ const myStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30
   },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18
-  },
   action: {
     flexDirection: 'row',
     marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 5
+    // paddingBottom: 5
   },
   actionError: {
     flexDirection: 'row',
@@ -286,9 +283,10 @@ const myStyles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    // marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 10,
-    color: '#05375a',
+    color: 'black',
+    // fontWeight: 'bold'
   },
   errorMsg: {
     color: '#FF0000',

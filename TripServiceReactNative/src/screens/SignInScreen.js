@@ -120,7 +120,7 @@ const SignInScreen = ({ navigation }) => {
             <Animatable.View
                 animation="fadeInUpBig"
                 style={[myStyles.footer, {
-                    backgroundColor: colors.background
+                    // backgroundColor: colors.background
                 }]}
             >
                 <Text style={[myStyles.text_footer, {
@@ -183,21 +183,21 @@ const SignInScreen = ({ navigation }) => {
                     <View style={[
                         { width: "40%", alignContent: 'center', marginBottom: 5 },
                         styles.BorderStyle,
-                        { borderColor: colors.generic2 }]}>
+                        { borderColor: colors.primary }]}>
                         <Button
                             onPress={handleLogIn}
                             title="Đăng nhập"
-                            color={colors.generic2}
+                            color={colors.primary}
                         />
                     </View>
                     <View style={[
                         { width: "40%", alignContent: 'center', marginBottom: 5 },
                         styles.BorderStyle,
-                        { borderColor: colors.generic3 }]}>
+                        { borderColor: colors.spot1 }]}>
                         <Button
                             onPress={() => { navigation.navigate("SignUpScreen"); }}
                             title="Đăng ký"
-                            color={colors.generic3}
+                            color={colors.spot1}
                         />
                     </View>
                 </View>
