@@ -43,20 +43,13 @@
 // Define color constants
 export const colors = {
   primary: '#009387',
-  generic1: '#33AA88',
-  generic2: '#5FC184',
-  generic3: '#8ED67D',
-  generic4: '#C1E875',
-  generic5: '#F9F871',
-  twisted1: '#FF79E2',
-  twisted2: '#FFE5FF',
-  spot1: '#57CABC',
-  spot2: '#C2FCF3',
+  switch1: '#E5F0EB',
+  switch2: '#568C73',
 };
 
 // Define domain constants
-const USER_DOMAIN = 'https://3f97-58-187-184-83.ngrok-free.app/api/v1/user';
-const TRIP_DOMAIN = 'https://d2c5-58-187-184-83.ngrok-free.app/api/v1/trip';
+const USER_DOMAIN = 'https://0cde-2001-ee0-5204-26f0-3c0a-9388-ddb8-842c.ngrok-free.app/api/v1/user';
+const TRIP_DOMAIN = 'https://0238-2001-ee0-5204-26f0-3c0a-9388-ddb8-842c.ngrok-free.app/api/v1/trip';
 const ROUTE_DOMAIN = 'https://db49-58-187-184-83.ngrok-free.app/api/v1/routes';
 
 export const endpoints = {
@@ -75,5 +68,6 @@ export const keys = {
   username: '@username',
   location: '@location',
   member: '@member',
+  groupId: 'groupId',
 };
 

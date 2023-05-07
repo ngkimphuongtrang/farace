@@ -15,8 +15,12 @@ import { BLUE_MARKER_ICON } from '../assets/image/index.js';
 import { REMOVE_ICON } from '../assets/image/index.js';
 import LocationComponent from '../components/LocationComponent';
 
-const AddJourneyScreen = ({ navigation }) => {
-    const [location, setLocation] = useState([]);
+const AddJourneyScreen = ({ route, navigation }) => {
+    var Locations;
+    if (route.params) {
+        Locations = route.params
+    }
+    const [locations, setLocations] = useState([]);
     const [coordinate, setCoordinate] = useState(
         {
             latitude: 10.7212249,
@@ -27,17 +31,22 @@ const AddJourneyScreen = ({ navigation }) => {
             (position) => {
                 setCoordinate({ latitude: position.coords.latitude, longitude: position.coords.longitude })
             })
+        if (Locations) {
+            const { Locations } = route.params;
+            console.log("locationsparams:", Locations);
+            setLocations(Locations);
+        }
     }, []);
 
     const [routes, setRoutes] = useState([]);
     useEffect(() => {
         calculateRoutes();
-    }, [location]);
+    }, [locations]);
     const calculateRoutes = () => {
         const routes = [];
-        for (let i = 0; i < location.length - 1; i++) {
-            const origin = location[i];
-            const destination = location[i + 1];
+        for (let i = 0; i < locations.length - 1; i++) {
+            const origin = locations[i];
+            const destination = locations[i + 1];
             routes.push({
                 origin,
                 destination,
@@ -48,12 +57,11 @@ const AddJourneyScreen = ({ navigation }) => {
     };
     const setLocationValue = async () => {
         try {
-
-            await AsyncStorage.setItem('@location', JSON.stringify(location))
+            await AsyncStorage.setItem('@location', JSON.stringify(locations))
         } catch (e) {
             // save error
         }
-        console.log('Set @location in AsyncStorage done:', JSON.stringify(location));
+        console.log('Set @location in AsyncStorage done:', JSON.stringify(locations));
     }
     const handlePlaceSelected = (data, details = null) => {
         const newLocation = details?.geometry?.location;
@@ -62,11 +70,11 @@ const AddJourneyScreen = ({ navigation }) => {
             longitude: newLocation.lng,
             name: data.description,
         };
-        setLocation((oldArray) => [...oldArray, locationObj]);
+        setLocations((oldArray) => [...oldArray, locationObj]);
         placeholder = "";
     };
     const handleAddLocations = () => {
-        if (location.length < 2) {
+        if (locations.length < 2) {
             Alert.alert('Chọn địa điểm không hợp lệ', "Hành trình chứa ít nhất 2 địa điểm.", [
                 {
                     text: 'Thử lại',
@@ -76,7 +84,11 @@ const AddJourneyScreen = ({ navigation }) => {
             return;
         }
         setLocationValue();
-        navigation.navigate("AddMember");
+        if (Locations) {
+            const { Members } = route.params;
+            navigation.navigate("AddMember", { Members: Members })
+        } else
+            navigation.navigate("AddMember");
     }
     const handleClickLocation = (index) => {
         Alert.alert('Xóa địa điểm này?', "", [
@@ -85,12 +97,12 @@ const AddJourneyScreen = ({ navigation }) => {
                 onPress: () => {
                     let chosenLocation = []
                     let j = 0
-                    for (let i = 0; i < location.length; i++) {
+                    for (let i = 0; i < locations.length; i++) {
                         if (i != index) {
-                            chosenLocation[j++] = location[i]
+                            chosenLocation[j++] = locations[i]
                         }
                     }
-                    setLocation(chosenLocation);
+                    setLocations(chosenLocation);
                 },
             },
             {
@@ -102,7 +114,7 @@ const AddJourneyScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.ContainerScreen}>
             {
-                location.length === 0 ?
+                locations === undefined || locations.length === 0 ?
                     (
                         <MapView
                             style={myStyles.map}
@@ -114,9 +126,9 @@ const AddJourneyScreen = ({ navigation }) => {
                             }}
                             onPress={(e) => {
                                 console.log("press:", e.nativeEvent, e.nativeEvent.coordinate);
-                                setLocation((oldArray) => [...oldArray, e.nativeEvent.coordinate]);
+                                setLocations((oldArray) => [...oldArray, e.nativeEvent.coordinate]);
                                 // setLocation({ markers: [...location, e.nativeEvent.coordinate}] })
-                                console.log(location);
+                                console.log(locations);
                             }}>
                         </MapView>
                     ) :
@@ -131,19 +143,19 @@ const AddJourneyScreen = ({ navigation }) => {
                             }
                         }
                         region={{
-                            latitude: location[location.length - 1].latitude,
-                            longitude: location[location.length - 1].longitude,
+                            latitude: locations[locations.length - 1].latitude,
+                            longitude: locations[locations.length - 1].longitude,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }}
                         onPress={(e) => {
                             console.log("press:", e.nativeEvent);
-                            setLocation({ markers: [...location, { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.latitude }] }
+                            setLocations({ markers: [...locations, { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.latitude }] }
                             )
                         }}>
                         {
-                            location.map((coordinate, index) =>
-                                index == location.length - 1 ? <Marker
+                            locations.map((coordinate, index) =>
+                                index == locations.length - 1 ? <Marker
                                     key={index}
                                     coordinate={{
                                         latitude: coordinate["latitude"],
@@ -160,8 +172,6 @@ const AddJourneyScreen = ({ navigation }) => {
                                     draggable
                                     image={BLUE_MARKER_ICON} // red is destination
                                 />
-
-
                             )
                         }
                         {routes.map((route, index) => (
@@ -200,9 +210,9 @@ const AddJourneyScreen = ({ navigation }) => {
                     <ScrollView style={{
                         marginHorizontal: 20,
                     }}>
-                        {location.map((l, i) =>
+                        {locations.map((l, i) =>
                             <View key={i} style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
-                                <LocationComponent location={l} i={i} backgroundColor={colors.spot1} otherStyle={{ maxWidth: 320 }} />
+                                <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
                                 <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
                             </View>
                         )}

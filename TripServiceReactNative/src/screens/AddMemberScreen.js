@@ -6,43 +6,71 @@ import { CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
 import { bottomTabIcon } from '../assets/image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { endpoints, colors } from '../constants';
+import { endpoints, colors, keys } from '../constants';
 import axios from 'axios';
+import { getDataFromAsyncStorage, storeGroupId } from '../components/util';
 
-const AddMemberScreen = ({ navigation }) => {
-    const [members, setMembers] = useState([]);
-    const [checkedState, setCheckedState] = useState(
-        new Array(1000).fill(false)
-    );
-    const handleOnCheckbox = (position) => {
-        const updatedCheckedState = checkedState.map((item, index) =>
-            index === position ? !item : item
-        ); setCheckedState(updatedCheckedState);
+const AddMemberScreen = ({ route, navigation }) => {
+    var Members;
+    if (route.params) {
+        Members = route.params;
     }
-    const storeMembers = async (member) => {
+    const [members, setMembers] = useState([]);
+    const [chosenMembers, setChosenMembers] = useState(new Set());
+    const [myUsername, setMyUsername] = useState();
+    function isChosenMember(username) {
+        if (chosenMembers instanceof Set)
+            return chosenMembers.has(username);
+        else return false;
+    }
+    function removeMember(username) {
+        if (chosenMembers instanceof Set) {
+            setChosenMembers(prev => new Set([...prev].filter(x => x !== username)))
+        }
+    }
+    const handleOnCheckbox = (username) => {
+        console.log("chosen", chosenMembers);
+        let n = members.length;
+        for (let i = 0; i < n; i++) {
+            if (isChosenMember(username)) {
+                removeMember(username);
+            } else {
+                setChosenMembers((oldArray) => new Set([...oldArray, username]));
+            }
+        }
+        console.log("chosen", chosenMembers);
+    }
+    const storeMembers = async (members) => {
         try {
-            await AsyncStorage.setItem('@member', JSON.stringify(member));
-            console.log('Set @member in AsyncStorage done:', member);
+            await AsyncStorage.setItem('@member', JSON.stringify(members));
+            console.log('Set @member in AsyncStorage done:', members);
         } catch (e) {
             // save error
         }
     }
-    const storeGroupId = async (groupId) => {
-        try {
-            await AsyncStorage.setItem("groupId", groupId);
-        } catch (e) {
-            console.log("error set group id");
-        }
-    }
+
     useEffect(() => {
-        axios.get(endpoints.members)
-            .then(function (response) {
-                setMembers(response.data);
-                console.log("/api/v1/user response:", members);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        async function getData() {
+            axios.get(endpoints.members)
+                .then(function (response) {
+                    setMembers(response.data);
+                    console.log("/api/v1/user response:", members);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            const username = await getDataFromAsyncStorage(keys.username);
+            setMyUsername(username);
+        }
+        getData();
+        if (Members) {
+            const { Members } = route.params;
+            let n = Members.length;
+            for (let i = 0; i < n; i++) {
+                setChosenMembers((oldArray) => new Set([...oldArray, Members[i].email]));
+            }
+        }
+
     }, []);
     const postTripHandle = async () => {
         const locationSerialized = await AsyncStorage.getItem("@location");
@@ -54,30 +82,49 @@ const AddMemberScreen = ({ navigation }) => {
         var customers = []
         var j = 0;
         for (let i = 0; i < members.length; i++) {
-            if (checkedState[i]) {
+            if (isChosenMember(members[i].email)) {
                 customers[j++] = members[i]
             }
         }
-        // let myUserId = await getDataFromAsyncStorage(keys.userId);
-        // customers[j++] = { "id": myUserId }
-
         let locations = _locationData;
         storeMembers(customers);
-        console.log("payload", { locations, customers });
-        try {
 
+        let postTripDomain = endpoints.postTrip;
+        if (Members) {
+            const groupId = await getDataFromAsyncStorage(keys.groupId);
+            postTripDomain = `${endpoints.postTrip}/${groupId}/update`;
+            console.log("payload", { locations, customers }, postTripDomain);
+            try {
+                await axios.put(postTripDomain, {
+                    locations,
+                    customers,
+                }).then(function (response) {
+                    console.log("update trip:", response, response.data, locations, customers);
 
-            await axios.post(endpoints.postTrip, {
-                locations,
-                customers,
-            }).then(function (response) {
-                console.log("post trip:", response, response.data, locations, customers);
-                storeGroupId(response.data.id);
-            });
-        } catch (error) {
-            console.log("ERROR post trip:", error);
+                });
+            } catch (error) {
+                console.log("ERROR post trip:", error);
+            }
+            navigation.navigate("JourneyDetailScreen", { groupId: groupId });
         }
-        navigation.navigate("JourneyDetailScreen");
+        else {
+            try {
+                console.log("payload", { locations, customers }, postTripDomain);
+                await axios.post(postTripDomain, {
+                    locations,
+                    customers,
+                }).then(function (response) {
+                    console.log("update trip:", response, response.data, locations, customers);
+                    if (response.data.id) {
+                        storeGroupId(response.data.id);
+                    }
+                });
+            } catch (error) {
+                console.log("ERROR post trip:", error);
+            }
+            navigation.navigate("JourneyDetailScreen");
+        }
+
     }
     return (
         <View style={styles.ContainerScreen}>
@@ -102,11 +149,12 @@ const AddMemberScreen = ({ navigation }) => {
                                             <Text style={{ fontStyle: 'italic' }}>{member.orderId + 1},</Text>
                                             <Text style={{ fontWeight: 'bold' }} >{member.firstName} {member.lastName}</Text>
                                         </View>
+                                        {/* <Text color={colors.primary}>{member.email}</Text>: */}
                                         <Text>{member.email}</Text>
                                     </View>
                                     <CheckBox
-                                        checked={checkedState[member.orderId]}
-                                        onPress={() => handleOnCheckbox(i)}
+                                        checked={isChosenMember(member.email)}
+                                        onPress={() => handleOnCheckbox(member.email)}
                                         iconType="material-community"
                                         checkedIcon="checkbox-outline"
                                         uncheckedIcon={'checkbox-blank-outline'}

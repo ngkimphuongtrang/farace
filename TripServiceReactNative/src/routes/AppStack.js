@@ -141,6 +141,24 @@ function JourneyStackScreen() {
 
           },
         }} />
+      <JourneyStack.Screen name="UpdateLocations" component={AddJourneyScreen}
+        options={{
+          title: "Chỉnh sửa địa điểm", headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <JourneyStack.Screen name="UpdateMembers" component={AddMemberScreen}
+        options={{
+          title: "Chỉnh sửa thành viên", headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
     </JourneyStack.Navigator>
   )
 }

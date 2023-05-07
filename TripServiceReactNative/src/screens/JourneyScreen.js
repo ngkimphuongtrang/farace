@@ -27,7 +27,7 @@ const JourneyScreen = ({ navigation }) => {
 				axios.get(await getTripOfUserDomain())
 					.then(function (response) {
 						console.log("Trip response:", response, response.data);
-						setTrips(response.data.tripCustomer);
+						setTrips(response.data['tripCustomer']);
 					})
 					.catch(function (error) {
 						if (error.response) {
@@ -68,24 +68,25 @@ const JourneyScreen = ({ navigation }) => {
 						marginHorizontal: 20,
 					}}>
 						{trips != undefined ? trips.map((l, i) =>
-							<TouchableOpacity onPress={() => handleOnTripDetail(l.groupId)} key={i}>
+							<TouchableOpacity onPress={() => handleOnTripDetail(l['groupId'])} key={i}>
 								<View style={{ flexDirection: 'row', width: 310 }}>
 
 									<View style={[
-										{ width: 30, height: 30, backgroundColor: colors.generic1, alignContent: 'center', marginBottom: 5, justifyContent: 'center' },
+										{ width: 30, height: 30, backgroundColor: colors.switch1, alignContent: 'center', marginBottom: 5, justifyContent: 'center' },
 										styles.BorderStyle,
 									]}>
 										<Text style={{ textAlign: 'center' }}>{i + 1}</Text>
 									</View>
 
 									<View style={[
-										{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic2, justifyContent: 'space-around' },
+										{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch1, justifyContent: 'space-around' },
 										styles.BorderStyle,
-										{ borderColor: colors.generic2 }]}>
+										{ borderColor: colors.switch1 }]}>
+										<Text>{l['createdAt'].substring(0, 10)}</Text>
 										<View style={[
-											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic3 },
+											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch2 },
 											styles.BorderStyle,
-											{ borderColor: colors.generic3 }]
+											{ borderColor: colors.switch2 }]
 										}>
 											<Text style={{ fontWeight: 'bold', color: 'black' }}>
 												{l.start}
@@ -93,13 +94,14 @@ const JourneyScreen = ({ navigation }) => {
 										</View>
 
 										<View style={[
-											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.generic4 },
+											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch1 },
 											styles.BorderStyle,
-											{ borderColor: colors.generic4 }]}>
+											{ borderColor: colors.switch1 }]}>
 											<Text style={{ fontWeight: 'bold', color: 'black' }}>
 												{l.end}
 											</Text>
-										</View></View>
+										</View>
+									</View>
 								</View>
 							</TouchableOpacity>
 						) : null}

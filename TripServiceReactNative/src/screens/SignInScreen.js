@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     StyleSheet,
     StatusBar,
     Alert,
-    Image, Button
+    Image, Button, ActivityIndicator
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,11 +16,13 @@ import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
 import { colors } from '../constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignInScreen = ({ navigation }) => {
+    const [loading, isLoading] = useState(false);
     const auth = useAuth();
     const signIn = async (email, password) => {
-        // isLoading(true);
+        isLoading(true);
         return await auth.signIn(email, password);
     };
     const [data, setData] = React.useState({
@@ -108,101 +110,111 @@ const SignInScreen = ({ navigation }) => {
         }
     }
     return (
-        <View style={myStyles.container}>
-            <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-            <View style={myStyles.header}>
-                <Image
-                    source={LOGO_GREEN}
-                    style={{ height: 100, width: 200 }}
-                ></Image>
+        <SafeAreaView style={myStyles.container}>
+            {/* {loading ? (
+                 <View style={myStyles.container}>
+                     <ActivityIndicator color={'#000'} animating={true} size="big" />
+                     </View>
+             ) : (*/}
 
-            </View>
-            <Animatable.View
-                animation="fadeInUpBig"
-                style={[myStyles.footer, {
-                    // backgroundColor: colors.background
-                }]}
-            >
-                <Text style={[myStyles.text_footer, {
-                    color: colors.text
-                }]}>Tên đăng nhập</Text>
-                <View style={myStyles.action}>
-                    <TextInput
-                        placeholder="Tên đăng nhập của bạn"
-                        placeholderTextColor="#666666"
-                        style={[myStyles.textInput, {
-                            color: colors.text
-                        }]}
-                        autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
-                        onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-                    />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
+            <View style={myStyles.container}>
+                <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+
+                <View style={myStyles.header}>
+                    <Image
+                        source={LOGO_GREEN}
+                        style={{ height: 100, width: 200 }}
+                    ></Image>
+
+                </View>
+                <Animatable.View
+                    animation="fadeInUpBig"
+                    style={[myStyles.footer, {
+                        // backgroundColor: colors.background
+                    }]}
+                >
+                    <Text style={[myStyles.text_footer, {
+                        color: colors.text
+                    }]}>Tên đăng nhập</Text>
+                    <View style={myStyles.action}>
+                        <TextInput
+                            placeholder="Tên đăng nhập của bạn"
+                            placeholderTextColor="#666666"
+                            style={[myStyles.textInput, {
+                                color: colors.text
+                            }]}
+                            autoCapitalize="none"
+                            onChangeText={(val) => textInputChange(val)}
+                            onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                        />
+                        {data.check_textInputChange ?
+                            <Animatable.View
+                                animation="bounceIn"
+                            >
+                            </Animatable.View>
+                            : null}
+                    </View>
+                    {data.isValidUser ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={myStyles.errorMsg}>Tên đăng nhập có độ dài ít nhất 4</Text>
                         </Animatable.View>
-                        : null}
-                </View>
-                {data.isValidUser ? null :
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={myStyles.errorMsg}>Tên đăng nhập có độ dài ít nhất 4</Text>
-                    </Animatable.View>
-                }
-                <Text style={[myStyles.text_footer, {
-                    color: colors.text,
-                    marginTop: 35
-                }]}>Mật khẩu</Text>
-                <View style={myStyles.action}>
-                    <TextInput
-                        placeholder="Mật khẩu của bạn"
-                        placeholderTextColor="#666666"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={[myStyles.textInput, {
-                            color: colors.text
-                        }]}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={updateSecureTextEntry}
-                    >
+                    }
+                    <Text style={[myStyles.text_footer, {
+                        color: colors.text,
+                        marginTop: 35
+                    }]}>Mật khẩu</Text>
+                    <View style={myStyles.action}>
+                        <TextInput
+                            placeholder="Mật khẩu của bạn"
+                            placeholderTextColor="#666666"
+                            secureTextEntry={data.secureTextEntry ? true : false}
+                            style={[myStyles.textInput, {
+                                color: colors.text
+                            }]}
+                            autoCapitalize="none"
+                            onChangeText={(val) => handlePasswordChange(val)}
+                        />
+                        <TouchableOpacity
+                            onPress={updateSecureTextEntry}
+                        >
+                        </TouchableOpacity>
+                    </View>
+                    {data.isValidPassword ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
+                        </Animatable.View>
+                    }
+
+
+                    <TouchableOpacity>
+                        <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
                     </TouchableOpacity>
-                </View>
-                {data.isValidPassword ? null :
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
-                    </Animatable.View>
-                }
-
-
-                <TouchableOpacity>
-                    <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
-                </TouchableOpacity>
-                <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-                    <View style={[
-                        { width: "40%", alignContent: 'center', marginBottom: 5 },
-                        styles.BorderStyle,
-                        { borderColor: colors.primary }]}>
-                        <Button
-                            onPress={handleLogIn}
-                            title="Đăng nhập"
-                            color={colors.primary}
-                        />
+                    <View style={[myStyles.button, { alignContent: 'space-between' }]}>
+                        <View style={[
+                            { width: "40%", alignContent: 'center', marginBottom: 5 },
+                            styles.BorderStyle,
+                            { borderColor: colors.primary }]}>
+                            <Button
+                                onPress={handleLogIn}
+                                title="Đăng nhập"
+                                color={colors.primary}
+                            />
+                        </View>
+                        <View style={[
+                            { width: "40%", alignContent: 'center', marginBottom: 5 },
+                            styles.BorderStyle,
+                            { borderColor: colors.switch2 }]}>
+                            <Button
+                                onPress={() => { navigation.navigate("SignUpScreen"); }}
+                                title="Đăng ký"
+                                color={colors.switch2}
+                            />
+                        </View>
                     </View>
-                    <View style={[
-                        { width: "40%", alignContent: 'center', marginBottom: 5 },
-                        styles.BorderStyle,
-                        { borderColor: colors.spot1 }]}>
-                        <Button
-                            onPress={() => { navigation.navigate("SignUpScreen"); }}
-                            title="Đăng ký"
-                            color={colors.spot1}
-                        />
-                    </View>
-                </View>
-            </Animatable.View>
-        </View>
+                </Animatable.View>
+            </View>
+            {/* )} */}
+        </SafeAreaView>
     );
 };
 

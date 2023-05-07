@@ -7,3 +7,11 @@ export const getDataFromAsyncStorage = async (key) => {
     console.log("GET fail", key);
   }
 }
+
+export const storeGroupId = async (groupId) => {
+  try {
+    await AsyncStorage.setItem("groupId", groupId);
+  } catch (e) {
+    console.log("error set group id");
+  }
+}

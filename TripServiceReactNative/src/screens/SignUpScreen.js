@@ -233,11 +233,11 @@ const SignUpScreen = () => {
               color={colors.primary}
             />
           </View>
-          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.spot1 }]}>
+          <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.switch2 }]}>
             <Button
               onPress={() => { navigation.navigate("SignInScreen"); }}
               title="Đăng nhập"
-              color={colors.spot1}
+              color={colors.switch2}
             />
           </View>
         </View>

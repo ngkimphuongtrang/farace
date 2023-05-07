@@ -27,3 +27,6 @@ export const bottomTabIcon = {
   chat: require('./chat.png'),
   profile: require('./profile.png'),
 }
+export const icons = {
+  edit: require('./edit.png'),
+}

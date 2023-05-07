@@ -1,16 +1,17 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text
+  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, Image, TouchableOpacity
 } from 'react-native';
 import { colors, endpoints, keys } from '../constants';
 import { styles } from '../styles/CommonStyles';
 import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
-import { BLUE_MARKER_ICON } from '../assets/image/index.js';
+import { BLUE_MARKER_ICON, icons } from '../assets/image/index.js';
 import MapView, { Marker } from "react-native-maps";
 import MemberComponent from '../components/MemberComponent';
 import LocationComponent from '../components/LocationComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storeGroupId } from '../components/util';
 
 const JourneyDetailScreen = ({ route, navigation }) => {
   let groupId;
@@ -30,8 +31,6 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     async function getData() {
       const { groupId } = route.params;
-      let groupIdValue = JSON.stringify(groupId);
-      groupIdValue = groupIdValue.substring(1, groupIdValue.length - 1);
       console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
       axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
         .then(function (response) {
@@ -99,8 +98,16 @@ const JourneyDetailScreen = ({ route, navigation }) => {
     }
     setRoutes(routes);
   };
+  const handleUpdateTrip = () => {
+    if (groupId) {
+      const { groupId } = route.params;
+      console.log("group edit:", groupId);
+      storeGroupId(groupId);
+      navigation.navigate("UpdateLocations", { Locations: locations, Members: members });
+    }
+  }
   return (
-    <View style={styles.ContainerScreen}>
+    <SafeAreaView style={styles.ContainerScreen}>
       {
         locations === undefined || locations.length === 0 ?
           (
@@ -168,22 +175,24 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           </MapView>
           )
       }
-      <SafeAreaView style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
+      <View style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-
+          <TouchableOpacity onPress={handleUpdateTrip}>
+            <Image source={icons.edit} style={styles.image} />
+          </TouchableOpacity>
           {locations.map((l, i) =>
             i % 2 == 0 ?
-              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.generic3} />
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch1} />
               :
-              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.generic4} />
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch2} />
           )
           }
           {/* {distances.map((d, i) => <Text key={i + locations.length}>{d}</Text>)} */}
           {/* {travelTimes.map((d, i) => <Text key={i}>{d}</Text>)} */}
         </ScrollView>
-      </SafeAreaView>
-      <SafeAreaView style={myStyles.safeAreaViewContainer}>
+      </View>
+      <View style={myStyles.safeAreaViewContainer}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
           {members.map((l, i) =>
@@ -191,23 +200,29 @@ const JourneyDetailScreen = ({ route, navigation }) => {
               <MemberComponent
                 member={l}
                 i={i}
-                backgroundColor={colors.spot1} />
+                backgroundColor={colors.switch1} />
               :
               <MemberComponent
                 member={l}
                 i={i}
-                backgroundColor={colors.spot2} />
+                backgroundColor={colors.switch2} />
           )
           }
         </ScrollView>
-      </SafeAreaView>
-      <View style={myStyles.buttonContainer}>
-        <Button
-          title="Bắt đầu"
-          onPress={() => navigation.navigate("LiveJourney")}>
-        </Button>
       </View>
-    </View >
+      <View style={[
+        myStyles.button,
+        { flexDirection: 'row', justifyContent: 'space-around' }]}>
+
+        <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
+          <Button
+            onPress={() => navigation.navigate("LiveJourney")}
+            title="Bắt đầu"
+            color={colors.primary}
+          />
+        </View>
+      </View>
+    </SafeAreaView >
   );
 };
 export default JourneyDetailScreen;
@@ -226,5 +241,9 @@ const myStyles = StyleSheet.create({
   },
   map: {
     flex: 3
-  }
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: 50
+  },
 })
