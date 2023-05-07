@@ -20,6 +20,8 @@ export const BACKGROUND_PROFILE = require('./arya-dubey-8eYI8qcEFxI-unsplash.jpg
 
 export const REMOVE_ICON = require('./x.png');
 
+export const USER_ICON = require('./user.png');
+
 export const bottomTabIcon = {
   home: require('./home.png'),
   friend: require('./friends.png'),
