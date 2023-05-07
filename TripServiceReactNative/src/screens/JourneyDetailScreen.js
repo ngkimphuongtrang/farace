@@ -106,6 +106,9 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       navigation.navigate("UpdateLocations", { Locations: locations, Members: members });
     }
   }
+  const handleClickGo = () => {
+    navigation.navigate("LiveJourney", { groupId: route.params.groupId })
+  }
   return (
     <SafeAreaView style={styles.ContainerScreen}>
       {
@@ -216,7 +219,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
 
         <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle]}>
           <Button
-            onPress={() => navigation.navigate("LiveJourney")}
+            onPress={handleClickGo}
             title="Bắt đầu"
             color={colors.primary}
           />
