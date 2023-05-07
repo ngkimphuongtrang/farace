@@ -60,6 +60,8 @@ export const endpoints = {
   tripDetail: TRIP_DOMAIN,
   postTrip: TRIP_DOMAIN,
   getDistance: ROUTE_DOMAIN,
+  start: `${TRIP_DOMAIN}/start`,
+  realTime: `${TRIP_DOMAIN}/realtime`,
 };
 
 export const keys = {

@@ -1,120 +1,144 @@
 import React, { useState,useEffect } from "react";
 import { Animated, Vibration,StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions, Modal,TouchableOpacity} from "react-native";
 import MapView,{Marker} from "react-native-maps";
-//import Footer from "../components/Footer";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import { Icon } from '@rneui/base';
-// import { onChildChanged } from "firebase/database";
-// import { ref } from "firebase/database";
-// import { onValue } from "firebase/database";
-// import { db} from "../services/firebase-config";
+import { onChildChanged } from "firebase/database";
+import { ref } from "firebase/database";
+import { onValue } from "firebase/database";
+import { db} from "../services/firebase-config";
 import { CheckBox } from '@rneui/base';
-// import Lottie from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 import { AnimationJson } from "../assets/image";
+import { keys } from "../constants";
+import { getDataFromAsyncStorage } from "../components/util";
+import { endpoints } from "../constants";
+import MapViewDirections from "react-native-maps-directions";
+import { USER_ICON } from '../assets/image/index.js';
 
-
-
-
-const Map = () => {
-  const groupId = "063cc4af-47a6-446a-a6a2-c7b95bacd5e3";
-  const ownerId= "3ff64-5717-4562-b3fc-2c963f66afa6";
-  const imgUrl = "https://bedental.vn/wp-content/uploads/2022/11/ce4f544cf302130777ecf32e24b1b9f8.png";
-  const firstName = "Hien";
-  const [distanceLocation, SetDistanceLocation] = useState(
-    [
-      {
-        locationName : "ABC",
-        latitude : 10.8002149,
-        longitude : 106.6673316,
-        distance : 123.2,
-        isCompleted : true
-      },
-      {
-        locationName : "DEF",
-        latitude : 10.8002149,
-        longitude : 106.6673316,
-        distance : 123.2,
-        isCompleted : true
-      },
-      {
-        locationName : "GHK",
-        latitude : 10.8002149,
-        longitude : 106.6673316,
-        distance : 123.2,
-        isCompleted : false
-      }
-
-    ]
-  )
-
-  const [distanceMember, setDistanceMember] = useState([
-    {
-        firstName: "abc",
-        imgUrl : imgUrl,
-        distance : 10
-    },
-    {
-        imgUrl: imgUrl,
-        firstName: "abc",
-        distance : 10
-    },
-    {
-        imgUrl : imgUrl,
-        firstName: "abc",
-        distance : 10
-    }
-  ])
-
-  const [coordinates, setCoordinates] = useState([
-    {
-      customerId : "ngvd-5717-4562-b3fc-2c963f66afa6",
-      latitude: 10.7112349,
-      longitude: 106.6673316,
-      ImgUrl:""
-    },
-    {
-      customerId : "dsfghg-5717-4562-b3fc-2c963f66afa6",
-      latitude: 10.7312149,
-      longitude: 106.6673316,
-      ImgUrl:""
-    }
-  ])
-  const [ownerLocation, setOwnerLocation] = useState(
-    {
-      customerId : ownerId,
-      latitude: 10.7212249,
-      longitude: 106.6673316,
-    })
+const Map = ({ route, navigation }) => {
+  const { groupId } = route.params.groupId;
+  const [ownerId, setOwnerId] = useState();
+  const [ownerFirstName, setOwnerFirstName] = useState();
+  const [location, setLocation] = useState([]);
+  const [member, setMember] = useState([]);
+  const [distanceLocation, SetDistanceLocation] = useState([])
+  const [distanceMember, setDistanceMember] = useState([])
+  const [coordinateMember, setCoordinateMember] = useState([])
+  const [ownerLocation, setOwnerLocation] = useState({
+          latitude: 10.7212249,
+          longitude: 106.6673316,
+        })
 
   useEffect(() => {
-    setInterval(() => {
-      Geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position.coords.latitude)
-          console.log(position.coords.longitude)
-          var distances = axios.post(' https://7277-2001-ee0-51d1-e6e0-41c8-1910-37ff-563f.ngrok-free.app/api/v1/trip/realtime', {
+            setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+        })
+  }, []);
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  async function loadData() {
+    const userId = await InitData();
+    const userFirstName = await getData(userId);
+    const start = await StartTrip(userId, userFirstName);
+    IntervalRealtime(start.userId, start.userFirstName);
+  }
+
+  const InitData = async () => {
+    const userId = await getDataFromAsyncStorage(keys.userId);
+    setOwnerId(userId);
+    return userId;
+  }
+
+  const getData = async (userId) => {
+    try {
+      const response = await axios.get(`${endpoints.tripDetail}/${groupId}/detail`);
+      setLocation(response.data.locations);
+      setMember(response.data.customers);
+      for (const element of response.data.customers) {
+        if (element.customerId === userId) {
+          setOwnerFirstName(element.firstName);
+          return element.firstName;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const StartTrip = async (userId, userFirstName) => {
+    Geolocation.getCurrentPosition(
+      async (position) => {
+        var start = await axios.post(endpoints.start, {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          customerId: userId,
+          groupId: groupId,
+          firstName : userFirstName,
+        });
+        var distances = axios.post(`${endpoints.realTime}`, {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            customerId: ownerId,
+            customerId: userId,
             groupId: groupId,
-            firstName : firstName,
-            imgUrl : imgUrl
+            firstName : userFirstName,
           })
           .then(function (response) {
-            console.log(response.data);
             var responseData = response.data
             SetDistanceLocation(responseData["locationRealtimes"])
             setDistanceMember(responseData["customerRealtimes"])
-            setCoordinates(responseData["customerRealtimes"])
-            setOwnerLocation({customerId: ownerId, latitude: position.coords.latitude,longitude: position.coords.longitude})
+            updateCoordinateMember(responseData)
+          })
+      })
+      return { userId, userFirstName };
+	}
+
+
+  const updateCoordinateMember = (responseData) => {
+    const updatedCoords = responseData.customerRealtimes.map((customer) => {
+      if (customer.latitude !== 0 && customer.longitude !== 0) {
+        return {
+          latitude: customer.latitude,
+          longitude: customer.longitude,
+        };
+      }
+      return null;
+    }).filter(Boolean); // Filter out any null values
+  
+    setCoordinateMember(updatedCoords);
+  }
+
+  const IntervalRealtime = (userId, userFirstName) => {
+    console.log("ownerFirstName", userFirstName);
+    console.log("ownerId", userId);
+    setInterval(() => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+          var distances = axios.post(`${endpoints.realTime}`, {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            customerId: userId,
+            groupId: groupId,
+            firstName : userFirstName,
+          })
+          .then(function (response) {
+            var responseData = response.data
+            SetDistanceLocation(responseData["locationRealtimes"])
+            setDistanceMember(responseData["customerRealtimes"])
+            updateCoordinateMember(responseData)
           })
           .catch(function (error) {
             console.log(error);
           });
           })
-    }, 100000000);
-  },[]);
+    }, 20000);
+  }
 
   const [dataFirebase, setDataFirebase] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -140,7 +164,27 @@ const Map = () => {
       }); 
   },[])
 
-  
+  const renderDirections = () => {
+    const directions = [];
+    for (let i = 0; i < location.length; i++) {
+      const origin = i === 0 ? ownerLocation : location[i - 1];
+      const destination = location[i];
+      if (origin && destination) {
+        directions.push(
+          <MapViewDirections
+            key={`${i}-${origin?.lat ?? 'undefined'}-${origin?.lng ?? 'undefined'}-${destination?.lat ?? 'undefined'}-${destination?.lng ?? 'undefined'}`}
+            origin={origin}
+            destination={destination}
+            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"} // Replace with your Google Maps API key
+            strokeWidth={3}
+            strokeColor="blue"
+          />
+        );
+      }
+    }
+    return directions;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header} >
@@ -148,9 +192,9 @@ const Map = () => {
           <ScrollView>
             {distanceMember.map((p, i) => (
                 <View style = {styles.info} key={i}>
-                  <Image
+                  {/* <Image
                         style={styles.image}
-                        source={{uri : p.imgUrl}}></Image>
+                        source={{uri : p.imgUrl}}></Image> */}
                     <Text style = {{marginLeft: 10,fontSize:10}}>{p.firstName}</Text>
                     <Text style = {{marginLeft: 10,fontSize:10}}>{p.distance}</Text>
                 </View>
@@ -160,8 +204,8 @@ const Map = () => {
         <View style={styles.header.box}>
           <ScrollView>
                   {
-                    distanceLocation.map((x,i) =>
-                    <View style = {styles.info} key={i}>
+                    distanceLocation.map((x,index) =>
+                    <View style = {styles.info} key={index}>
                       <Text style = {{marginLeft: 10,fontSize:10, width : 55}}>{x.locationName}</Text>
                       <Text style = {{marginLeft: 5,fontSize:10, width : 35}}>{x.distance}</Text>
                       <CheckBox 
@@ -191,14 +235,29 @@ const Map = () => {
         }
         }>
         {
-          coordinates.map((coordinate,index) =>
+          coordinateMember.map((coordinate,index) =>
           <Marker
             key={index}
             coordinate={{
               latitude: coordinate.latitude,
               longitude: coordinate.longitude,
             }}
-            icon={coordinate.ImgUrl}
+          >
+            <View style={{ height: 30, width: 30 }}>
+              <Image source={USER_ICON} style={{ height: '100%', width: '100%' }} />
+            </View>
+          </Marker>
+          )
+        }
+        {
+          location.map((coordinate,index) =>
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
+            }}
+            // icon={coordinate.ImgUrl}
           />
           )
         }
@@ -210,19 +269,7 @@ const Map = () => {
             }}
             pinColor = {'#269039'}
           />
-        {/* <MapViewDirections
-          origin={{
-            latitude: 10.8002149,
-            longitude: 106.6673316,
-          }}
-          destination={{
-            latitude: 10.7002149,
-            longitude: 106.6673316,
-          }}
-          apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
-          strokeWidth={4}
-          strokeColor="rgb(0,139,241)"
-        /> */}
+        {renderDirections()}
       </MapView>
       {/* <Footer id="2"/> */}
       <Modal
@@ -273,7 +320,7 @@ const styles = StyleSheet.create({
 
   },
   map: {
-    flex: 0.6
+    flex: 0.8
   },
   image: {
     width: 30,
