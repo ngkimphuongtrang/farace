@@ -11,7 +11,7 @@ import MapView, { Marker } from "react-native-maps";
 import MemberComponent from '../components/MemberComponent';
 import LocationComponent from '../components/LocationComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { storeGroupId } from '../components/util';
+import { getDataFromAsyncStorage, storeGroupId } from '../components/util';
 
 const JourneyDetailScreen = ({ route, navigation }) => {
   let groupId;
@@ -29,7 +29,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   const [distances, setDistances] = useState([]);
   const [travelTimes, setTravelTimes] = useState([]);
   useEffect(() => {
-    async function getData() {
+    async function getData() { // from JourneyScreen
       const { groupId } = route.params;
       console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
       axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
@@ -41,7 +41,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           console.log(locations, members);
         })
     }
-    async function getData2() {
+    async function getData2() { // from AddMemberScreen
       const locationSerialized = await AsyncStorage.getItem(keys.location);
       if (locationSerialized) {
         const _locationData = JSON.parse(locationSerialized);
@@ -106,8 +106,13 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       navigation.navigate("UpdateLocations", { Locations: locations, Members: members });
     }
   }
-  const handleClickGo = () => {
-    navigation.navigate("LiveJourney", { groupId: route.params.groupId })
+  const handleClickGo = async () => {
+    if (route.params) {
+      navigation.navigate("LiveJourney", { groupId: route.params.groupId })
+    } else {
+      const groupId = await getDataFromAsyncStorage(keys.groupId);
+      navigation.navigate("LiveJourney", { groupId: groupId })
+    }
   }
   return (
     <SafeAreaView style={styles.ContainerScreen}>
@@ -181,8 +186,8 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       <View style={[myStyles.safeAreaViewContainer, styles.BorderStyle]}>
 
         <ScrollView style={myStyles.scrollViewContainer}>
-          <TouchableOpacity onPress={handleUpdateTrip}>
-            <Image source={icons.edit} style={styles.image} />
+          <TouchableOpacity onPress={handleUpdateTrip} style={{ marginLeft: 280 }}>
+            <Image source={icons.edit} style={[styles.image, { width: 20, height: 20 }]} />
           </TouchableOpacity>
           {locations.map((l, i) =>
             i % 2 == 0 ?
@@ -201,11 +206,13 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           {members.map((l, i) =>
             i % 2 == 0 ?
               <MemberComponent
+                key={i}
                 member={l}
                 i={i}
                 backgroundColor={colors.switch1} />
               :
               <MemberComponent
+                key={i}
                 member={l}
                 i={i}
                 backgroundColor={colors.switch2} />

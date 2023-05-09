@@ -58,7 +58,6 @@ const Map = ({ route, navigation }) => {
   const getData = async (userId) => {
     try {
       const response = await axios.get(`${endpoints.tripDetail}/${groupId}/detail`);
-      console.log("request", `${endpoints.tripDetail}/${groupId}/detail`);
       setLocation(response.data.locations);
       setMember(response.data.customers);
       for (const element of response.data.customers) {
@@ -68,7 +67,7 @@ const Map = ({ route, navigation }) => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log("GET detail:", error);
     }
   }
 
@@ -135,7 +134,7 @@ const Map = ({ route, navigation }) => {
               updateCoordinateMember(responseData)
             })
             .catch(function (error) {
-              console.log(error);
+              console.log("IntervalRealtime:", error);
             });
         })
     }, 20000);

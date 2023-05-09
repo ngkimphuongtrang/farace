@@ -82,7 +82,9 @@ const JourneyScreen = ({ navigation }) => {
 										{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch1, justifyContent: 'space-around' },
 										styles.BorderStyle,
 										{ borderColor: colors.switch1 }]}>
-										<Text>{l['createdAt'].substring(0, 10)}</Text>
+										<Text>{l['createdAt']
+											// .substring(0, 10)
+										}</Text>
 										<View style={[
 											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch2 },
 											styles.BorderStyle,
