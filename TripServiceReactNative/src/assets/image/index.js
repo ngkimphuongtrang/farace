@@ -31,4 +31,5 @@ export const bottomTabIcon = {
 }
 export const icons = {
   edit: require('./edit.png'),
+  greenBiker: require('./soldier.png'),
 }

@@ -73,8 +73,8 @@ function BottomTab() {
       }}
     />
     <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
+      name="ProfileStack"
+      component={ProfileStackScreen}
       options={{
         tabBarLabel: 'Cá nhân',
         tabBarIcon: () => (
@@ -87,6 +87,25 @@ function BottomTab() {
       }}
     />
   </Tab.Navigator>)
+}
+const ProfileStack = createNativeStackNavigator();
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          title: "Trang cá nhân",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+    </ProfileStack.Navigator>
+  )
 }
 const JourneyStack = createNativeStackNavigator();
 function JourneyStackScreen() {

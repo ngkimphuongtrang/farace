@@ -8,7 +8,7 @@ import {
     StyleSheet,
     StatusBar,
     Alert,
-    Image, Button, ActivityIndicator
+    Image, Button
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -33,9 +33,6 @@ const SignInScreen = ({ navigation }) => {
         isValidUser: true,
         isValidPassword: true,
     });
-
-
-    //const { signIn } = React.useContext(AuthContext);
 
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {
@@ -109,6 +106,9 @@ const SignInScreen = ({ navigation }) => {
             signInFail();
         }
     }
+    const handleLogOut = () => {
+        navigation.navigate("SignUpScreen");
+    }
     return (
         <SafeAreaView style={myStyles.container}>
             {/* {loading ? (
@@ -133,12 +133,9 @@ const SignInScreen = ({ navigation }) => {
                         // backgroundColor: colors.background
                     }]}
                 >
-                    <Text style={[myStyles.text_footer, {
-                        color: colors.text
-                    }]}>Tên đăng nhập</Text>
                     <View style={myStyles.action}>
                         <TextInput
-                            placeholder="Tên đăng nhập của bạn"
+                            placeholder="Tên đăng nhập"
                             placeholderTextColor="#666666"
                             style={[myStyles.textInput, {
                                 color: colors.text
@@ -155,17 +152,13 @@ const SignInScreen = ({ navigation }) => {
                             : null}
                     </View>
                     {data.isValidUser ? null :
-                        <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Animatable.View animation="fadeInLeft" duration={500} style={{ marginBottom: 20 }}>
                             <Text style={myStyles.errorMsg}>Tên đăng nhập có độ dài ít nhất 4</Text>
                         </Animatable.View>
                     }
-                    <Text style={[myStyles.text_footer, {
-                        color: colors.text,
-                        marginTop: 35
-                    }]}>Mật khẩu</Text>
                     <View style={myStyles.action}>
                         <TextInput
-                            placeholder="Mật khẩu của bạn"
+                            placeholder="Mật khẩu"
                             placeholderTextColor="#666666"
                             secureTextEntry={data.secureTextEntry ? true : false}
                             style={[myStyles.textInput, {
@@ -180,7 +173,7 @@ const SignInScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     {data.isValidPassword ? null :
-                        <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Animatable.View animation="fadeInLeft" duration={500} style={{ marginBottom: 20 }}>
                             <Text style={myStyles.errorMsg}>Mật khẩu có độ dài ít nhất 8</Text>
                         </Animatable.View>
                     }
@@ -214,7 +207,7 @@ const SignInScreen = ({ navigation }) => {
                 </Animatable.View>
             </View>
             {/* )} */}
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 
@@ -239,15 +232,6 @@ const myStyles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 30
     },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 30
-    },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 18
-    },
     action: {
         flexDirection: 'row',
         marginTop: 10,
@@ -267,6 +251,11 @@ const myStyles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+        borderWidth: 1,
+        borderColor: colors.primary,
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
     },
     errorMsg: {
         color: '#FF0000',

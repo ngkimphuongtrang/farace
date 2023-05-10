@@ -1,13 +1,13 @@
-import React, { useState,useEffect } from "react";
-import { Animated, Vibration,StyleSheet, Text, ScrollView , View , Platform, PermissionsAndroid,Image, Dimensions, Modal,TouchableOpacity} from "react-native";
-import MapView,{Marker} from "react-native-maps";
+import React, { useState, useEffect } from "react";
+import { Animated, Vibration, StyleSheet, Text, ScrollView, View, Platform, PermissionsAndroid, Image, Dimensions, Modal, TouchableOpacity } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import { Icon } from '@rneui/base';
 import { onChildChanged } from "firebase/database";
 import { ref } from "firebase/database";
 import { onValue } from "firebase/database";
-import { db} from "../services/firebase-config";
+import { db } from "../services/firebase-config";
 import { CheckBox } from '@rneui/base';
 import Lottie from 'lottie-react-native';
 import { AnimationJson } from "../assets/image";
@@ -26,29 +26,29 @@ const Map = ({ route, navigation }) => {
   const [distanceMember, setDistanceMember] = useState([])
   const [coordinateMember, setCoordinateMember] = useState([])
   const [ownerLocation, setOwnerLocation] = useState({
-          latitude: 10.7212249,
-          longitude: 106.6673316,
-        })
+    latitude: 10.7212249,
+    longitude: 106.6673316,
+  })
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
-        (position) => {
-            setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
-        })
+      (position) => {
+        setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+      })
   }, []);
 
   useEffect(() => {
     loadData()
   }, [])
 
-  
+
   async function loadData() {
     const userId = await InitData();
     const userFirstName = await getData(userId);
     const start = await StartTrip(userId, userFirstName);
     IntervalRealtime(start.userId, start.userFirstName);
 
-    const notification = ref(db, 'group/'+ groupId+ '/user/'+ start.userId +'/event/arrived');
+    const notification = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/arrived');
     onChildChanged(
       notification, (snapshot) => {
         setShowPopup(true);
@@ -59,33 +59,31 @@ const Map = ({ route, navigation }) => {
       notification, (snapshot) => {
         const data = snapshot.val();
         console.log(data)
-        if (data != null)
-        {
+        if (data != null) {
           var locationName = data["locationName"]
           setDataFirebase(`Chúc mừng bạn đã đến ${locationName}`)
         }
       });
 
-    const notificationComing = ref(db, 'group/'+ groupId+ '/user/'+ start.userId +'/event/coming');
+    const notificationComing = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/coming');
     onChildChanged(
       notificationComing, (snapshot) => {
         setShowPopup(true);
         Vibration.vibrate([500, 1000, 500]);
       });
 
-      onValue(
-        notificationComing, (snapshot) => {
-          const data = snapshot.val();
-          console.log("data",data)
-          if (data != null)
-          {
-            var locationName = data["locationName"]
-            var distance = data["distance"]
-            console.log(distance)
-            console.log(locationName)
-            setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
-          }
-        });
+    onValue(
+      notificationComing, (snapshot) => {
+        const data = snapshot.val();
+        console.log("data", data)
+        if (data != null) {
+          var locationName = data["locationName"]
+          var distance = data["distance"]
+          console.log(distance)
+          console.log(locationName)
+          setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
+        }
+      });
   }
 
   const InitData = async () => {
@@ -117,15 +115,15 @@ const Map = ({ route, navigation }) => {
           longitude: position.coords.longitude,
           customerId: userId,
           groupId: groupId,
-          firstName : userFirstName,
+          firstName: userFirstName,
         });
         var distances = axios.post(`${endpoints.realTime}`, {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            customerId: userId,
-            groupId: groupId,
-            firstName : userFirstName,
-          })
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          customerId: userId,
+          groupId: groupId,
+          firstName: userFirstName,
+        })
           .then(function (response) {
             var responseData = response.data
             SetDistanceLocation(responseData["locationRealtimes"])
@@ -133,8 +131,8 @@ const Map = ({ route, navigation }) => {
             updateCoordinateMember(responseData)
           })
       })
-      return { userId, userFirstName };
-	}
+    return { userId, userFirstName };
+  }
 
 
   const updateCoordinateMember = (responseData) => {
@@ -147,31 +145,31 @@ const Map = ({ route, navigation }) => {
       }
       return null;
     }).filter(Boolean); // Filter out any null values
-  
+
     setCoordinateMember(updatedCoords);
   }
 
   const IntervalRealtime = (userId, userFirstName) => {
     setInterval(() => {
-      Geolocation.getCurrentPosition(
-        (position) => {
-          setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
-          var distances = axios.post(`${endpoints.realTime}`, {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            customerId: userId,
-            groupId: groupId,
-            firstName : userFirstName,
-          })
-          .then(function (response) {
-            var responseData = response.data
-            SetDistanceLocation(responseData["locationRealtimes"])
-            setDistanceMember(responseData["customerRealtimes"])
-            updateCoordinateMember(responseData)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        Geolocation.getCurrentPosition(
+          (position) => {
+            setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+            var distances = axios.post(`${endpoints.realTime}`, {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              customerId: userId,
+              groupId: groupId,
+              firstName: userFirstName,
+            })
+              .then(function (response) {
+                var responseData = response.data
+                SetDistanceLocation(responseData["locationRealtimes"])
+                setDistanceMember(responseData["customerRealtimes"])
+                updateCoordinateMember(responseData)
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           })
     }, 20000);
   }
@@ -206,34 +204,34 @@ const Map = ({ route, navigation }) => {
         <View style={styles.header.box}>
           <ScrollView>
             {distanceMember.map((p, i) => (
-                <View style = {styles.info} key={i}>
-                  {/* <Image
+              <View style={styles.info} key={i}>
+                {/* <Image
                         style={styles.image}
                         source={{uri : p.imgUrl}}></Image> */}
-                    <Text style = {{marginLeft: 10,fontSize:10}}>{p.firstName}</Text>
-                    <Text style = {{marginLeft: 10,fontSize:10}}>{p.distance}</Text>
-                </View>
+                <Text style={{ marginLeft: 10, fontSize: 10 }}>{p.firstName}</Text>
+                <Text style={{ marginLeft: 10, fontSize: 10 }}>{p.distance}</Text>
+              </View>
             ))}
           </ScrollView>
         </View>
         <View style={styles.header.box}>
           <ScrollView>
-                  {
-                    distanceLocation.map((x,index) =>
-                    <View style = {styles.info} key={index}>
-                      <Text style = {{marginLeft: 10,fontSize:10, width : 55}}>{x.locationName.split(',')[0]}</Text>
-                      <Text style = {{marginLeft: 5,fontSize:10, width : 35}}>{x.distance}</Text>
-                      <CheckBox 
-                        checked ={x.isCompleted} 
-                        size={25} 
-                        checkedColor="#0F0" 
-                        uncheckedColor="#F00"
-                        style={styles.checkbox}
-                        containerStyle={styles.containerCheckBox}
-                        />
-                    </View>
-                    )
-                  }
+            {
+              distanceLocation.map((x, index) =>
+                <View style={styles.info} key={index}>
+                  <Text style={{ marginLeft: 10, fontSize: 10, width: 55 }}>{x.locationName.split(',')[0]}</Text>
+                  <Text style={{ marginLeft: 5, fontSize: 10, width: 35 }}>{x.distance}</Text>
+                  <CheckBox
+                    checked={x.isCompleted}
+                    size={25}
+                    checkedColor="#0F0"
+                    uncheckedColor="#F00"
+                    style={styles.checkbox}
+                    containerStyle={styles.containerCheckBox}
+                  />
+                </View>
+              )
+            }
           </ScrollView>
         </View>
       </View>
@@ -250,40 +248,40 @@ const Map = ({ route, navigation }) => {
         }
         }>
         {
-          coordinateMember.map((coordinate,index) =>
-          <Marker
-            key={index}
-            coordinate={{
-              latitude: coordinate.latitude,
-              longitude: coordinate.longitude,
-            }}
-          >
-            <View style={{ height: 30, width: 30 }}>
-              <Image source={USER_ICON} style={{ height: '100%', width: '100%' }} />
-            </View>
-          </Marker>
+          coordinateMember.map((coordinate, index) =>
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+              }}
+            >
+              <View style={{ height: 30, width: 30 }}>
+                <Image source={USER_ICON} style={{ height: '100%', width: '100%' }} />
+              </View>
+            </Marker>
           )
         }
         {
-          location.map((coordinate,index) =>
-          <Marker
-            key={index}
-            coordinate={{
-              latitude: coordinate.latitude,
-              longitude: coordinate.longitude,
-            }}
+          location.map((coordinate, index) =>
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+              }}
             // icon={coordinate.ImgUrl}
-          />
+            />
           )
         }
-          <Marker
-            key={1}
-            coordinate={{
-              latitude: ownerLocation.latitude,
-              longitude: ownerLocation.longitude,
-            }}
-            pinColor = {'#269039'}
-          />
+        <Marker
+          key={1}
+          coordinate={{
+            latitude: ownerLocation.latitude,
+            longitude: ownerLocation.longitude,
+          }}
+          pinColor={'#269039'}
+        />
         {renderDirections()}
       </MapView>
       {/* <Footer id="2"/> */}
@@ -305,7 +303,7 @@ const Map = ({ route, navigation }) => {
           /> */}
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>{dataFirebase}</Text>
-            <TouchableOpacity style={styles.closeButton}  onPress={() => setShowPopup(false)}>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPopup(false)}>
               <Icon name="close" type="FontAwesome" />
             </TouchableOpacity>
           </View>
@@ -330,7 +328,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#D9D9D9',
       borderRadius: 10,
       margin: '5%',
-      padding : 10
+      padding: 10
     },
 
   },
@@ -341,8 +339,8 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-  info:{
-    flex: 1, 
+  info: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     height: 50
@@ -365,7 +363,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginVertical: 10,
-    height : 50
+    height: 50
   },
   closeButton: {
     backgroundColor: '#9E93B6',

@@ -10,6 +10,9 @@ const signIn = (Email, Password) => {
   const postLogin = async () => {
     var token, userId;
     try {
+      console.log(endpoints.login, {
+        Email, Password
+      });
       await axios.post(endpoints.login, {
         Email, Password
       }).then(function (response) {

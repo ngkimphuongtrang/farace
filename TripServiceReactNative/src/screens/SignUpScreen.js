@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Platform,
   StyleSheet,
   StatusBar,
   Alert,
@@ -120,9 +119,11 @@ const SignUpScreen = () => {
   const handleRegister = async () => {
     Email = registerInfo.username;
     Password = registerInfo.password;
+    PhoneNumber = '';
+    BirthDay = '';
     try {
       await axios.post(endpoints.register, {
-        Email, Password, FirstName, LastName
+        Email, Password, FirstName, LastName, PhoneNumber, BirthDay
       }).then(function (response) {
         console.log(response);
         registerSuccessfullyNotifier();
@@ -132,6 +133,13 @@ const SignUpScreen = () => {
       registerFailNotifier();
     }
   }
+  // const setDate = (event, date) => {
+  //   const {
+  //     type,
+  //     nativeEvent: {timestamp},
+  //   } = event;
+  // };
+
 
   return (
     <View style={myStyles.container}>
@@ -152,10 +160,8 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Tên đăng nhập"
-            // placeholderTextColor="#666666"
-            // style={[myStyles.textInput, {
-            //   color: colors.text
-            // }]}
+            placeholderTextColor="#666666"
+            style={myStyles.textInput}
             autoCapitalize="none"
             onChangeText={(val) => textInputChange(val)}
             onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
@@ -175,7 +181,7 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Mật khẩu"
-            // placeholderTextColor="#666666"
+            placeholderTextColor="#666666"
             secureTextEntry={registerInfo.secureTextEntry ? true : false}
             style={[myStyles.textInput, {
               // color: colors.text
@@ -197,7 +203,7 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Nhập lại mật khẩu"
-            // placeholderTextColor="#666666"
+            placeholderTextColor="#666666"
             secureTextEntry={registerInfo.secureTextEntry ? true : false}
             style={[myStyles.textInput, {
               // color: colors.text
@@ -218,11 +224,13 @@ const SignUpScreen = () => {
         <View style={myStyles.action}>
           <TextInput
             placeholder="Nhập tên"
+            placeholderTextColor="#666666"
             style={myStyles.textInput}
             onChangeText={(val) => setFirstname(val)} /></View>
         <View style={myStyles.action}>
           <TextInput
             placeholder='Nhập họ'
+            placeholderTextColor="#666666"
             style={myStyles.textInput}
             onChangeText={(val) => setLastName(val)} /></View>
         <View style={[myStyles.button, { alignContent: 'space-between' }]}>
@@ -287,6 +295,11 @@ const myStyles = StyleSheet.create({
     paddingLeft: 10,
     color: 'black',
     // fontWeight: 'bold'
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
   errorMsg: {
     color: '#FF0000',
