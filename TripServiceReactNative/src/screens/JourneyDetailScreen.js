@@ -103,8 +103,8 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       const { groupId } = route.params;
       console.log("group edit:", groupId);
       storeGroupId(groupId);
-      navigation.navigate("UpdateLocations", { Locations: locations, Members: members });
     }
+    navigation.navigate("UpdateLocations", { Locations: locations, Members: members });
   }
   const handleClickGo = async () => {
     if (route.params) {
@@ -191,10 +191,14 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           </TouchableOpacity>
           {locations.map((l, i) =>
             i % 2 == 0 ?
-              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch1} />
-              :
-              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch2} />
-          )
+              (<>
+                <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
+                <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch1} />
+              </>)
+              : <>
+                <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
+                <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch2} />
+              </>)
           }
           {/* {distances.map((d, i) => <Text key={i + locations.length}>{d}</Text>)} */}
           {/* {travelTimes.map((d, i) => <Text key={i}>{d}</Text>)} */}

@@ -13,9 +13,9 @@ import Lottie from 'lottie-react-native';
 import { AnimationJson } from "../assets/image";
 import { keys } from "../constants";
 import { getDataFromAsyncStorage } from "../components/util";
-import { endpoints } from "../constants";
+import { endpoints, colors } from "../constants";
 import MapViewDirections from "react-native-maps-directions";
-import { USER_ICON } from '../assets/image/index.js';
+import { icons } from '../assets/image/index.js';
 
 const Map = ({ route, navigation }) => {
   const groupId = route.params.groupId;
@@ -60,7 +60,7 @@ const Map = ({ route, navigation }) => {
         const data = snapshot.val();
         console.log(data)
         if (data != null) {
-          var locationName = data["locationName"]
+          var locationName = data["LocationName"]
           setDataFirebase(`Chúc mừng bạn đã đến ${locationName}`)
         }
       });
@@ -77,8 +77,9 @@ const Map = ({ route, navigation }) => {
         const data = snapshot.val();
         console.log("data", data)
         if (data != null) {
-          var locationName = data["locationName"]
-          var distance = data["distance"]
+          var locationName = data["LocationName"].split(',')[0];
+
+          var distance = data["Distance"]
           console.log(distance)
           console.log(locationName)
           setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
@@ -151,26 +152,26 @@ const Map = ({ route, navigation }) => {
 
   const IntervalRealtime = (userId, userFirstName) => {
     setInterval(() => {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
-            var distances = axios.post(`${endpoints.realTime}`, {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              customerId: userId,
-              groupId: groupId,
-              firstName: userFirstName,
-            })
-              .then(function (response) {
-                var responseData = response.data
-                SetDistanceLocation(responseData["locationRealtimes"])
-                setDistanceMember(responseData["customerRealtimes"])
-                updateCoordinateMember(responseData)
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
+      Geolocation.getCurrentPosition(
+        (position) => {
+          setOwnerLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+          var distances = axios.post(`${endpoints.realTime}`, {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            customerId: userId,
+            groupId: groupId,
+            firstName: userFirstName,
           })
+            .then(function (response) {
+              var responseData = response.data
+              SetDistanceLocation(responseData["locationRealtimes"])
+              setDistanceMember(responseData["customerRealtimes"])
+              updateCoordinateMember(responseData)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
     }, 20000);
   }
   const [dataFirebase, setDataFirebase] = useState("");
@@ -257,7 +258,7 @@ const Map = ({ route, navigation }) => {
               }}
             >
               <View style={{ height: 30, width: 30 }}>
-                <Image source={USER_ICON} style={{ height: '100%', width: '100%' }} />
+                <Image source={icons.redBiker} style={{ height: '100%', width: '100%' }} />
               </View>
             </Marker>
           )
@@ -295,12 +296,12 @@ const Map = ({ route, navigation }) => {
         style={{ margin: 0 }}
       >
         <View style={styles.modalBackground}>
-          {/* <Lottie
+          <Lottie
             source={AnimationJson}
             loop
             autoPlay
             style={{ width: 300, height: 300 }}
-          /> */}
+          />
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>{dataFirebase}</Text>
             <TouchableOpacity style={styles.closeButton} onPress={() => setShowPopup(false)}>
@@ -352,18 +353,20 @@ const styles = StyleSheet.create({
     paddingTop: 70
   },
   modalContent: {
-    backgroundColor: '#189F59',
+    backgroundColor: colors.switch1,
     padding: 10,
     paddingBottom: 10,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 200,
   },
   modalText: {
     fontSize: 18,
     textAlign: 'center',
     marginVertical: 10,
-    height: 50
+    height: 50,
+    marginBottom: 20,
   },
   closeButton: {
     backgroundColor: '#9E93B6',

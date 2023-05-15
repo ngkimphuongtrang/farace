@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, StyleSheet, Button, ScrollView, StatusBar, Alert, TouchableOpacity, Image
+    View, StyleSheet, Button, ScrollView, StatusBar, Alert, TouchableOpacity, Image, Text
 } from 'react-native';
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -14,6 +14,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import { BLUE_MARKER_ICON } from '../assets/image/index.js';
 import { REMOVE_ICON } from '../assets/image/index.js';
 import LocationComponent from '../components/LocationComponent';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 const AddJourneyScreen = ({ route, navigation }) => {
     var Locations;
@@ -63,19 +64,39 @@ const AddJourneyScreen = ({ route, navigation }) => {
         }
         console.log('Set @location in AsyncStorage done:', JSON.stringify(locations));
     }
+    const [date, setDate] = useState(new Date());
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setDate(currentDate);
+        console.log("date selected", date);
+    };
+
+    const showMode = (currentMode) => {
+        DateTimePickerAndroid.open({
+            value: date,
+            onChange,
+            mode: currentMode,
+            is24Hour: true,
+        });
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
     const handlePlaceSelected = (data, details = null) => {
+        showDatepicker();
         const newLocation = details?.geometry?.location;
         const locationObj = {
             latitude: newLocation.lat,
             longitude: newLocation.lng,
             name: data.description,
+            estimatedTimeOfArrival: date,
         };
         setLocations((oldArray) => [...oldArray, locationObj]);
-        placeholder = "";
     };
     const handleAddLocations = () => {
-        if (locations.length < 2) {
-            Alert.alert('Chọn địa điểm không hợp lệ', "Hành trình chứa ít nhất 2 địa điểm.", [
+        if (locations.length < 1) {
+            Alert.alert('Chọn địa điểm không hợp lệ', "Hành trình chứa ít nhất 1 địa điểm.", [
                 {
                     text: 'Thử lại',
                     onPress: () => console.log('OK Pressed'),
@@ -212,7 +233,11 @@ const AddJourneyScreen = ({ route, navigation }) => {
                     }}>
                         {locations.map((l, i) =>
                             <View key={i} style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
-                                <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
+                                <View style={{ flexDirection: 'column' }}>
+
+                                    <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
+                                    <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
+                                </View>
                                 <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
                             </View>
                         )}

@@ -12,10 +12,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
 import { endpoints } from '../constants';
-import { LOGO_GREEN } from '../assets/image';
+import { LOGO_GREEN, icons } from '../assets/image';
 import { styles } from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../constants';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -110,7 +111,7 @@ const SignUpScreen = () => {
       },
     ]);
   const registerFailNotifier = () =>
-    Alert.alert('Tên đăng nhập đã tồn tại', "Chọn một tên đăng nhập khác", [
+    Alert.alert('Đăng ký tài khoản thất bại', "Hãy nhập thông tin đăng ký hợp lệ hoặc chọn một tên đăng nhập khác", [
       {
         text: 'OK',
         onPress: () => console.log("OK pressed"),
@@ -120,7 +121,7 @@ const SignUpScreen = () => {
     Email = registerInfo.username;
     Password = registerInfo.password;
     PhoneNumber = '';
-    BirthDay = '';
+    BirthDay = date;
     try {
       await axios.post(endpoints.register, {
         Email, Password, FirstName, LastName, PhoneNumber, BirthDay
@@ -133,14 +134,26 @@ const SignUpScreen = () => {
       registerFailNotifier();
     }
   }
-  // const setDate = (event, date) => {
-  //   const {
-  //     type,
-  //     nativeEvent: {timestamp},
-  //   } = event;
-  // };
 
+  const [date, setDate] = useState(new Date(1598051730000));
 
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange,
+      mode: currentMode,
+      is24Hour: true,
+    });
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
   return (
     <View style={myStyles.container}>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
@@ -221,19 +234,42 @@ const SignUpScreen = () => {
             <Text style={myStyles.errorMsg}>Nhập lại mật khẩu không khớp với mật khẩu</Text>
           </Animatable.View>
         }
-        <View style={myStyles.action}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+          <View style={[myStyles.action, { width: '50%' }]}>
+            <TextInput
+              placeholder="Nhập tên"
+              placeholderTextColor="#666666"
+              style={myStyles.textInput}
+              onChangeText={(val) => setFirstname(val)} /></View>
+          <View style={[myStyles.action, { width: '50%' }]}>
+            <TextInput
+              placeholder='Nhập họ'
+              placeholderTextColor="#666666"
+              style={myStyles.textInput}
+              onChangeText={(val) => setLastName(val)} /></View></View>
+        <View style={[myStyles.action, {
+          flexDirection: 'row', alignItems: 'center', borderWidth: 1,
+          borderColor: colors.primary,
+          borderRadius: 5,
+          // padding: 10,
+          // marginBottom: 10,
+        }]}>
           <TextInput
-            placeholder="Nhập tên"
+            placeholder="Ngày sinh"
             placeholderTextColor="#666666"
-            style={myStyles.textInput}
-            onChangeText={(val) => setFirstname(val)} /></View>
-        <View style={myStyles.action}>
-          <TextInput
-            placeholder='Nhập họ'
-            placeholderTextColor="#666666"
-            style={myStyles.textInput}
-            onChangeText={(val) => setLastName(val)} /></View>
-        <View style={[myStyles.button, { alignContent: 'space-between' }]}>
+          // value={date.toDateString()}
+          />
+          <TouchableOpacity onPress={showDatepicker} style={{ marginLeft: 250 }}>
+            <Image source={icons.birthday}
+              style={
+                {
+                  justifyContent: 'center',
+                  height: 20,
+                  width: 20,
+                }
+              }></Image></TouchableOpacity>
+        </View>
+        <View style={[myStyles.button, { justifyContent: 'space-between', flexDirection: 'row' }]}>
           <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.primary }]}>
             <Button
               onPress={() => handleRegister()}

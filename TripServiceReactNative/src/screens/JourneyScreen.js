@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
 	View,
-	StyleSheet, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Text
+	TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Text
 } from 'react-native';
 import { ADD_ICON } from '../assets/image/index.js';
 import { endpoints, keys } from '../constants/index.js';
@@ -62,14 +62,18 @@ const JourneyScreen = ({ navigation }) => {
 			<View style={{ flex: 8 }}>
 				<SafeAreaView style={{
 					flex: 1,
-					paddingTop: StatusBar.currentHeight
+					paddingTop: StatusBar.currentHeight,
+					alignItems: 'center'
 				}}>
 					<ScrollView style={{
 						marginHorizontal: 20,
+
 					}}>
 						{trips != undefined ? trips.map((l, i) =>
 							<TouchableOpacity onPress={() => handleOnTripDetail(l['groupId'])} key={i}>
-								<View style={{ flexDirection: 'row', width: 310 }}>
+								<View style={{ flexDirection: 'row', 
+								// width: 360
+							 }}>
 
 									<View style={[
 										{ width: 30, height: 30, backgroundColor: colors.switch1, alignContent: 'center', marginBottom: 5, justifyContent: 'center' },
@@ -106,7 +110,7 @@ const JourneyScreen = ({ navigation }) => {
 									</View>
 								</View>
 							</TouchableOpacity>
-						) : null}
+						) : <Text style={{ fontSize: 18 }}>Hãy bắt đầu những hành trình!</Text>}
 					</ScrollView>
 				</SafeAreaView>
 			</View>

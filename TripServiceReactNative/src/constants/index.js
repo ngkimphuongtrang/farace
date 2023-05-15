@@ -48,14 +48,17 @@ export const colors = {
 };
 
 // Define domain constants
-const USER_DOMAIN = 'https://f4a1-2001-ee0-5202-8950-94c2-af6f-5444-7810.ngrok-free.app/api/v1/user';
-const TRIP_DOMAIN = 'https://38ee-2001-ee0-5202-8950-94c2-af6f-5444-7810.ngrok-free.app/api/v1/trip';
+const USER_DOMAIN = 'https://bef7-115-75-39-140.ngrok-free.app/api/v1/user';
+const TRIP_DOMAIN = 'https://12fc-115-75-39-140.ngrok-free.app/api/v1/trip';
 const ROUTE_DOMAIN = 'https://db49-58-187-184-83.ngrok-free.app/api/v1/routes';
 
 export const endpoints = {
   register: `${USER_DOMAIN}/register`,
   login: `${USER_DOMAIN}/login`,
   userDetail: USER_DOMAIN,
+  userSearch: `${USER_DOMAIN}/search`,
+  sendFriend: `${USER_DOMAIN}/send`,
+  acceptRequest: `${USER_DOMAIN}/accept`,
   members: USER_DOMAIN,
   trip: `${TRIP_DOMAIN}/customer/`,
   tripDetail: TRIP_DOMAIN,

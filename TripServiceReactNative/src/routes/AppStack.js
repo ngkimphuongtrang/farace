@@ -14,7 +14,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import AddMemberScreen from '../screens/AddMemberScreen';
 import Map from '../screens/Map';
 import JourneyDetailScreen from '../screens/JourneyDetailScreen';
-
+import FriendRequestScreen from '../screens/FriendRequestScreen';
+import FriendListScreen from '../screens/FriendListScreen';
 import { colors } from '../constants';
 
 const Tab = createBottomTabNavigator();
@@ -40,8 +41,8 @@ function BottomTab() {
       }}
     />
     <Tab.Screen
-      name="Friend"
-      component={FriendScreen}
+      name="FriendStack"
+      component={FriendStackScreen}
       options={{
         tabBarLabel: 'Bạn bè',
         tabBarIcon: () => (
@@ -105,6 +106,50 @@ function ProfileStackScreen() {
           },
         }} />
     </ProfileStack.Navigator>
+  )
+}
+const FriendStack = createNativeStackNavigator();
+function FriendStackScreen() {
+  return (
+    <FriendStack.Navigator>
+      <FriendStack.Screen
+        name="FriendList"
+        component={FriendListScreen}
+        options={{
+          title: "Danh sách bạn bè",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <FriendStack.Screen
+        name="FindFriend"
+        component={FriendScreen}
+        options={{
+          title: "Tìm bạn bè",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+      <FriendStack.Screen
+        name="FriendRequest"
+        component={FriendRequestScreen}
+        options={{
+          title: "Lời mời kết bạn",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+
+    </FriendStack.Navigator>
   )
 }
 const JourneyStack = createNativeStackNavigator();
