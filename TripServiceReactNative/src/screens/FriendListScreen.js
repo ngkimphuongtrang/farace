@@ -11,6 +11,7 @@ import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getDataFromAsyncStorage } from '../components/util.js';
 import { styles } from '../styles/CommonStyles.js';
+import UserComponent from '../components/UserComponent.js';
 
 const FriendListScreen = ({ navigation }) => {
   const [members, setMembers] = useState([]);
@@ -51,21 +52,12 @@ const FriendListScreen = ({ navigation }) => {
           {
             members.length > 0 ? members?.map((member, i) => {
               return (
-                <View key={i} style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10 }}>
-                  <Image
-                    style={styles.image}
-                    resizeMode="cover"
-                    source={bottomTabIcon.profile}
-                  />
-                  <View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginLeft: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ fontStyle: 'italic' }}>{member['orderId'] + 1},</Text>
-                      <Text style={{ fontWeight: 'bold' }} >{member['firstName']} {member['lastName']}</Text>
-                    </View>
-                    {/* <Text color={colors.primary}>{member.email}</Text>: */}
-                    <Text>{member['email']}</Text>
-                  </View>
-                </View>
+                <UserComponent
+                  key={i}
+                  orderId={member['orderId'] + 1}
+                  firstName={member['firstName']}
+                  lastName={member['lastName']}
+                  email={member['email']} />
               );
             }) : <Text style={{ fontSize: 18, alignItems: 'center' }}>Bạn hiện chưa có người bạn nào</Text>
           }

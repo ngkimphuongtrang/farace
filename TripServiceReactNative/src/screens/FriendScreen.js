@@ -22,9 +22,10 @@ const FriendScreen = ({ navigation }) => {
 		let Sorts = ["FirstName"];
 		let Page = 1;
 		let PageSize = 30;
-		console.log(request, { Filters, Sorts, Page, PageSize });
+		let CustomerId = await getDataFromAsyncStorage(keys.userId);
+		console.log(request, { Filters, Sorts, Page, PageSize, CustomerId });
 		await axios.post(request, {
-			Filters, Sorts, Page, PageSize
+			Filters, Sorts, Page, PageSize, CustomerId
 		})
 			.then(function (response) {
 				console.log("Search:", response.data);
@@ -81,7 +82,31 @@ const FriendScreen = ({ navigation }) => {
 			console.log(error.config);
 		});
 	}
-
+	const handleAcceptRequest = async (member) => {
+		const request = endpoints.acceptRequest;
+		let UserIdReceive = await getDataFromAsyncStorage(keys.userId);
+		let UserIdSend = member['id'];
+		console.log(request, { UserIdSend, UserIdReceive });
+		await axios.post(request, {
+			UserIdSend, UserIdReceive
+		}).then(function (response) {
+			console.log("Accept:", response, response.data);
+			setMembers(response.data);
+			acceptRequestSuccess(member);
+		}).catch(function (error) {
+			acceptRequestFail(member);
+			if (error.response) {
+				console.log(error.response.data);
+				console.log(error.response.status);
+				console.log(error.response.headers);
+			} else if (error.request) {
+				console.log(error.request);
+			} else {
+				console.log('Error', error.message);
+			}
+			console.log(error.config);
+		});
+	}
 	return (
 		<SafeAreaView style={styles.ContainerScreen}>
 
@@ -118,15 +143,32 @@ const FriendScreen = ({ navigation }) => {
 										{/* <Text color={colors.primary}>{member.email}</Text>: */}
 										<Text>{member['email']}</Text>
 									</View>
-									<TouchableOpacity onPress={() => handleAddFriend(member)}>
-										<Image source={icons.add}
+									{member['isFriend'] ?
+										<Image source={bottomTabIcon.friend}
 											style={
 												{
-													// justifyContent: 'center',
 													height: 40,
 													width: 40,
 												}
-											}></Image></TouchableOpacity>
+											}></Image>
+										: member['isWaiting'] ?
+											<TouchableOpacity onPress={() => handleAcceptRequest(member)}>
+												<Image source={icons.acceptFriend}
+													style={
+														{
+															height: 40,
+															width: 40,
+														}
+													}></Image></TouchableOpacity> :
+											<TouchableOpacity onPress={() => handleAddFriend(member)}>
+												<Image source={icons.add}
+													style={
+														{
+															height: 40,
+															width: 40,
+														}
+													}></Image></TouchableOpacity>}
+
 								</View>
 							);
 						})
