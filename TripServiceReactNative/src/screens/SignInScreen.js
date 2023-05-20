@@ -17,7 +17,8 @@ import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
 import { colors } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
 const SignInScreen = ({ navigation }) => {
     const [loading, isLoading] = useState(false);
     const auth = useAuth();
@@ -106,17 +107,8 @@ const SignInScreen = ({ navigation }) => {
             signInFail();
         }
     }
-    const handleLogOut = () => {
-        navigation.navigate("SignUpScreen");
-    }
     return (
         <SafeAreaView style={myStyles.container}>
-            {/* {loading ? (
-                 <View style={myStyles.container}>
-                     <ActivityIndicator color={'#000'} animating={true} size="big" />
-                     </View>
-             ) : (*/}
-
             <View style={myStyles.container}>
                 <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
 
@@ -134,7 +126,17 @@ const SignInScreen = ({ navigation }) => {
                     }]}
                 >
                     <View style={myStyles.action}>
-                        <TextInput
+                        <FormInput
+                            // labelValue={email}
+                            onChangeText={(val) => textInputChange(val)}
+                            onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                            placeholderText="Tên đăng nhập"
+                            iconType="user"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                        />
+                        {/* <TextInput
                             placeholder="Tên đăng nhập"
                             placeholderTextColor="#666666"
                             style={[myStyles.textInput, {
@@ -143,7 +145,7 @@ const SignInScreen = ({ navigation }) => {
                             autoCapitalize="none"
                             onChangeText={(val) => textInputChange(val)}
                             onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-                        />
+                        /> */}
                         {data.check_textInputChange ?
                             <Animatable.View
                                 animation="bounceIn"
@@ -157,7 +159,7 @@ const SignInScreen = ({ navigation }) => {
                         </Animatable.View>
                     }
                     <View style={myStyles.action}>
-                        <TextInput
+                        {/* <TextInput
                             placeholder="Mật khẩu"
                             placeholderTextColor="#666666"
                             secureTextEntry={data.secureTextEntry ? true : false}
@@ -166,6 +168,13 @@ const SignInScreen = ({ navigation }) => {
                             }]}
                             autoCapitalize="none"
                             onChangeText={(val) => handlePasswordChange(val)}
+                        /> */}
+                        <FormInput
+                            // labelValue={password}
+                            onChangeText={(val) => handlePasswordChange(val)}
+                            placeholderText="Mật khẩu"
+                            iconType="lock"
+                            secureTextEntry={true}
                         />
                         <TouchableOpacity
                             onPress={updateSecureTextEntry}
@@ -179,11 +188,11 @@ const SignInScreen = ({ navigation }) => {
                     }
 
 
-                    <TouchableOpacity>
+                    {/* <TouchableOpacity>
                         <Text style={{ color: colors.primary }}>Quên mật khẩu</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={[myStyles.button, { alignContent: 'space-between' }]}>
-                        <View style={[
+                        {/* <View style={[
                             { width: "40%", alignContent: 'center', marginBottom: 5 },
                             styles.BorderStyle,
                             { borderColor: colors.primary }]}>
@@ -192,8 +201,14 @@ const SignInScreen = ({ navigation }) => {
                                 title="Đăng nhập"
                                 color={colors.primary}
                             />
-                        </View>
-                        <View style={[
+                        </View> */}
+                        <FormButton
+                            buttonTitle="Đăng nhập"
+                            onPress={handleLogIn}
+                            textColor='white'
+                            bgColor={colors.primary}
+                        />
+                        {/* <View style={[
                             { width: "40%", alignContent: 'center', marginBottom: 5 },
                             styles.BorderStyle,
                             { borderColor: colors.switch2 }]}>
@@ -202,7 +217,16 @@ const SignInScreen = ({ navigation }) => {
                                 title="Đăng ký"
                                 color={colors.switch2}
                             />
-                        </View>
+                        </View> */}
+                        <FormButton
+                            buttonTitle="Đăng ký"
+                            onPress={handleLogIn}
+                            textColor={colors.switch2}
+                            bgColor={colors.switch1}
+                        />
+                        <TouchableOpacity onPress={() => navigation.navigate("AddPostScreen")}>
+                            <Text >Thêm bài</Text>
+                        </TouchableOpacity>
                     </View>
                 </Animatable.View>
             </View>

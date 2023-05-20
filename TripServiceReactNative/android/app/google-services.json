@@ -10,7 +10,7 @@
         "client_info": {
           "mobilesdk_app_id": "1:910763898116:android:241a505c7dc05348a48c51",
           "android_client_info": {
-            "package_name": "com.trip.tripservice"
+            "package_name": "com.tripservicereactnative"
           }
         },
         "oauth_client": [

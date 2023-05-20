@@ -12,6 +12,18 @@ export const AuthStack = () => {
     }}>
       <Stack.Screen name="SignInScreen" component={SignInScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+      <Stack.Screen
+        name="AddPostScreen"
+        component={AddPostScreen}
+        options={{
+          title: "Them bai",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
     </Stack.Navigator>
   );
 };

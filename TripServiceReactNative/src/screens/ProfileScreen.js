@@ -156,6 +156,7 @@ const ProfileScreen = ({ navigation }) => {
                     <TouchableOpacity style={[myStyles.button, styles.BorderStyle, { backgroundColor: colors.switch1, marginLeft: 200 }]} onPress={handleLogOut}>
                         <Text style={[myStyles.buttonText, { color: colors.switch2, fontSize: 18 }]}>Đăng xuất</Text>
                     </TouchableOpacity>
+                    
                 </>
             )}
         </View>
