@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import storage from '@react-native-firebase/storage';
+import { endpoints } from "../constants";
+import axios from 'axios';
 
 export const getDataFromAsyncStorage = async (key) => {
   try {
@@ -22,13 +24,10 @@ export const windowHeight = Dimensions.get('window').height;
 
 export const getAvatarByUserId = async (userId) => {
   const pathImage = userId + '.jpg';
-  // console.log("userId+:", pathImage);
   try {
     const storageRef = storage().ref(pathImage);
     const url = await storageRef.getDownloadURL();
-    // console.log("get url image:", url);
     if (typeof url === 'string' || url instanceof String) {
-      // console.log("get url success");
       return url;
     }
     else return null;
@@ -36,4 +35,22 @@ export const getAvatarByUserId = async (userId) => {
     console.log("Error get firestore:", e);
     return null;
   }
+}
+
+export const getUserInfoById = async (userId) => {
+  let myUserId = await getDataFromAsyncStorage(userId);
+  let request = `${endpoints.members}/${myUserId}/detail`;
+  data = null;
+  try {
+    await axios.get(request)
+      .then(function (response) {
+        console.log("getUserInfoById", response.data);
+        data = response.data;
+        return response.data;
+      })
+
+  } catch (error) {
+    console.log(error);
+  };
+  return data;
 }

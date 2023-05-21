@@ -8,7 +8,7 @@ import { bottomTabIcon } from '../assets/image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { endpoints, colors, keys } from '../constants';
 import axios from 'axios';
-import { getDataFromAsyncStorage, storeGroupId } from '../components/util';
+import { getDataFromAsyncStorage, getUserInfoById, storeGroupId } from '../components/util';
 
 const AddMemberScreen = ({ route, navigation }) => {
 	var Members;
@@ -110,6 +110,9 @@ const AddMemberScreen = ({ route, navigation }) => {
 			navigation.navigate("JourneyDetailScreen", { groupId: groupId });
 		}
 		else {
+			const me = await getUserInfoById(keys.userId);
+			console.log("myinfo", me);
+			customers[j++] = me
 			try {
 				console.log("payload", { locations, customers }, postTripDomain);
 				await axios.post(postTripDomain, {
