@@ -10,6 +10,8 @@ export const ADD_ICON = require('./add.png')
 
 export const AnimationJson = require('./lf20_fnjH1K.json')
 
+export const AnimationWarningJson = require('./lf20_8zle4p5u.json')
+
 export const BLUE_MARKER_ICON = require('./pin.png');
 
 export const BACKGROUND_HOME = require('./jairph-1XLyzi17Z2M-unsplash.jpg');

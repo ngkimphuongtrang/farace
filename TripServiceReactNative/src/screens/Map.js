@@ -10,7 +10,7 @@ import { onValue } from "firebase/database";
 import { db } from "../services/firebase-config";
 import { CheckBox } from '@rneui/base';
 import Lottie from 'lottie-react-native';
-import { AnimationJson } from "../assets/image";
+import { AnimationJson , AnimationWarningJson} from "../assets/image";
 import { keys } from "../constants";
 import { getDataFromAsyncStorage } from "../components/util";
 import { endpoints, colors } from "../constants";
@@ -19,9 +19,7 @@ import { icons } from '../assets/image/index.js';
 
 const Map = ({ route, navigation }) => {
   const groupId = route.params.groupId;
-  const [ownerFirstName, setOwnerFirstName] = useState();
-  const [location, setLocation] = useState([]);
-  const [member, setMember] = useState([]);
+  const [locations, setLocation] = useState([]);
   const [distanceLocation, SetDistanceLocation] = useState([])
   const [distanceMember, setDistanceMember] = useState([])
   const [coordinateMember, setCoordinateMember] = useState([])
@@ -53,6 +51,7 @@ const Map = ({ route, navigation }) => {
       notification, (snapshot) => {
         setShowPopup(true);
         Vibration.vibrate([500, 1000, 500]);
+        setAnimation(AnimationJson)
       });
 
     onValue(
@@ -70,6 +69,7 @@ const Map = ({ route, navigation }) => {
       notificationComing, (snapshot) => {
         setShowPopup(true);
         Vibration.vibrate([500, 1000, 500]);
+        setAnimation(AnimationJson)
       });
 
     onValue(
@@ -85,6 +85,24 @@ const Map = ({ route, navigation }) => {
           setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
         }
       });
+
+    const notificationWeather = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/weather');
+    onChildChanged(
+      notificationWeather, (snapshot) => {
+        setShowPopup(true);
+        Vibration.vibrate([500, 1000, 500]);
+        setAnimation(AnimationWarningJson)
+      });
+
+    onValue(
+      notificationWeather, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data)
+        if (data != null) {
+          var text = data["Text"]
+          setDataFirebase(text)
+        }
+      });
   }
 
   const InitData = async () => {
@@ -96,10 +114,8 @@ const Map = ({ route, navigation }) => {
     try {
       const response = await axios.get(`${endpoints.tripDetail}/${groupId}/detail`);
       setLocation(response.data.locations);
-      setMember(response.data.customers);
       for (const element of response.data.customers) {
         if (element.customerId === userId) {
-          setOwnerFirstName(element.firstName);
           return element.firstName;
         }
       }
@@ -130,6 +146,7 @@ const Map = ({ route, navigation }) => {
             SetDistanceLocation(responseData["locationRealtimes"])
             setDistanceMember(responseData["customerRealtimes"])
             updateCoordinateMember(responseData)
+            setLocation(responseData["locationRealtimes"])
           })
       })
     return { userId, userFirstName };
@@ -167,6 +184,7 @@ const Map = ({ route, navigation }) => {
               SetDistanceLocation(responseData["locationRealtimes"])
               setDistanceMember(responseData["customerRealtimes"])
               updateCoordinateMember(responseData)
+              setLocation(responseData["locationRealtimes"])
             })
             .catch(function (error) {
               console.log(error);
@@ -174,31 +192,59 @@ const Map = ({ route, navigation }) => {
         })
     }, 20000);
   }
+
   const [dataFirebase, setDataFirebase] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [checked, setChecked] = useState(false);
-
-  const renderDirections = () => {
+  const [animation, setAnimation] = useState(AnimationJson);
+  const getDirections = () => {
+    const completedLocations = locations.filter(
+      (location) => location.isCompleted
+    );
+    const incompleteLocations = locations.filter(
+      (location) => !location.isCompleted
+    );
     const directions = [];
-    for (let i = 0; i < location.length; i++) {
-      const origin = i === 0 ? ownerLocation : location[i - 1];
-      const destination = location[i];
-      if (origin && destination) {
-        directions.push(
-          <MapViewDirections
-            key={`${i}-${origin?.lat ?? 'undefined'}-${origin?.lng ?? 'undefined'}-${destination?.lat ?? 'undefined'}-${destination?.lng ?? 'undefined'}`}
-            origin={origin}
-            destination={destination}
-            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"} // Replace with your Google Maps API key
-            strokeWidth={3}
-            strokeColor="blue"
-          />
-        );
+    console.log("completedLocations",completedLocations.length)
+    for (let i = 0; i < completedLocations.length; i++) 
+    {
+      const source = completedLocations[i];
+      let destination = completedLocations[i + 1];
+      console.log("destination",destination)
+      if (destination == null)
+      {
+        destination = ownerLocation
       }
+      directions.push({
+        source,
+        destination,
+        color: 'green',
+      });
     }
+
+    if (incompleteLocations[0] != null)
+    {
+      directions.push({
+        source: ownerLocation,
+        destination: incompleteLocations[0],
+        color: 'red',
+      });
+    }
+    
+
+    for (let i = 0; i < incompleteLocations.length - 1; i++) 
+    {
+      const source = incompleteLocations[i];
+      const destination = incompleteLocations[i + 1];
+      directions.push({
+        source,
+        destination,
+        color: 'red',
+      });
+    }
+
     return directions;
   };
-
+  const directions = getDirections();
   return (
     <View style={styles.container}>
       <View style={styles.header} >
@@ -263,18 +309,6 @@ const Map = ({ route, navigation }) => {
             </Marker>
           )
         }
-        {
-          location.map((coordinate, index) =>
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-              }}
-            // icon={coordinate.ImgUrl}
-            />
-          )
-        }
         <Marker
           key={1}
           coordinate={{
@@ -283,7 +317,33 @@ const Map = ({ route, navigation }) => {
           }}
           pinColor={'#269039'}
         />
-        {renderDirections()}
+        {directions.map((direction, index) => (
+        <MapViewDirections
+          key={index}
+          origin={{
+            latitude: direction.source.latitude,
+            longitude: direction.source.longitude,
+          }}
+          destination={{
+            latitude: direction.destination.latitude,
+            longitude: direction.destination.longitude,
+          }}
+          apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+          strokeWidth={3}
+          strokeColor={direction.color}
+        />
+      ))}
+
+      {locations.map((location, index) => (
+        <Marker
+          key={index}
+          coordinate={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+          }}
+          pinColor={location.isCompleted ? 'green' : 'red'}
+        />
+      ))}
       </MapView>
       {/* <Footer id="2"/> */}
       <Modal
