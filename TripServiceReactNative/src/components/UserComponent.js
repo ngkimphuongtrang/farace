@@ -8,19 +8,18 @@ const UserComponent = (props) => {
     <View elevation={5} style={[
       {
         alignContent: 'center', marginBottom: 10,
-        backgroundColor: colors.switch1, flexDirection: 'row'
+        backgroundColor: props['bgColor'], flexDirection: 'row'
       },
       styles.BorderStyle, { borderColor: colors.switch2, borderRadius: 10 }
     ]} >
       <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10, marginTop: 10 }}>
-        <AvatarComponent userId={props['userId']} />
+        <AvatarComponent userId={props['member']['id']} />
 
         <View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginLeft: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontStyle: 'italic' }}>{props['orderId']},</Text>
-            <Text style={{ fontWeight: 'bold' }} >{props['firstName']} {props['lastName']}</Text>
+            <Text style={{ fontWeight: 'bold' }} >{props['member']['firstName']} {props['member']['lastName']}</Text>
           </View>
-          <Text>{props.email}</Text>
+          <Text>{props['member']['email']}</Text>
         </View>
       </View>
     </View>

@@ -232,9 +232,9 @@ const AddJourneyScreen = ({ route, navigation }) => {
                         marginHorizontal: 20,
                     }}>
                         {locations.map((l, i) =>
-                            <View key={i} style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+                            <View key={i} style={[styles.BorderStyle,
+                            { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', backgroundColor: colors.switch1, borderColor: colors.switch1 }]}>
                                 <View style={{ flexDirection: 'column' }}>
-
                                     <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
                                     <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
                                 </View>

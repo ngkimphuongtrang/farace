@@ -10,8 +10,12 @@ const LocationComponent = (props) => {
       }, props.otherStyle,
       styles.BorderStyle, { borderColor: props.backgroundColor }
     ]} key={props.i}>
-      <Text style={{ fontStyle: 'italic' }}>{props.i + 1}, </Text>
-      <Text style={{ fontWeight: 'bold' }}>{props.location.name}</Text>
+      <View style={{ flexDirection: 'column' }}>
+        <Text>{props.location.estimatedTimeOfArrival?.toLocaleString()}</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontStyle: 'italic' }}>{props.i + 1}, </Text>
+          <Text style={{ fontWeight: 'bold' }}>{props.location.name}</Text></View>
+      </View>
     </View>
   )
 }

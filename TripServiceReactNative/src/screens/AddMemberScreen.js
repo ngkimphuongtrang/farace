@@ -143,18 +143,17 @@ const AddMemberScreen = ({ route, navigation }) => {
 					{
 						members.map((member, i) => {
 							return (
-								<View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+								<View key={i} style={[styles.BorderStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: colors.switch1 }]}>
 									<Image
-										style={styles.image}
+										style={[styles.image, { marginTop: 5 }]}
 										resizeMode="cover"
 										source={bottomTabIcon.profile}
 									/>
-									<View style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+									<View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginTop: 5 }}>
 										<View style={{ flexDirection: 'row' }}>
 											<Text style={{ fontStyle: 'italic' }}>{member.orderId + 1},</Text>
 											<Text style={{ fontWeight: 'bold' }} >{member.firstName} {member.lastName}</Text>
 										</View>
-										{/* <Text color={colors.primary}>{member.email}</Text>: */}
 										<Text>{member.email}</Text>
 									</View>
 									<CheckBox

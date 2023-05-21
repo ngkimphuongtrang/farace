@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import {
-  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, Image, TouchableOpacity
+  View, Button, SafeAreaView, ScrollView, StatusBar, StyleSheet, Image, TouchableOpacity
 } from 'react-native';
 import { colors, endpoints, keys } from '../constants';
 import { styles } from '../styles/CommonStyles';
@@ -8,10 +8,10 @@ import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
 import { BLUE_MARKER_ICON, icons } from '../assets/image/index.js';
 import MapView, { Marker } from "react-native-maps";
-import MemberComponent from '../components/MemberComponent';
 import LocationComponent from '../components/LocationComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDataFromAsyncStorage, storeGroupId } from '../components/util';
+import UserComponent from '../components/UserComponent';
 
 const JourneyDetailScreen = ({ route, navigation }) => {
   let groupId;
@@ -191,14 +191,11 @@ const JourneyDetailScreen = ({ route, navigation }) => {
           </TouchableOpacity>
           {locations.map((l, i) =>
             i % 2 == 0 ?
-              (<>
-                <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
-                <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch1} />
-              </>)
-              : <>
-                <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
-                <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch2} />
-              </>)
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch1} />
+
+              :
+              <LocationComponent key={i} location={l} i={i} backgroundColor={colors.switch2} />
+          )
           }
           {/* {distances.map((d, i) => <Text key={i + locations.length}>{d}</Text>)} */}
           {/* {travelTimes.map((d, i) => <Text key={i}>{d}</Text>)} */}
@@ -209,17 +206,16 @@ const JourneyDetailScreen = ({ route, navigation }) => {
         <ScrollView style={myStyles.scrollViewContainer}>
           {members.map((l, i) =>
             i % 2 == 0 ?
-              <MemberComponent
+              <UserComponent
                 key={i}
                 member={l}
-                i={i}
-                backgroundColor={colors.switch1} />
-              :
-              <MemberComponent
+                bgColor={colors.switch1}
+              />
+              : <UserComponent
                 key={i}
                 member={l}
-                i={i}
-                backgroundColor={colors.switch2} />
+                bgColor={colors.switch2}
+              />
           )
           }
         </ScrollView>
