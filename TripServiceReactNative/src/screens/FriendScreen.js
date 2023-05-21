@@ -11,6 +11,7 @@ import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getDataFromAsyncStorage } from '../components/util.js';
 import { styles } from '../styles/CommonStyles.js';
+import AvatarComponent from '../components/AvatarComponent.js';
 
 const FriendScreen = ({ navigation }) => {
 	const [searchQuery, setSearchQuery] = useState('');
@@ -130,20 +131,22 @@ const FriendScreen = ({ navigation }) => {
 									justifyContent: 'space-between',
 									marginBottom: 5,
 								}}>
-									<Image
+									<AvatarComponent userId={member['id']} />
+									{/* <Image
 										style={styles.image}
 										resizeMode="cover"
 										source={bottomTabIcon.profile}
-									/>
+									/> */}
 									<View style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
 										<View style={{ flexDirection: 'row' }}>
-											<Text style={{ fontStyle: 'italic' }}>{member['orderId'] + 1},</Text>
+											{/* <Text style={{ fontStyle: 'italic' }}>{member['orderId'] + 1},</Text> */}
 											<Text style={{ fontWeight: 'bold' }} >{member['firstName']} {member['lastName']}</Text>
 										</View>
 										{/* <Text color={colors.primary}>{member.email}</Text>: */}
 										<Text>{member['email']}</Text>
 									</View>
 									{member['isFriend'] ?
+
 										<Image source={bottomTabIcon.friend}
 											style={
 												{

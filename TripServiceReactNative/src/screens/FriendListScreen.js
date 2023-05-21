@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Image, Alert,
   StyleSheet, ScrollView, Text, Button, StatusBar
 } from 'react-native';
-import { bottomTabIcon, icons } from '../assets/image/index.js';
 import { colors, endpoints, keys } from '../constants/index.js';
 import { Searchbar } from 'react-native-paper';
 import axios from 'axios';
@@ -23,13 +21,15 @@ const FriendListScreen = ({ navigation }) => {
         axios.get(request)
           .then(function (response) {
             setMembers(response.data);
-            console.log(`${request} response:`, members);
+            console.log(`${request} response:`, members, '\n', response.data);
           })
           .catch(function (error) {
             console.log(error);
           });
       }
-      getData();
+      // getData();
+      setMembers([{ "birthDay": "2020-08-21T23:15:30", "email": "nkpt2", "firstName": "Trang", "id": "2dbbd0a3-1a39-45d9-9b9e-1fe268845d35", "imgUrl": null, "lastName": "Phuong", "orderId": 0, "phoneNumber": null }, { "birthDay": "0001-01-01T00:00:00", "email": "hiennguyen", "firstName": "Hiên", "id": "8023dc54-026e-4636-8833-a96e1f79161c", "imgUrl": null, "lastName": "Nguyễn", "orderId": 1, "phoneNumber": null }, { "birthDay": "2001-06-08T00:00:00", "email": "nkpt1", "firstName": "Trang Ph", "id": "adabdaa8-89b1-491e-93ad-8bd6fc8fc333", "imgUrl": null, "lastName": "Nguyen", "orderId": 2, "phoneNumber": "0323882823" }]
+      )
     });
     return unsubscribe;
   }, []);
@@ -54,6 +54,7 @@ const FriendListScreen = ({ navigation }) => {
               return (
                 <UserComponent
                   key={i}
+                  userId={member['id']}
                   orderId={member['orderId'] + 1}
                   firstName={member['firstName']}
                   lastName={member['lastName']}

@@ -1,54 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, TouchableOpacity, View, Image, StyleSheet, TextInput, Alert
+    Text, TouchableOpacity, View, Image, StyleSheet, TextInput, Alert, Platform,
 } from 'react-native';
 import { keys } from '../constants';
 import { useAuth } from '../contexts/Auth';
 import { styles } from '../styles/CommonStyles';
-import { getDataFromAsyncStorage } from '../components/util';
+import { getDataFromAsyncStorage, getAvatarByUserId } from '../components/util';
 import { colors, endpoints } from '../constants';
 import { icons } from '../assets/image';
 import axios from 'axios';
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
 
-const UserProfile = ({ avatar, name, dateOfBirth, phoneNumber, username, onEdit }) => {
-    dateOfBirth = "06-08-2001";
-    phoneNumber = "0334571352"
+const UserProfile = ({ done, avatar, name, phoneNumber, username, onEdit }) => {
+    // phoneNumber = "0334571352"
     return (
         <View style={myStyles.container}>
+            <TouchableOpacity onPress={onEdit} style={{ marginLeft: 280 }}>
+                <Image source={icons.edit} style={[styles.image,
+                    //  { width: 20, height: 20 }
+                ]} />
+            </TouchableOpacity>
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Image style={myStyles.avatar} source={avatar} />
+
+                {done ? <Image source={{ uri: avatar }} style={myStyles.avatar} /> :
+                    <Image source={icons.greenBiker} style={myStyles.avatar} />}
                 <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{username}</Text></View>
             <Text style={myStyles.label}>Tên</Text>
             <TextInput
                 style={myStyles.input}
                 value={name}
             />
-            <Text style={myStyles.label}>Ngày sinh</Text>
-            <TextInput
-                style={myStyles.input}
-                value={dateOfBirth}
-            />
             <Text style={myStyles.label}>Số điện thoại</Text>
             <TextInput
                 style={myStyles.input}
                 value={phoneNumber}
             />
-            <TouchableOpacity style={myStyles.button} onPress={onEdit}>
-                <Text style={myStyles.buttonText}>Chỉnh sửa</Text>
-            </TouchableOpacity>
+
         </View>
     );
 };
 
 const ProfileScreen = ({ navigation }) => {
+    const [image, setImage] = useState("");
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
+    const [done, setDone] = useState(false);
+
     const [userInfo, setUserInfo] = useState({
-        firstName: '',
-        lastName: '',
+        firstName: 'dummy name',
         phoneNumber: '',
-        birthDay: '',
-        email: '',
+        email: 'dummy@email',
         id: '',
+        imgUrl: '',
     });
+
     const auth = useAuth();
     const logOut = async () => {
         // isLoading(true);
@@ -69,19 +75,43 @@ const ProfileScreen = ({ navigation }) => {
                 });
 
         }
-        getData()
+        getData();
+        getImage();
     }, [])
     const [isEditing, setIsEditing] = useState(false);
 
+    const getImage = async () => {
+        const userId = await getDataFromAsyncStorage(keys.userId);
+        const uri = await getAvatarByUserId(userId);
+        console.log("get image", uri);
+        handleInputChange("imgUrl", uri);
+        setDone(true);
+
+        // console.log("userId+:", userId);
+        // try {
+        //     const storageRef = storage().ref(userId);
+        //     const url = await storageRef.getDownloadURL();
+        //     setImage(url);
+        //     handleInputChange("imgUrl", url);
+        //     setDone(true);
+        //     console.log("get:", url, done);
+        // } catch (e) {
+        //     console.log(e);
+        // }
+    }
     const handleEdit = () => {
         setIsEditing(true);
     };
 
     const handleSave = async () => {
         setIsEditing(false);
+        const imgUrl = await uploadImage();
+        handleInputChange('imgUrl', imgUrl);
         let request = `${endpoints.members}/${userInfo.id}/update`;
-        console.log(request);
-        await axios.put(request, userInfo)
+        const clone = userInfo;
+        clone['imgUrl'] = imgUrl;
+        console.log(request, clone);
+        await axios.put(request, clone)
             .then(function (response) {
                 console.log("/api/v1/user/update:", response.data);
                 Alert.alert('Cập nhật tài khoản thành công', '', [
@@ -101,32 +131,105 @@ const ProfileScreen = ({ navigation }) => {
     };
 
     const handleInputChange = (key, value) => {
+        if (key == "imgUrl") {
+            console.log("---------------------------ping000000000000000000000", value, userInfo);
+        }
         setUserInfo({
             ...userInfo,
             [key]: value,
         });
+        console.log('11111111111111', userInfo);
     };
     const handleLogOut = () => {
         logOut();
         navigation.navigate("SignInScreen");
     }
+    const choosePhotoFromLibrary = () => {
+        ImagePicker.openPicker({
+            width: 2000,
+            height: 2000,
+            cropping: true,
+        }).then((image) => {
+            console.log(image);
+            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+            setImage(imageUri);
+            // handleInputChange("imgUrl", imageUri);
+            setDone(true);
+            console.log(imageUri, image != null);
+        });
+    };
+
+    const uploadImage = async () => {
+        if (image == null) {
+            return null;
+        }
+        const uploadUri = image;
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+        // Add timestamp to File Name
+        const extension = filename.split('.').pop();
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+
+        setUploading(true);
+        setTransferred(0);
+        const filename2 = await getDataFromAsyncStorage(keys.userId) + '.jpg';
+        console.log('userid:', filename2);
+        const storageRef = storage().ref(filename2);
+        const task = storageRef.putFile(uploadUri);
+        console.log(storageRef, '\n', task, '\n', uploadUri, '\n', filename2);
+
+        // Set transferred state
+        task.on('state_changed', (taskSnapshot) => {
+            console.log(
+                `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+            );
+
+            setTransferred(
+                Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+                100,
+            );
+        });
+
+        try {
+            await task;
+
+            const url = await storageRef.getDownloadURL();
+            console.log("down", url);
+            setUploading(false);
+            // setImage(url);
+            handleInputChange("imgUrl", url);
+            setDone(true);
+
+            console.log("done:", userInfo.imgUrl, url, done);
+            Alert.alert(
+                'Ảnh của bạn đã được lưu!',
+                url,
+            );
+            return url;
+
+        } catch (e) {
+            console.log("profile2:", e);
+            return null;
+        }
+
+    };
     return (
         <View style={myStyles.container}>
             {isEditing ? (
                 <>
-                    <Image source={icons.greenBiker} style={myStyles.avatar}
-                    />
+                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={choosePhotoFromLibrary} style={{ flexDirection: 'column', alignItems: 'center' }}>
+                            {done || userInfo.imgUrl ? <Image source={{ uri: userInfo.imgUrl }} style={myStyles.avatar} /> :
+                                <Image source={icons.greenBiker} style={myStyles.avatar} />}
+                        </TouchableOpacity>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{userInfo.email}</Text>
+                    </View>
                     <Text style={myStyles.label}>Tên</Text>
                     <TextInput
                         style={myStyles.input}
                         value={userInfo.firstName}
                         onChangeText={(value) => handleInputChange('firstName', value)}
-                    />
-                    <Text style={myStyles.label}>Ngày sinh</Text>
-                    <TextInput
-                        style={myStyles.input}
-                        value={userInfo.birthDay}
-                        onChangeText={(value) => handleInputChange('birthDay', value)}
                     />
                     <Text style={myStyles.label}>Số điện thoại</Text>
                     <TextInput
@@ -145,21 +248,22 @@ const ProfileScreen = ({ navigation }) => {
                 <>
                     {userInfo && (
                         <UserProfile
-                            avatar={icons.greenBiker}
-                            name={`${userInfo.firstName} ${userInfo.lastName}`}
+                            done={done}
+                            avatar={userInfo.imgUrl}
+                            name={`${userInfo.firstName}`}
                             dateOfBirth={userInfo.birthDay}
                             phoneNumber={userInfo.phoneNumber}
                             username={userInfo.email}
                             onEdit={handleEdit}
                         />
                     )}
-                    <TouchableOpacity style={[myStyles.button, styles.BorderStyle, { backgroundColor: colors.switch1, marginLeft: 200 }]} onPress={handleLogOut}>
+                    <TouchableOpacity style={[myStyles.button, styles.BorderStyle, { backgroundColor: colors.switch1, marginLeft: 100 }]} onPress={handleLogOut}>
                         <Text style={[myStyles.buttonText, { color: colors.switch2, fontSize: 18 }]}>Đăng xuất</Text>
                     </TouchableOpacity>
-                    
                 </>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 };
 
@@ -172,9 +276,9 @@ const myStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     avatar: {
-        width: 150,
-        height: 150,
-        borderRadius: 50,
+        width: 200,
+        height: 200,
+        borderRadius: 20,
         marginBottom: 10,
     },
     name: {

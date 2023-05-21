@@ -21,7 +21,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 const SignUpScreen = () => {
   const navigation = useNavigation();
   const [FirstName, setFirstname] = useState("trang");
-  const [LastName, setLastName] = useState("nguyen");
+  // const [LastName, setLastName] = useState("nguyen");
   const [registerInfo, setData] = useState({
     username: '',
     password: '',
@@ -121,10 +121,12 @@ const SignUpScreen = () => {
     Email = registerInfo.username;
     Password = registerInfo.password;
     PhoneNumber = '';
-    BirthDay = date;
+    // BirthDay = date;
+    LastName = '';
+    ImgUrl = "";
     try {
       await axios.post(endpoints.register, {
-        Email, Password, FirstName, LastName, PhoneNumber, BirthDay
+        Email, Password, FirstName, LastName, PhoneNumber, ImgUrl
       }).then(function (response) {
         console.log(response);
         registerSuccessfullyNotifier();
@@ -234,20 +236,23 @@ const SignUpScreen = () => {
             <Text style={myStyles.errorMsg}>Nhập lại mật khẩu không khớp với mật khẩu</Text>
           </Animatable.View>
         }
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <View style={[myStyles.action, { width: '50%' }]}>
-            <TextInput
-              placeholder="Nhập tên"
-              placeholderTextColor="#666666"
-              style={myStyles.textInput}
-              onChangeText={(val) => setFirstname(val)} /></View>
-          <View style={[myStyles.action, { width: '50%' }]}>
+        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}> */}
+        <View style={[myStyles.action]}>
+          <TextInput
+            placeholder="Nhập tên"
+            placeholderTextColor="#666666"
+            style={myStyles.textInput}
+            onChangeText={(val) => setFirstname(val)} />
+        </View>
+        {/* <View style={[myStyles.action, { width: '50%' }]}>
             <TextInput
               placeholder='Nhập họ'
               placeholderTextColor="#666666"
               style={myStyles.textInput}
-              onChangeText={(val) => setLastName(val)} /></View></View>
-        <View style={[myStyles.action, {
+              onChangeText={(val) => setLastName(val)} />
+          </View> */}
+        {/* </View> */}
+        {/* <View style={[myStyles.action, {
           flexDirection: 'row', alignItems: 'center', borderWidth: 1,
           borderColor: colors.primary,
           borderRadius: 5,
@@ -257,7 +262,7 @@ const SignUpScreen = () => {
           <TextInput
             placeholder="Ngày sinh"
             placeholderTextColor="#666666"
-          // value={date.toDateString()}
+          value={date.toDateString()}
           />
           <TouchableOpacity onPress={showDatepicker} style={{ marginLeft: 250 }}>
             <Image source={icons.birthday}
@@ -268,7 +273,7 @@ const SignUpScreen = () => {
                   width: 20,
                 }
               }></Image></TouchableOpacity>
-        </View>
+        </View> */}
         <View style={[myStyles.button, { justifyContent: 'space-between', flexDirection: 'row' }]}>
           <View style={[{ width: "40%", alignContent: 'center', marginBottom: 5 }, styles.BorderStyle, { borderColor: colors.primary }]}>
             <Button

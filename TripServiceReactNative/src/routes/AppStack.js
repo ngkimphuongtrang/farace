@@ -17,7 +17,6 @@ import JourneyDetailScreen from '../screens/JourneyDetailScreen';
 import FriendRequestScreen from '../screens/FriendRequestScreen';
 import FriendListScreen from '../screens/FriendListScreen';
 import { colors } from '../constants';
-import AddPostScreen from '../screens/AddPostScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -106,7 +105,7 @@ function ProfileStackScreen() {
             fontWeight: 'bold',
           },
         }} />
-      
+
     </ProfileStack.Navigator>
   )
 }

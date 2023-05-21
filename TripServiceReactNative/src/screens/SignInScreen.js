@@ -14,11 +14,11 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import { LOGO_GREEN } from '../assets/image';
 import { useAuth } from '../contexts/Auth';
-import { styles } from '../styles/CommonStyles';
 import { colors } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
+
 const SignInScreen = ({ navigation }) => {
     const [loading, isLoading] = useState(false);
     const auth = useAuth();
@@ -208,25 +208,13 @@ const SignInScreen = ({ navigation }) => {
                             textColor='white'
                             bgColor={colors.primary}
                         />
-                        {/* <View style={[
-                            { width: "40%", alignContent: 'center', marginBottom: 5 },
-                            styles.BorderStyle,
-                            { borderColor: colors.switch2 }]}>
-                            <Button
-                                onPress={() => { navigation.navigate("SignUpScreen"); }}
-                                title="Đăng ký"
-                                color={colors.switch2}
-                            />
-                        </View> */}
                         <FormButton
                             buttonTitle="Đăng ký"
-                            onPress={handleLogIn}
+                            onPress={() => { navigation.navigate("SignUpScreen") }}
                             textColor={colors.switch2}
                             bgColor={colors.switch1}
                         />
-                        <TouchableOpacity onPress={() => navigation.navigate("AddPostScreen")}>
-                            <Text >Thêm bài</Text>
-                        </TouchableOpacity>
+
                     </View>
                 </Animatable.View>
             </View>
