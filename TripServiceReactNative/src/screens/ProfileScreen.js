@@ -82,10 +82,12 @@ const ProfileScreen = ({ navigation }) => {
 
     const getImage = async () => {
         const userId = await getDataFromAsyncStorage(keys.userId);
-        const uri = await getAvatarByUserId(userId);
+        const url = await getAvatarByUserId(userId);
         console.log("get image", uri);
-        handleInputChange("imgUrl", uri);
-        setDone(true);
+        if (typeof url === 'string' || url instanceof String) {
+            handleInputChange("imgUrl", url);
+            setDone(true);
+        }
 
         // console.log("userId+:", userId);
         // try {
