@@ -78,10 +78,7 @@ const Map = ({ route, navigation }) => {
         console.log("data", data)
         if (data != null) {
           var locationName = data["LocationName"].split(',')[0];
-
           var distance = data["Distance"]
-          console.log(distance)
-          console.log(locationName)
           setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
         }
       });
@@ -103,6 +100,24 @@ const Map = ({ route, navigation }) => {
           setDataFirebase(text)
         }
       });
+
+      const notificationGroup = ref(db, 'group/' + groupId + '/event/arrived');
+      onChildChanged(
+        notificationGroup, (snapshot) => {
+          setShowPopup(true);
+          setAnimation(AnimationJson)
+        });
+  
+      onValue(
+        notificationGroup, (snapshot) => {
+          const data = snapshot.val();
+          console.log(data)
+          if (data != null) {
+          var locationName = data["LocationName"].split(',')[0];
+          var userName = data["CustomerName"]
+          setDataFirebase(`Thành viên ${userName} đã đến điểm ${locationName}`)
+          }
+        });
   }
 
   const InitData = async () => {
@@ -204,12 +219,10 @@ const Map = ({ route, navigation }) => {
       (location) => !location.isCompleted
     );
     const directions = [];
-    console.log("completedLocations",completedLocations.length)
     for (let i = 0; i < completedLocations.length; i++) 
     {
       const source = completedLocations[i];
       let destination = completedLocations[i + 1];
-      console.log("destination",destination)
       if (destination == null)
       {
         destination = ownerLocation
@@ -357,7 +370,7 @@ const Map = ({ route, navigation }) => {
       >
         <View style={styles.modalBackground}>
           <Lottie
-            source={AnimationJson}
+            source={animation}
             loop
             autoPlay
             style={{ width: 300, height: 300 }}
