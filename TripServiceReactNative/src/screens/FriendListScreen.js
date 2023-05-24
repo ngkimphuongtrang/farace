@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, ScrollView, Text, Button, StatusBar
+  View, ScrollView, Text, Button, StatusBar, TouchableOpacity
 } from 'react-native';
 import { colors, endpoints, keys } from '../constants/index.js';
 import axios from 'axios';
@@ -37,6 +37,10 @@ const FriendListScreen = ({ navigation }) => {
   const handleClickFindFriend = () => {
     navigation.navigate('FindFriend');
   }
+  const handleClickFriendProfile = (friendId) => {
+    console.log("Friend Id:", friendId);
+    navigation.navigate("FriendProfile", { FriendId: friendId })
+  }
   return (
     <SafeAreaView style={styles.ContainerScreen}>
       <SafeAreaView style={{
@@ -49,11 +53,12 @@ const FriendListScreen = ({ navigation }) => {
           {
             members.length > 0 ? members?.map((member, i) => {
               return (
-                <UserComponent
-                  key={i}
-                  member={member}
-                  bgColor={colors.switch1}
-                />
+                <TouchableOpacity onPress={() => handleClickFriendProfile(member['id'])}>
+                  <UserComponent
+                    key={i}
+                    member={member}
+                    bgColor={colors.switch1}
+                  /></TouchableOpacity>
               );
             }) : <Text style={{ fontSize: 18, alignItems: 'center' }}>Bạn hiện chưa có người bạn nào</Text>
           }

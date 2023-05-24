@@ -11,35 +11,8 @@ import { icons } from '../assets/image';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
+import UserProfile from '../components/UserProfile';
 
-const UserProfile = ({ done, avatar, name, phoneNumber, username, onEdit }) => {
-    // phoneNumber = "0334571352"
-    return (
-        <View style={myStyles.container}>
-            <TouchableOpacity onPress={onEdit} style={{ marginLeft: 280 }}>
-                <Image source={icons.edit} style={[styles.image,
-                    //  { width: 20, height: 20 }
-                ]} />
-            </TouchableOpacity>
-            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-
-                {done ? <Image source={{ uri: avatar }} style={myStyles.avatar} /> :
-                    <Image source={icons.greenBiker} style={myStyles.avatar} />}
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{username}</Text></View>
-            <Text style={myStyles.label}>Tên</Text>
-            <TextInput
-                style={myStyles.input}
-                value={name}
-            />
-            <Text style={myStyles.label}>Số điện thoại</Text>
-            <TextInput
-                style={myStyles.input}
-                value={phoneNumber}
-            />
-
-        </View>
-    );
-};
 
 const ProfileScreen = ({ navigation }) => {
     const [image, setImage] = useState("");
@@ -88,18 +61,6 @@ const ProfileScreen = ({ navigation }) => {
             handleInputChange("imgUrl", url);
             setDone(true);
         }
-
-        // console.log("userId+:", userId);
-        // try {
-        //     const storageRef = storage().ref(userId);
-        //     const url = await storageRef.getDownloadURL();
-        //     setImage(url);
-        //     handleInputChange("imgUrl", url);
-        //     setDone(true);
-        //     console.log("get:", url, done);
-        // } catch (e) {
-        //     console.log(e);
-        // }
     }
     const handleEdit = () => {
         setIsEditing(true);
@@ -133,14 +94,10 @@ const ProfileScreen = ({ navigation }) => {
     };
 
     const handleInputChange = (key, value) => {
-        if (key == "imgUrl") {
-            console.log("---------------------------ping000000000000000000000", value, userInfo);
-        }
         setUserInfo({
             ...userInfo,
             [key]: value,
         });
-        console.log('11111111111111', userInfo);
     };
     const handleLogOut = () => {
         logOut();
@@ -155,7 +112,6 @@ const ProfileScreen = ({ navigation }) => {
             console.log(image);
             const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
             setImage(imageUri);
-            // handleInputChange("imgUrl", imageUri);
             setDone(true);
             console.log(imageUri, image != null);
         });
@@ -186,7 +142,6 @@ const ProfileScreen = ({ navigation }) => {
             console.log(
                 `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
             );
-
             setTransferred(
                 Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
                 100,
@@ -199,7 +154,6 @@ const ProfileScreen = ({ navigation }) => {
             const url = await storageRef.getDownloadURL();
             console.log("down", url);
             setUploading(false);
-            // setImage(url);
             handleInputChange("imgUrl", url);
             setDone(true);
 
@@ -253,7 +207,6 @@ const ProfileScreen = ({ navigation }) => {
                             done={done}
                             avatar={userInfo.imgUrl}
                             name={`${userInfo.firstName}`}
-                            dateOfBirth={userInfo.birthDay}
                             phoneNumber={userInfo.phoneNumber}
                             username={userInfo.email}
                             onEdit={handleEdit}
@@ -272,11 +225,11 @@ const ProfileScreen = ({ navigation }) => {
 export default ProfileScreen;
 
 const myStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+    // container: {
+    //     flex: 1,
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    // },
     avatar: {
         width: 200,
         height: 200,

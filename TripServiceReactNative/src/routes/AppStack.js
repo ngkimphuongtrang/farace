@@ -1,22 +1,24 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import JourneyScreen from '../screens/JourneyScreen';
-import FriendScreen from '../screens/FriendScreen';
-import MessageScreen from '../screens/MessageScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import { colors } from '../constants';
+import { NavigationContainer } from '@react-navigation/native';
 import { bottomTabIcon } from '../assets/image';
 import { Image } from 'react-native';
 import { styles } from '../styles/CommonStyles';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import AddJourneyScreen from '../screens/AddJourneyScreen';
-import { NavigationContainer } from '@react-navigation/native';
 import AddMemberScreen from '../screens/AddMemberScreen';
 import Map from '../screens/Map';
 import JourneyDetailScreen from '../screens/JourneyDetailScreen';
 import FriendRequestScreen from '../screens/FriendRequestScreen';
 import FriendListScreen from '../screens/FriendListScreen';
-import { colors } from '../constants';
+import FriendProfileScreen from '../screens/FriendProfileScreen';
+import HomeScreen from '../screens/HomeScreen';
+import JourneyScreen from '../screens/JourneyScreen';
+import FriendScreen from '../screens/FriendScreen';
+import MessageScreen from '../screens/MessageScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -149,7 +151,18 @@ function FriendStackScreen() {
             fontWeight: 'bold',
           },
         }} />
-
+      <FriendStack.Screen
+        name="FriendProfile"
+        component={FriendProfileScreen}
+        options={{
+          title: "Trang cá nhân",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
     </FriendStack.Navigator>
   )
 }
