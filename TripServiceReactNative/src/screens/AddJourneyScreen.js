@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View, StyleSheet, Button, ScrollView, StatusBar, Alert, TouchableOpacity, Image, Text
 } from 'react-native';
@@ -21,6 +21,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
     if (route.params) {
         Locations = route.params
     }
+    const autocompleteRef = useRef(null);
     const [locations, setLocations] = useState([]);
     const [coordinate, setCoordinate] = useState(
         {
@@ -93,6 +94,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
             estimatedTimeOfArrival: date,
         };
         setLocations((oldArray) => [...oldArray, locationObj]);
+        autocompleteRef.current?.setAddressText('');
     };
     const handleAddLocations = () => {
         if (locations.length < 1) {
@@ -213,6 +215,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
             <View style={[myStyles.input, { flex: 0.8 }]}>
                 <View style={[myStyles.input]}>
                     <GooglePlacesAutocomplete
+                        ref={autocompleteRef}
                         GooglePlacesDetailsQuery={{ fields: "geometry" }}
                         fetchDetails={true}
                         styles={myStyles.autocomplete}
@@ -235,7 +238,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
                             <View key={i} style={[styles.BorderStyle,
                             { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', backgroundColor: colors.switch1, borderColor: colors.switch1 }]}>
                                 <View style={{ flexDirection: 'column' }}>
-                                    <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text>
+                                    {/* <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text> */}
                                     <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
                                 </View>
                                 <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
