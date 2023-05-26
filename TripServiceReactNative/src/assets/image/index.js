@@ -39,3 +39,6 @@ export const icons = {
   acceptFriend: require('./verified-user.png'),
   redBiker: require('./biker.png'),
 }
+export const markers = [
+  require('./number-1.png'),
+  require('./two.png')]

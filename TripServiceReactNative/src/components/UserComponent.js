@@ -1,28 +1,48 @@
-import { styles } from "../styles/CommonStyles";
-import { View, Text, Image } from 'react-native';
-import { colors } from "../constants";
+import { View, Text } from 'react-native';
 import AvatarComponent from "./AvatarComponent";
 
 const UserComponent = (props) => {
   return (
-    <View elevation={5} style={[
-      {
-        alignContent: 'center', marginBottom: 10,
-        backgroundColor: props['bgColor'], flexDirection: 'row'
-      },
-      styles.BorderStyle, { borderColor: colors.switch2, borderRadius: 10 }
-    ]} >
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10, marginTop: 10 }}>
-        <AvatarComponent userId={props['member']['id']} />
 
-        <View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginLeft: 10 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontWeight: 'bold' }} >{props['member']['firstName']} {props['member']['lastName']}</Text>
+    props['elevation'] ?
+      <View
+        style={
+          {
+            alignContent: 'center', 
+            marginBottom: 5,
+            backgroundColor: props['bgColor'], flexDirection: 'row', borderRadius: 10
+          }} >
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10, marginTop: 10 }}>
+          <AvatarComponent userId={props['member']['id']} />
+
+          <View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginLeft: 10 }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontWeight: 'bold' }} >{props['member']['firstName']} {props['member']['lastName']}</Text>
+            </View>
+            <Text>{props['member']['email']}</Text>
           </View>
-          <Text>{props['member']['email']}</Text>
+        </View>
+      </View> :
+      <View elevation={5}
+        style={
+          {
+            alignContent: 'center', marginBottom: 10,
+            backgroundColor: props['bgColor'], flexDirection: 'row', borderRadius: 10
+
+          }} >
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10, marginTop: 10 }}>
+          <AvatarComponent userId={props['member']['id']} />
+
+          <View style={{ flexDirection: 'column', justifyContent: 'flex-start', marginLeft: 10 }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontWeight: 'bold' }} >{props['member']['firstName']} {props['member']['lastName']}</Text>
+            </View>
+            <Text>{props['member']['email']}</Text>
+          </View>
         </View>
       </View>
-    </View>
+
+
   )
 }
 export default UserComponent;

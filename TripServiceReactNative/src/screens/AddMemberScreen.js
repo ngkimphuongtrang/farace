@@ -1,14 +1,14 @@
 import { React, useState, useEffect } from 'react';
 import {
-	View, StyleSheet, Image, Text, Button, ScrollView, SafeAreaView, StatusBar
+	View, StyleSheet, Button, ScrollView, SafeAreaView, StatusBar
 } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { styles } from '../styles/CommonStyles';
-import { bottomTabIcon } from '../assets/image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { endpoints, colors, keys } from '../constants';
 import axios from 'axios';
 import { getDataFromAsyncStorage, getUserInfoById, storeGroupId } from '../components/util';
+import UserComponent from '../components/UserComponent';
 
 const AddMemberScreen = ({ route, navigation }) => {
 	var Members;
@@ -144,7 +144,13 @@ const AddMemberScreen = ({ route, navigation }) => {
 						members.map((member, i) => {
 							return (
 								<View key={i} style={[styles.BorderStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: colors.switch1 }]}>
-									<Image
+									<UserComponent
+										key={i}
+										member={member}
+										bgColor={colors.switch1}
+										elevation={true}
+									/>
+									{/* <Image
 										style={[styles.image, { marginTop: 5 }]}
 										resizeMode="cover"
 										source={bottomTabIcon.profile}
@@ -155,7 +161,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 											<Text style={{ fontWeight: 'bold' }} >{member.firstName} {member.lastName}</Text>
 										</View>
 										<Text>{member.email}</Text>
-									</View>
+									</View> */}
 									<CheckBox
 										checked={isChosenMember(member.email)}
 										onPress={() => handleOnCheckbox(member.email)}

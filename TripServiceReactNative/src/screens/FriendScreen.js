@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
 	View,
 	Image, Alert,
-	StyleSheet, ScrollView, Text, TouchableOpacity, StatusBar, Button
+	ScrollView, Text, TouchableOpacity, StatusBar, Button
 } from 'react-native';
 import { bottomTabIcon, icons } from '../assets/image/index.js';
 import { colors, endpoints, keys } from '../constants/index.js';
@@ -126,10 +126,13 @@ const FriendScreen = ({ navigation }) => {
 					{
 						members.length > 0 && members?.map((member, i) => {
 							return (
-								<View key={i} style={{
+								<View key={i} elevation={5} style={{
 									flexDirection: 'row',
 									justifyContent: 'space-between',
 									marginBottom: 5,
+									backgroundColor: colors.switch1, flexDirection: 'row', borderRadius: 10
+
+
 								}}>
 									<AvatarComponent userId={member['id']} />
 									{/* <Image

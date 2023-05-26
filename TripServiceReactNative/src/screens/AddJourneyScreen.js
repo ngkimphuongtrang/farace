@@ -11,8 +11,7 @@ import { styles } from '../styles/CommonStyles.js';
 import { colors } from '../constants/index.js';
 import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from 'react-native-maps-directions';
-import { BLUE_MARKER_ICON } from '../assets/image/index.js';
-import { REMOVE_ICON } from '../assets/image/index.js';
+import { REMOVE_ICON, markers } from '../assets/image/index.js';
 import LocationComponent from '../components/LocationComponent';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
@@ -178,22 +177,23 @@ const AddJourneyScreen = ({ route, navigation }) => {
                         }}>
                         {
                             locations.map((coordinate, index) =>
-                                index == locations.length - 1 ? <Marker
-                                    key={index}
-                                    coordinate={{
-                                        latitude: coordinate["latitude"],
-                                        longitude: coordinate["longitude"],
-                                    }}
-                                    draggable
+                                // index == locations.length - 1 ? <Marker
+                                //     key={index}
+                                //     coordinate={{
+                                //         latitude: coordinate["latitude"],
+                                //         longitude: coordinate["longitude"],
+                                //     }}
+                                //     draggable
 
-                                /> : <Marker
+                                // /> : 
+                                <Marker
                                     key={index}
                                     coordinate={{
                                         latitude: coordinate["latitude"],
                                         longitude: coordinate["longitude"],
                                     }}
                                     draggable
-                                    image={BLUE_MARKER_ICON} // red is destination
+                                    image={markers[index]} // red is destination
                                 />
                             )
                         }
