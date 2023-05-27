@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Image,
     StyleSheet,
+    TouchableHighlight, TextInput
 } from 'react-native';
 import { BACKGROUND_HOME, LOGO_GREEN } from '../assets/image/index.js';
-import { colors } from '../constants/index.js';
+import { colors, keys } from '../constants/index.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
-    console.log("navigation:", navigation)
+    const [showTextInput, setShowTextInput] = useState(false);
+    const handleSetConfig = async () => {
+        if (showTextInput == false) {
+            setShowTextInput(true);
+        } else {
+            await AsyncStorage.setItem(keys.userDomain, userId);
+        }
+        console.log("text:", showTextInput);
+    }
     return (
         <View style={styles.container}>
             <Image source={BACKGROUND_HOME} style={{
@@ -22,15 +32,19 @@ const HomeScreen = ({ navigation }) => {
             </View> */}
 
             <View style={styles.logoContainer}>
-                <Image
-                    source={LOGO_GREEN}
-                    style={styles.logo}
-                ></Image>
+                <TouchableHighlight onPress={handleSetConfig}>
+                    <Image
+                        source={LOGO_GREEN}
+                        style={styles.logo}
+                    ></Image>
+                </TouchableHighlight>
+                {showTextInput &&
+                    <>
+                        <TextInput placeholder="User domain" />
+                        <TextInput placeholder="Trip domain" style={{ color: 'black' }} />
+                    </>
+                }
             </View>
-            {/* <View style={{
-                 flex: 3,
-             }}
-             </View>  */}
         </View >
     );
 };

@@ -13,10 +13,12 @@
 // export default App;
 
 import React from 'react';
+import { LogBox } from 'react-native';
 
 
 import { Router } from './src/routes/Router';
 import { AuthProvider } from './src/contexts/Auth';
+// LogBox.ignoreAllLogs();
 
 const App = () => {
   return (

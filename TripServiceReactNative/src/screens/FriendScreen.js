@@ -129,7 +129,7 @@ const FriendScreen = ({ navigation }) => {
 								<View key={i} elevation={5} style={{
 									flexDirection: 'row',
 									justifyContent: 'space-between',
-									marginBottom: 5,
+									marginBottom: 10,
 									backgroundColor: colors.switch1, flexDirection: 'row', borderRadius: 10
 
 

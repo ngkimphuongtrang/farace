@@ -236,12 +236,13 @@ const AddJourneyScreen = ({ route, navigation }) => {
                     }}>
                         {locations.map((l, i) =>
                             <View key={i} style={[styles.BorderStyle,
-                            { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', backgroundColor: colors.switch1, borderColor: colors.switch1 }]}>
+                            { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', backgroundColor: colors.switch1, borderColor: colors.switch2, marginTop: 5 }]}>
                                 <View style={{ flexDirection: 'column' }}>
-                                    {/* <Text>{l.estimatedTimeOfArrival?.toLocaleString()}</Text> */}
                                     <LocationComponent location={l} i={i} backgroundColor={colors.switch1} otherStyle={{ maxWidth: 320 }} />
                                 </View>
-                                <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}><Image source={REMOVE_ICON} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleClickLocation(i)} style={{ marginRight: 5 }}>
+                                    <Image source={REMOVE_ICON} />
+                                </TouchableOpacity>
                             </View>
                         )}
 
