@@ -24,12 +24,12 @@ const FriendScreen = ({ navigation }) => {
 		let Page = 1;
 		let PageSize = 30;
 		let CustomerId = await getDataFromAsyncStorage(keys.userId);
-		console.log(request, { Filters, Sorts, Page, PageSize, CustomerId });
+		// console.log(request, { Filters, Sorts, Page, PageSize, CustomerId });
 		await axios.post(request, {
 			Filters, Sorts, Page, PageSize, CustomerId
 		})
 			.then(function (response) {
-				console.log("Search:", response.data);
+				// console.log("Search:", response.data);
 				setMembers(response.data.result);
 			}).catch(function (error) {
 				if (error.response) {
@@ -66,7 +66,7 @@ const FriendScreen = ({ navigation }) => {
 		await axios.post(request, {
 			UserIdSend, UserIdReceive
 		}).then(function (response) {
-			console.log("Send friend:", response, response.data);
+			// console.log("Send friend:", response, response.data);
 			setMembers(response.data);
 			addFriendSuccess(member);
 		}).catch(function (error) {
@@ -87,11 +87,11 @@ const FriendScreen = ({ navigation }) => {
 		const request = endpoints.acceptRequest;
 		let UserIdReceive = await getDataFromAsyncStorage(keys.userId);
 		let UserIdSend = member['id'];
-		console.log(request, { UserIdSend, UserIdReceive });
+		// console.log(request, { UserIdSend, UserIdReceive });
 		await axios.post(request, {
 			UserIdSend, UserIdReceive
 		}).then(function (response) {
-			console.log("Accept:", response, response.data);
+			// console.log("Accept:", response, response.data);
 			setMembers(response.data);
 			acceptRequestSuccess(member);
 		}).catch(function (error) {

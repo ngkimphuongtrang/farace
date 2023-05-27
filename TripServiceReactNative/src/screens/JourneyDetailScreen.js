@@ -31,27 +31,27 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     async function getData() { // from JourneyScreen
       const { groupId } = route.params;
-      console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
+      // console.log("GET:", `${endpoints.tripDetail}/${groupId}/detail`, typeof groupIdValue);
       axios.get(`${endpoints.tripDetail}/${groupId}/detail`)
         .then(function (response) {
-          console.log("Journey Detail Screen:", response, response.data);
+          // console.log("Journey Detail Screen:", response, response.data);
           setLocations(response.data.locations);
           setMembers(response.data.customers);
 
-          console.log(locations, members);
+          // console.log(locations, members);
         })
     }
     async function getData2() { // from AddMemberScreen
       const locationSerialized = await AsyncStorage.getItem(keys.location);
       if (locationSerialized) {
         const _locationData = JSON.parse(locationSerialized);
-        console.log("JourneySummaryScreen location:", _locationData);
+        // console.log("JourneySummaryScreen location:", _locationData);
         setLocations(_locationData);
       }
       const memberSerialized = await AsyncStorage.getItem(keys.member);
       if (memberSerialized) {
         const _memberData = JSON.parse(memberSerialized);
-        console.log("JourneySummaryScreen member:", _memberData);
+        // console.log("JourneySummaryScreen member:", _memberData);
         setMembers(_memberData);
       }
     }
@@ -61,10 +61,10 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       var TravelTimes = [];
       for (let i = 0; i < n - 1; i++) {
         const request = `${endpoints.getDistance}?travel_mode=driving&origin_lng=${locations[i].longitude}&destination_lat=${locations[i + 1].latitude}&destination_lng=${locations[i + 1].longitude}&origin_lat=${locations[i].latitude}`;
-        console.log('GET request distance', request);
+        // console.log('GET request distance', request);
         axios.get(request)
           .then(function (response) {
-            console.log("GET distance:", response, response.data.route);
+            // console.log("GET distance:", response, response.data.route);
             Distances.push(response.data["route"]["distance"]);
             TravelTimes.push(response.data["route"]["travel_time"]);
           })
@@ -77,7 +77,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
       getData()
     else
       getData2()
-    console.log("length location:", locations.length);
+    // console.log("length location:", locations.length);
     // getDistance();
     // console.log(distances, travelTimes);
 
@@ -101,7 +101,7 @@ const JourneyDetailScreen = ({ route, navigation }) => {
   const handleUpdateTrip = () => {
     if (groupId) {
       const { groupId } = route.params;
-      console.log("group edit:", groupId);
+      // console.log("group edit:", groupId);
       storeGroupId(groupId);
     }
     navigation.navigate("UpdateLocations", { Locations: locations, Members: members });

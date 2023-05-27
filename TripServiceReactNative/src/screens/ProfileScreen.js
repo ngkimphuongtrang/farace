@@ -37,11 +37,11 @@ const ProfileScreen = ({ navigation }) => {
         async function getData() {
             let myUserId = await getDataFromAsyncStorage(keys.userId);
             let request = `${endpoints.members}/${myUserId}/detail`;
-            console.log(request);
+            // console.log(request);
             axios.get(request)
                 .then(function (response) {
                     setUserInfo(response.data);
-                    console.log("/api/v1/user detail:", response.data);
+                    // console.log("/api/v1/user detail:", response.data);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -56,7 +56,7 @@ const ProfileScreen = ({ navigation }) => {
     const getImage = async () => {
         const userId = await getDataFromAsyncStorage(keys.userId);
         const url = await getAvatarByUserId(userId);
-        console.log("get image", uri);
+        // console.log("get image", uri);
         if (typeof url === 'string' || url instanceof String) {
             handleInputChange("imgUrl", url);
             setDone(true);
@@ -73,10 +73,10 @@ const ProfileScreen = ({ navigation }) => {
         let request = `${endpoints.members}/${userInfo.id}/update`;
         const clone = userInfo;
         clone['imgUrl'] = imgUrl;
-        console.log(request, clone);
+        // console.log(request, clone);
         await axios.put(request, clone)
             .then(function (response) {
-                console.log("/api/v1/user/update:", response.data);
+                // console.log("/api/v1/user/update:", response.data);
                 Alert.alert('Cập nhật tài khoản thành công', '', [
                     {
                         text: 'OK',
@@ -109,11 +109,11 @@ const ProfileScreen = ({ navigation }) => {
             height: 2000,
             cropping: true,
         }).then((image) => {
-            console.log(image);
+            // console.log(image);
             const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
             setImage(imageUri);
             setDone(true);
-            console.log(imageUri, image != null);
+            // console.log(imageUri, image != null);
         });
     };
 
@@ -132,10 +132,10 @@ const ProfileScreen = ({ navigation }) => {
         setUploading(true);
         setTransferred(0);
         const filename2 = await getDataFromAsyncStorage(keys.userId) + '.jpg';
-        console.log('userid:', filename2);
+        // console.log('userid:', filename2);
         const storageRef = storage().ref(filename2);
         const task = storageRef.putFile(uploadUri);
-        console.log(storageRef, '\n', task, '\n', uploadUri, '\n', filename2);
+        // console.log(storageRef, '\n', task, '\n', uploadUri, '\n', filename2);
 
         // Set transferred state
         task.on('state_changed', (taskSnapshot) => {
@@ -152,12 +152,12 @@ const ProfileScreen = ({ navigation }) => {
             await task;
 
             const url = await storageRef.getDownloadURL();
-            console.log("down", url);
+            // console.log("down", url);
             setUploading(false);
             handleInputChange("imgUrl", url);
             setDone(true);
 
-            console.log("done:", userInfo.imgUrl, url, done);
+            // console.log("done:", userInfo.imgUrl, url, done);
             Alert.alert(
                 'Ảnh của bạn đã được lưu!',
                 url,
@@ -165,7 +165,7 @@ const ProfileScreen = ({ navigation }) => {
             return url;
 
         } catch (e) {
-            console.log("profile2:", e);
+            // console.log("profile2:", e);
             return null;
         }
 

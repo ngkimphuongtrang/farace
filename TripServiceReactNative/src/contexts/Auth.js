@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
     try {
       //Try get the data from Async Storage
       const _authData = await AsyncStorage.getItem('@MyAuthData');
-      console.log("auth:", _authData);
+      // console.log("auth:", _authData);
       setAuthData(_authData);
     } catch (error) {
       console.log("Load Storage Data fail");
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
     const loginToken = result[0];
     if (!loginToken) return false;
     const userId = result[1];
-    console.log("authdata:", loginToken, userId);
+    // console.log("authdata:", loginToken, userId);
 
     //Set the data in the context, so the App can be notified
     //and send the user to the AuthStack
@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
     //Persist the data in the Async Storage
     //to be recovered in the next user session.
     await storeData(loginToken, userId, username);
-    console.log("go here");
+    // console.log("go here");
     return true;
 
   };

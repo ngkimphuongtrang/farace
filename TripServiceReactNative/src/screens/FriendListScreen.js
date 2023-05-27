@@ -19,7 +19,7 @@ const FriendListScreen = ({ navigation }) => {
         axios.get(request)
           .then(function (response) {
             setMembers(response.data);
-            console.log(`${request} response:`, members, '\n', response.data);
+            // console.log(`${request} response:`, members, '\n', response.data);
           })
           .catch(function (error) {
             console.log(error);
@@ -38,7 +38,7 @@ const FriendListScreen = ({ navigation }) => {
     navigation.navigate('FindFriend');
   }
   const handleClickFriendProfile = (friendId) => {
-    console.log("Friend Id:", friendId);
+    // console.log("Friend Id:", friendId);
     navigation.navigate("FriendProfile", { FriendId: friendId })
   }
   return (

@@ -113,8 +113,7 @@ const SignUpScreen = () => {
   const registerFailNotifier = () =>
     Alert.alert('Đăng ký tài khoản thất bại', "Hãy nhập thông tin đăng ký hợp lệ hoặc chọn một tên đăng nhập khác", [
       {
-        text: 'OK',
-        onPress: () => console.log("OK pressed"),
+        text: 'OK'
       },
     ]);
   const handleRegister = async () => {
@@ -128,7 +127,7 @@ const SignUpScreen = () => {
       await axios.post(endpoints.register, {
         Email, Password, FirstName, LastName, PhoneNumber, ImgUrl
       }).then(function (response) {
-        console.log(response);
+        // console.log(response);
         registerSuccessfullyNotifier();
       })
     } catch (error) {

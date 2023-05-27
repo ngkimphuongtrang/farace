@@ -44,7 +44,7 @@ export const getUserInfoById = async (userId) => {
   try {
     await axios.get(request)
       .then(function (response) {
-        console.log("getUserInfoById", response.data);
+        // console.log("getUserInfoById", response.data);
         data = response.data;
         return response.data;
       })

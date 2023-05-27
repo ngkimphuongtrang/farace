@@ -18,13 +18,13 @@ const FriendProfileScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         async function getData() {
-            console.log("FriendProfile, friendId", FriendId);
+            // console.log("FriendProfile, friendId", FriendId);
             let request = `${endpoints.members}/${FriendId}/detail`;
-            console.log("FriendProfileScreen:", request);
+            // console.log("FriendProfileScreen:", request);
             axios.get(request)
                 .then(function (response) {
                     setUserInfo(response.data);
-                    console.log("/api/v1/user detail:", response.data);
+                    // console.log("/api/v1/user detail:", response.data);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -37,7 +37,7 @@ const FriendProfileScreen = ({ route, navigation }) => {
 
     const getImage = async () => {
         const url = await getAvatarByUserId(FriendId);
-        console.log("get image", uri);
+        // console.log("get image", uri);
         if (typeof url === 'string' || url instanceof String) {
             handleInputChange("imgUrl", url);
             setDone(true);

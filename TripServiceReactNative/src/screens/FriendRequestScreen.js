@@ -21,7 +21,7 @@ const FriendRequestScreen = ({ navigation }) => {
       axios.get(request)
         .then(function (response) {
           setMembers(response.data);
-          console.log(`${request} response:`, members);
+          // console.log(`${request} response:`, members);
         })
         .catch(function (error) {
           console.log(error);
@@ -47,11 +47,11 @@ const FriendRequestScreen = ({ navigation }) => {
     const request = endpoints.acceptRequest;
     let UserIdReceive = await getDataFromAsyncStorage(keys.userId);
     let UserIdSend = member['id'];
-    console.log(request, { UserIdSend, UserIdReceive });
+    // console.log(request, { UserIdSend, UserIdReceive });
     await axios.post(request, {
       UserIdSend, UserIdReceive
     }).then(function (response) {
-      console.log("Accept:", response, response.data);
+      // console.log("Accept:", response, response.data);
       setMembers(response.data);
       acceptRequestSuccess(member);
     }).catch(function (error) {

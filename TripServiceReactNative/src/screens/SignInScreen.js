@@ -99,7 +99,7 @@ const SignInScreen = ({ navigation }) => {
         ]);
     const handleLogIn = async () => {
         let success = await signIn(data.username, data.password);
-        console.log("success:", success);
+        // console.log("success:", success);
         if (success) {
             // navigation.navigate("BottomTab", { screen: 'Home' });
             navigation.navigate('Home');

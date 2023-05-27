@@ -34,7 +34,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
             })
         if (Locations) {
             const { Locations } = route.params;
-            console.log("locationsparams:", Locations);
+            // console.log("locationsparams:", Locations);
             setLocations(Locations);
         }
     }, []);
@@ -62,13 +62,13 @@ const AddJourneyScreen = ({ route, navigation }) => {
         } catch (e) {
             // save error
         }
-        console.log('Set @location in AsyncStorage done:', JSON.stringify(locations));
+        // console.log('Set @location in AsyncStorage done:', JSON.stringify(locations));
     }
     const [date, setDate] = useState(new Date());
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setDate(currentDate);
-        console.log("date selected", date);
+        // console.log("date selected", date);
     };
 
     const showMode = (currentMode) => {
@@ -99,8 +99,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
         if (locations.length < 1) {
             Alert.alert('Chọn địa điểm không hợp lệ', "Hành trình chứa ít nhất 1 địa điểm.", [
                 {
-                    text: 'Thử lại',
-                    onPress: () => console.log('OK Pressed'),
+                    text: 'Thử lại'
                 },
             ]);
             return;
@@ -129,7 +128,6 @@ const AddJourneyScreen = ({ route, navigation }) => {
             },
             {
                 text: 'Quay lại',
-                onPress: () => console.log('Go Back Pressed'),
             }
         ]);
     }
@@ -147,10 +145,10 @@ const AddJourneyScreen = ({ route, navigation }) => {
                                 longitudeDelta: 0.0421,
                             }}
                             onPress={(e) => {
-                                console.log("press:", e.nativeEvent, e.nativeEvent.coordinate);
+                                // console.log("press:", e.nativeEvent, e.nativeEvent.coordinate);
                                 setLocations((oldArray) => [...oldArray, e.nativeEvent.coordinate]);
                                 // setLocation({ markers: [...location, e.nativeEvent.coordinate}] })
-                                console.log(locations);
+                                // console.log(locations);
                             }}>
                         </MapView>
                     ) :
@@ -171,7 +169,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
                             longitudeDelta: 0.0421,
                         }}
                         onPress={(e) => {
-                            console.log("press:", e.nativeEvent);
+                            // console.log("press:", e.nativeEvent);
                             setLocations({ markers: [...locations, { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.latitude }] }
                             )
                         }}>

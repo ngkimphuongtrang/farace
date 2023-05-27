@@ -7,7 +7,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 // import { GiftedChat } from 'react-native-gifted-chat';
 
 const MessageScreen = ({ navigation }) => {
-    console.log("navigation:", navigation);
+    // console.log("navigation:", navigation);
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {

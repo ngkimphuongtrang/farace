@@ -29,7 +29,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 		}
 	}
 	const handleOnCheckbox = (username) => {
-		console.log("chosen", chosenMembers);
+		// console.log("chosen", chosenMembers);
 		let n = members.length;
 		for (let i = 0; i < n; i++) {
 			if (isChosenMember(username)) {
@@ -38,12 +38,12 @@ const AddMemberScreen = ({ route, navigation }) => {
 				setChosenMembers((oldArray) => new Set([...oldArray, username]));
 			}
 		}
-		console.log("chosen", chosenMembers);
+		// console.log("chosen", chosenMembers);
 	}
 	const storeMembers = async (members) => {
 		try {
 			await AsyncStorage.setItem('@member', JSON.stringify(members));
-			console.log('Set @member in AsyncStorage done:', members);
+			// console.log('Set @member in AsyncStorage done:', members);
 		} catch (e) {
 			// save error
 		}
@@ -56,7 +56,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 			axios.get(request)
 				.then(function (response) {
 					setMembers(response.data);
-					console.log(`${request} response:`, members);
+					// console.log(`${request} response:`, members);
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -79,7 +79,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 		var _locationData;
 		if (locationSerialized) {
 			_locationData = JSON.parse(locationSerialized);
-			console.log("location get from asyncstorage:", _locationData, members)
+			// console.log("location get from asyncstorage:", _locationData, members)
 		}
 		var customers = []
 		var j = 0;
@@ -95,13 +95,13 @@ const AddMemberScreen = ({ route, navigation }) => {
 		if (Members) {
 			const groupId = await getDataFromAsyncStorage(keys.groupId);
 			postTripDomain = `${endpoints.postTrip}/${groupId}/update`;
-			console.log("payload", { locations, customers }, postTripDomain);
+			// console.log("payload", { locations, customers }, postTripDomain);
 			try {
 				await axios.put(postTripDomain, {
 					locations,
 					customers,
 				}).then(function (response) {
-					console.log("update trip:", response, response.data, locations, customers);
+					// console.log("update trip:", response, response.data, locations, customers);
 
 				});
 			} catch (error) {
@@ -111,15 +111,15 @@ const AddMemberScreen = ({ route, navigation }) => {
 		}
 		else {
 			const me = await getUserInfoById(keys.userId);
-			console.log("myinfo", me);
+			// console.log("myinfo", me);
 			customers[j++] = me
 			try {
-				console.log("payload", { locations, customers }, postTripDomain);
+				// console.log("payload", { locations, customers }, postTripDomain);
 				await axios.post(postTripDomain, {
 					locations,
 					customers,
 				}).then(function (response) {
-					console.log("post trip:", response.data.id, locations, customers);
+					// console.log("post trip:", response.data.id, locations, customers);
 					if (response.data.id) {
 						storeGroupId(response.data.id);
 					}
