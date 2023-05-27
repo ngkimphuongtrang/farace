@@ -71,11 +71,12 @@ const JourneyScreen = ({ navigation }) => {
 					}}>
 						{trips != undefined ? trips.map((l, i) =>
 							<TouchableOpacity onPress={() => handleOnTripDetail(l['groupId'])} key={i}>
-								<View style={{ flexDirection: 'row', 
-								// width: 360
-							 }}>
+								<View style={{
+									flexDirection: 'row',
+									// minWidth: 500
+								}}>
 
-									<View style={[
+									<View elevation={5} style={[
 										{ width: 30, height: 30, backgroundColor: colors.switch1, alignContent: 'center', marginBottom: 5, justifyContent: 'center' },
 										styles.BorderStyle,
 									]}>
@@ -86,9 +87,7 @@ const JourneyScreen = ({ navigation }) => {
 										{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch1, justifyContent: 'space-around' },
 										styles.BorderStyle,
 										{ borderColor: colors.switch1 }]}>
-										<Text>{l['createdAt']
-											// .substring(0, 10)
-										}</Text>
+										<Text>{l['createdAt']?.toLocaleString()}</Text>
 										<View style={[
 											{ alignContent: 'center', marginBottom: 5, backgroundColor: colors.switch2 },
 											styles.BorderStyle,

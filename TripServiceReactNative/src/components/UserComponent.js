@@ -8,7 +8,7 @@ const UserComponent = (props) => {
       <View
         style={
           {
-            alignContent: 'center', 
+            alignContent: 'center',
             marginBottom: 5,
             backgroundColor: props['bgColor'], flexDirection: 'row', borderRadius: 10
           }} >

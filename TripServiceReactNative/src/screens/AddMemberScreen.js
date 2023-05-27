@@ -143,7 +143,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 					{
 						members.map((member, i) => {
 							return (
-								<View key={i} style={[styles.BorderStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: colors.switch1 }]}>
+								<View key={i} style={[styles.BorderStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: colors.switch1, marginTop: 5 }]}>
 									<UserComponent
 										key={i}
 										member={member}
@@ -168,6 +168,7 @@ const AddMemberScreen = ({ route, navigation }) => {
 										iconType="material-community"
 										checkedIcon="checkbox-outline"
 										uncheckedIcon={'checkbox-blank-outline'}
+										containerStyle={mystyles.checkboxContainer}
 									/>
 								</View>
 							);
@@ -193,5 +194,9 @@ const mystyles = StyleSheet.create({
 	button: {
 		alignItems: 'center',
 		marginTop: 50
+	},
+	checkboxContainer: {
+		backgroundColor: 'transparent',
+		borderWidth: 0, // Remove border if desired
 	},
 });
