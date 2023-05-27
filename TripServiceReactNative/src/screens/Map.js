@@ -42,9 +42,9 @@ const Map = ({ route, navigation }) => {
 
   async function loadData() {
     const userId = await InitData();
-    const userFirstName = await getData(userId);
-    const start = await StartTrip(userId, userFirstName);
-    IntervalRealtime(start.userId, start.userFirstName);
+    const data = await getData(userId);
+    const start = await StartTrip(userId, data.firstName, data.imgUrl);
+    IntervalRealtime(start.userId, start.userFirstName, start.imgUrl);
 
     const notification = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/arrived');
     onChildChanged(
@@ -131,7 +131,7 @@ const Map = ({ route, navigation }) => {
       setLocation(response.data.locations);
       for (const element of response.data.customers) {
         if (element.customerId === userId) {
-          return element.firstName;
+          return { firstName: element.firstName, imgUrl: element.imgUrl };
         }
       }
     } catch (error) {
@@ -139,7 +139,7 @@ const Map = ({ route, navigation }) => {
     }
   }
 
-  const StartTrip = async (userId, userFirstName) => {
+  const StartTrip = async (userId, userFirstName, imgUrl) => {
     Geolocation.getCurrentPosition(
       async (position) => {
         var start = await axios.post(endpoints.start, {
@@ -148,6 +148,7 @@ const Map = ({ route, navigation }) => {
           customerId: userId,
           groupId: groupId,
           firstName: userFirstName,
+          imgUrl: imgUrl
         });
         var distances = axios.post(`${endpoints.realTime}`, {
           latitude: position.coords.latitude,
@@ -164,7 +165,7 @@ const Map = ({ route, navigation }) => {
             setLocation(responseData["locationRealtimes"])
           })
       })
-    return { userId, userFirstName };
+    return { userId, userFirstName, imgUrl };
   }
 
 
@@ -174,6 +175,7 @@ const Map = ({ route, navigation }) => {
         return {
           latitude: customer.latitude,
           longitude: customer.longitude,
+          imgUrl: customer.imgUrl
         };
       }
       return null;
@@ -182,7 +184,7 @@ const Map = ({ route, navigation }) => {
     setCoordinateMember(updatedCoords);
   }
 
-  const IntervalRealtime = (userId, userFirstName) => {
+  const IntervalRealtime = (userId, userFirstName, imgUrl) => {
     setInterval(() => {
       Geolocation.getCurrentPosition(
         (position) => {
@@ -193,6 +195,7 @@ const Map = ({ route, navigation }) => {
             customerId: userId,
             groupId: groupId,
             firstName: userFirstName,
+            imgUrl: imgUrl
           })
             .then(function (response) {
               var responseData = response.data
@@ -207,7 +210,7 @@ const Map = ({ route, navigation }) => {
         })
     }, 20000);
   }
-
+  console.log(coordinateMember)
   const [dataFirebase, setDataFirebase] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [animation, setAnimation] = useState(AnimationJson);
@@ -317,7 +320,7 @@ const Map = ({ route, navigation }) => {
               }}
             >
               <View style={{ height: 30, width: 30 }}>
-                <Image source={icons.redBiker} style={{ height: '100%', width: '100%' }} />
+                <Image source={{uri : coordinate.imgUrl}} style={{ height: '100%', width: '100%' }} />
               </View>
             </Marker>
           )
