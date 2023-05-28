@@ -115,7 +115,13 @@ const Map = ({ route, navigation }) => {
         if (data != null) {
           var locationName = data["LocationName"].split(',')[0];
           var userName = data["CustomerName"]
-          setDataFirebase(`Thành viên ${userName} đã đến điểm ${locationName}`)
+          if (customerId == userId)
+          {
+            setDataFirebase(`Chúc mừng bạn đã đến ${locationName}`)
+          }
+          else{
+            setDataFirebase(`Thành viên ${userName} đã đến điểm ${locationName}`)
+          }
         }
       });
   }
