@@ -315,7 +315,12 @@ const Map = ({ route, navigation }) => {
                 longitude: coordinate.longitude,
               }}
             >
-              <MarkerComponent image={icons.greenPin} number={index} />
+              <View style={{ height: 30, width: 30, borderRadius: 15, overflow: 'hidden', borderWidth: 2, borderColor: 'green' }}>
+                <Image
+                  source={{ uri: coordinate.imgUrl }}
+                  style={{ height: '100%', width: '100%', borderRadius: 15 }}
+                />
+              </View>
             </Marker>
           )
         }

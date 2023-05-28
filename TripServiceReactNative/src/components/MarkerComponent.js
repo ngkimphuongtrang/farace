@@ -13,7 +13,10 @@ const MarkerComponent = (props) => {
         }}
         source={props.image}
       />
-      <Text style={{ position: 'absolute', fontSize: 20, fontWeight: 'bold', color: 'white' }}>{props.number + 1}</Text>
+      <Text style={{
+        position: 'absolute',
+        fontSize: 14, fontWeight: 'bold', color: 'white'
+      }}>{props.number + 1}</Text>
     </View>
   )
 }
