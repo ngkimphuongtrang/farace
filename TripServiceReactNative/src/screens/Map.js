@@ -115,6 +115,7 @@ const Map = ({ route, navigation }) => {
         if (data != null) {
           var locationName = data["LocationName"].split(',')[0];
           var userName = data["CustomerName"]
+          var customerId = data["CustomerId"]
           if (customerId == userId)
           {
             setDataFirebase(`Chúc mừng bạn đã đến ${locationName}`)
