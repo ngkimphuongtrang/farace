@@ -14,7 +14,7 @@ const LocationComponent = (props) => {
       <View style={{ flexDirection: 'column' }}>
         <Text style={{ fontSize: 10 }}>{props.location.estimatedTimeOfArrival?.toLocaleString()}</Text>
         <View style={{ flexDirection: 'row' }}>
-          {/* <Text style={{ fontStyle: 'italic' }}>{props.i + 1}, </Text> */}
+          <Text style={{ fontWeight: 'bold' }}>{props.i + 1}, </Text>
           <Text style={{ fontWeight: 'bold' }}>{props.location.name}</Text></View>
       </View>
     </View>

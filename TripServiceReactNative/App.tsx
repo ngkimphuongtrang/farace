@@ -18,7 +18,7 @@ import { LogBox } from 'react-native';
 
 import { Router } from './src/routes/Router';
 import { AuthProvider } from './src/contexts/Auth';
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const App = () => {
   return (

@@ -11,9 +11,10 @@ import { styles } from '../styles/CommonStyles.js';
 import { colors } from '../constants/index.js';
 import Geolocation from "@react-native-community/geolocation";
 import MapViewDirections from 'react-native-maps-directions';
-import { REMOVE_ICON, markers } from '../assets/image/index.js';
+import { REMOVE_ICON, icons } from '../assets/image/index.js';
 import LocationComponent from '../components/LocationComponent';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import MarkerComponent from '../components/MarkerComponent.js';
 
 const AddJourneyScreen = ({ route, navigation }) => {
     var Locations;
@@ -145,10 +146,7 @@ const AddJourneyScreen = ({ route, navigation }) => {
                                 longitudeDelta: 0.0421,
                             }}
                             onPress={(e) => {
-                                // console.log("press:", e.nativeEvent, e.nativeEvent.coordinate);
                                 setLocations((oldArray) => [...oldArray, e.nativeEvent.coordinate]);
-                                // setLocation({ markers: [...location, e.nativeEvent.coordinate}] })
-                                // console.log(locations);
                             }}>
                         </MapView>
                     ) :
@@ -169,7 +167,6 @@ const AddJourneyScreen = ({ route, navigation }) => {
                             longitudeDelta: 0.0421,
                         }}
                         onPress={(e) => {
-                            // console.log("press:", e.nativeEvent);
                             setLocations({ markers: [...locations, { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.latitude }] }
                             )
                         }}>
@@ -191,8 +188,9 @@ const AddJourneyScreen = ({ route, navigation }) => {
                                         longitude: coordinate["longitude"],
                                     }}
                                     draggable
-                                    image={markers[index]} // red is destination
-                                />
+                                >
+                                    <MarkerComponent image={icons.greenPin} number={index} />
+                                </Marker>
                             )
                         }
                         {routes.map((route, index) => (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Animated, Vibration, StyleSheet, Text, ScrollView, View, Platform, PermissionsAndroid, Image, Dimensions, Modal, TouchableOpacity } from "react-native";
+import {  Vibration, StyleSheet, Text, ScrollView, View, Platform, PermissionsAndroid, Image, Dimensions, Modal, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
@@ -10,7 +10,7 @@ import { onValue } from "firebase/database";
 import { db } from "../services/firebase-config";
 import { CheckBox } from '@rneui/base';
 import Lottie from 'lottie-react-native';
-import { AnimationJson , AnimationWarningJson} from "../assets/image";
+import { AnimationJson, AnimationWarningJson } from "../assets/image";
 import { keys } from "../constants";
 import { getDataFromAsyncStorage } from "../components/util";
 import { endpoints, colors } from "../constants";
@@ -101,23 +101,23 @@ const Map = ({ route, navigation }) => {
         }
       });
 
-      const notificationGroup = ref(db, 'group/' + groupId + '/event/arrived');
-      onChildChanged(
-        notificationGroup, (snapshot) => {
-          setShowPopup(true);
-          setAnimation(AnimationJson)
-        });
-  
-      onValue(
-        notificationGroup, (snapshot) => {
-          const data = snapshot.val();
-          console.log(data)
-          if (data != null) {
+    const notificationGroup = ref(db, 'group/' + groupId + '/event/arrived');
+    onChildChanged(
+      notificationGroup, (snapshot) => {
+        setShowPopup(true);
+        setAnimation(AnimationJson)
+      });
+
+    onValue(
+      notificationGroup, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data)
+        if (data != null) {
           var locationName = data["LocationName"].split(',')[0];
           var userName = data["CustomerName"]
           setDataFirebase(`Thành viên ${userName} đã đến điểm ${locationName}`)
-          }
-        });
+        }
+      });
   }
 
   const InitData = async () => {
@@ -222,12 +222,10 @@ const Map = ({ route, navigation }) => {
       (location) => !location.isCompleted
     );
     const directions = [];
-    for (let i = 0; i < completedLocations.length; i++) 
-    {
+    for (let i = 0; i < completedLocations.length; i++) {
       const source = completedLocations[i];
       let destination = completedLocations[i + 1];
-      if (destination == null)
-      {
+      if (destination == null) {
         destination = ownerLocation
       }
       directions.push({
@@ -237,18 +235,16 @@ const Map = ({ route, navigation }) => {
       });
     }
 
-    if (incompleteLocations[0] != null)
-    {
+    if (incompleteLocations[0] != null) {
       directions.push({
         source: ownerLocation,
         destination: incompleteLocations[0],
         color: 'red',
       });
     }
-    
 
-    for (let i = 0; i < incompleteLocations.length - 1; i++) 
-    {
+
+    for (let i = 0; i < incompleteLocations.length - 1; i++) {
       const source = incompleteLocations[i];
       const destination = incompleteLocations[i + 1];
       directions.push({
@@ -319,12 +315,7 @@ const Map = ({ route, navigation }) => {
                 longitude: coordinate.longitude,
               }}
             >
-                <View style={{ height: 30, width: 30, borderRadius: 15, overflow: 'hidden', borderWidth: 2, borderColor: 'green' }}>
-    <Image
-      source={{ uri: coordinate.imgUrl }}
-      style={{ height: '100%', width: '100%', borderRadius: 15 }}
-    />
-  </View>
+              <MarkerComponent image={icons.greenPin} number={index} />
             </Marker>
           )
         }
@@ -337,34 +328,36 @@ const Map = ({ route, navigation }) => {
           pinColor={'#269039'}
         />
         {directions.map((direction, index) => (
-        <MapViewDirections
-          key={index}
-          origin={{
-            latitude: direction.source.latitude,
-            longitude: direction.source.longitude,
-          }}
-          destination={{
-            latitude: direction.destination.latitude,
-            longitude: direction.destination.longitude,
-          }}
-          apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
-          strokeWidth={3}
-          strokeColor={direction.color}
-        />
-      ))}
+          <MapViewDirections
+            key={index}
+            origin={{
+              latitude: direction.source.latitude,
+              longitude: direction.source.longitude,
+            }}
+            destination={{
+              latitude: direction.destination.latitude,
+              longitude: direction.destination.longitude,
+            }}
+            apikey={"AIzaSyCLC8Dw7wItISMh9A_m34OtUFQt2hD3IB8"}
+            strokeWidth={3}
+            strokeColor={direction.color}
+          />
+        ))}
 
-      {locations.map((location, index) => (
-        <Marker
-          key={index}
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          pinColor={location.isCompleted ? 'green' : 'red'}
-        />
-      ))}
+        {locations.map((location, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+          >{location.isCompleted ?
+            <MarkerComponent image={icons.greenPin} number={index} /> :
+            <MarkerComponent image={icons.redPin} number={index} />}
+
+          </Marker>
+        ))}
       </MapView>
-      {/* <Footer id="2"/> */}
       <Modal
         visible={showPopup}
         animationIn="fadeIn"
