@@ -12,7 +12,7 @@ import LocationComponent from '../components/LocationComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDataFromAsyncStorage, storeGroupId } from '../components/util';
 import UserComponent from '../components/UserComponent';
-
+import MarkerComponent from '../components/MarkerComponent';
 const JourneyDetailScreen = ({ route, navigation }) => {
   let groupId;
   if (route.params) {
@@ -150,23 +150,16 @@ const JourneyDetailScreen = ({ route, navigation }) => {
             }>
             {
               locations.map((coordinate, index) =>
-                index == locations.length - 1 ? <Marker
+                <Marker
                   key={index}
                   coordinate={{
                     latitude: coordinate["latitude"],
                     longitude: coordinate["longitude"],
                   }}
                   draggable
-
-                /> : <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: coordinate["latitude"],
-                    longitude: coordinate["longitude"],
-                  }}
-                  draggable
-                  image={BLUE_MARKER_ICON} // red is destination
-                />
+                >
+                  <MarkerComponent image={icons.greenPin} number={index} />
+                </Marker>
               )
             }
             {routes.map((route, index) => (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {  Vibration, StyleSheet, Text, ScrollView, View, Platform, PermissionsAndroid, Image, Dimensions, Modal, TouchableOpacity } from "react-native";
+import { Vibration, StyleSheet, Text, ScrollView, View, Platform, PermissionsAndroid, Image, Dimensions, Modal, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
@@ -16,7 +16,7 @@ import { getDataFromAsyncStorage } from "../components/util";
 import { endpoints, colors } from "../constants";
 import MapViewDirections from "react-native-maps-directions";
 import { icons } from '../assets/image/index.js';
-
+import MarkerComponent from "../components/MarkerComponent";
 const Map = ({ route, navigation }) => {
   const groupId = route.params.groupId;
   const [locations, setLocation] = useState([]);
