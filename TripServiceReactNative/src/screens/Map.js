@@ -47,73 +47,81 @@ const Map = ({ route, navigation }) => {
     IntervalRealtime(start.userId, start.userFirstName, start.imgUrl);
 
     const notification = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/arrived');
-    onChildChanged(
-      notification, (snapshot) => {
-        setShowPopup(true);
-        Vibration.vibrate([500, 1000, 500]);
-        setAnimation(AnimationJson)
-      });
+    // onChildChanged(
+    //   notification, (snapshot) => {
+    //     setShowPopup(true);
+    //     Vibration.vibrate([500, 1000, 500]);
+    //     setAnimation(AnimationJson)
+    //   });
 
     onValue(
       notification, (snapshot) => {
         const data = snapshot.val();
-        console.log(data)
-        if (data != null) {
+        if (data != null && data["LocationName"] != undefined) {
+          setShowPopup(true);
+          Vibration.vibrate([500, 1000, 500]);
+          setAnimation(AnimationJson)
           var locationName = data["LocationName"]
           setDataFirebase(`Chúc mừng bạn đã đến ${locationName}`)
         }
       });
 
     const notificationComing = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/coming');
-    onChildChanged(
-      notificationComing, (snapshot) => {
-        setShowPopup(true);
-        Vibration.vibrate([500, 1000, 500]);
-        setAnimation(AnimationJson)
-      });
+    // onChildChanged(
+    //   notificationComing, (snapshot) => {
+    //     setShowPopup(true);
+    //     Vibration.vibrate([500, 1000, 500]);
+    //     setAnimation(AnimationJson)
+    //   });
 
     onValue(
       notificationComing, (snapshot) => {
         const data = snapshot.val();
-        console.log("data", data)
-        if (data != null) {
-          var locationName = data["LocationName"].split(',')[0];
+        console.log("notificationComing", data)
+        if (data != null && data["LocationName"] != undefined)  {
+
+          Vibration.vibrate([500, 1000, 500]);
+          setAnimation(AnimationJson)
+          var locationName = data["LocationName"];
           var distance = data["Distance"]
           setDataFirebase(`Bạn còn cách địa điểm ${locationName} ${distance} km`)
+          setShowPopup(true);
         }
       });
 
     const notificationWeather = ref(db, 'group/' + groupId + '/user/' + start.userId + '/event/weather');
-    onChildChanged(
-      notificationWeather, (snapshot) => {
-        setShowPopup(true);
-        Vibration.vibrate([500, 1000, 500]);
-        setAnimation(AnimationWarningJson)
-      });
+    // onChildChanged(
+    //   notificationWeather, (snapshot) => {
+    //     setShowPopup(true);
+    //     Vibration.vibrate([500, 1000, 500]);
+    //     setAnimation(AnimationWarningJson)
+    //   });
 
     onValue(
       notificationWeather, (snapshot) => {
         const data = snapshot.val();
-        console.log(data)
-        if (data != null) {
+        if (data != null && data["Text"] != undefined)  {
+          Vibration.vibrate([500, 1000, 500]);
+          setAnimation(AnimationWarningJson)
           var text = data["Text"]
           setDataFirebase(text)
+          setShowPopup(true);
         }
       });
 
     const notificationGroup = ref(db, 'group/' + groupId + '/event/arrived');
-    onChildChanged(
-      notificationGroup, (snapshot) => {
-        setShowPopup(true);
-        setAnimation(AnimationJson)
-      });
+    // onChildChanged(
+    //   notificationGroup, (snapshot) => {
+    //     setShowPopup(true);
+    //     setAnimation(AnimationJson)
+    //   });
 
     onValue(
       notificationGroup, (snapshot) => {
         const data = snapshot.val();
-        console.log(data)
-        if (data != null) {
-          var locationName = data["LocationName"].split(',')[0];
+        if (data != null && data["LocationName"] != undefined) {
+          setAnimation(AnimationJson)
+          var locationName = data["LocationName"];
           var userName = data["CustomerName"]
           var customerId = data["CustomerId"]
           if (customerId == userId)
@@ -123,6 +131,7 @@ const Map = ({ route, navigation }) => {
           else{
             setDataFirebase(`Thành viên ${userName} đã đến điểm ${locationName}`)
           }
+          setShowPopup(true);
         }
       });
   }
@@ -217,7 +226,6 @@ const Map = ({ route, navigation }) => {
         })
     }, 20000);
   }
-  console.log(coordinateMember)
   const [dataFirebase, setDataFirebase] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [animation, setAnimation] = useState(AnimationJson);
