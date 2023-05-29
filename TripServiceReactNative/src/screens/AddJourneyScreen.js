@@ -66,35 +66,34 @@ const AddJourneyScreen = ({ route, navigation }) => {
         // console.log('Set @location in AsyncStorage done:', JSON.stringify(locations));
     }
     const [date, setDate] = useState(new Date());
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setDate(currentDate);
-        // console.log("date selected", date);
-    };
 
-    const showMode = (currentMode) => {
-        DateTimePickerAndroid.open({
-            value: date,
-            onChange,
-            mode: currentMode,
-            is24Hour: true,
-        });
-    };
-
-    const showDatepicker = () => {
-        showMode('date');
-    };
     const handlePlaceSelected = (data, details = null) => {
-        showDatepicker();
-        const newLocation = details?.geometry?.location;
-        const locationObj = {
-            latitude: newLocation.lat,
-            longitude: newLocation.lng,
-            name: data.description,
-            estimatedTimeOfArrival: date,
-        };
-        setLocations((oldArray) => [...oldArray, locationObj]);
-        autocompleteRef.current?.setAddressText('');
+        DateTimePickerAndroid.open({
+            mode: 'date',
+            value: date,
+            onChange: (event, newDate) => {
+                if (newDate) {
+                    DateTimePickerAndroid.open({
+                        mode: 'time',
+                        value: newDate,
+                        onChange: (_, newDateTime) => {
+                            if (newDateTime) {
+                                setDate(newDateTime);
+                                const newLocation = details?.geometry?.location;
+                                const locationObj = {
+                                    latitude: newLocation.lat,
+                                    longitude: newLocation.lng,
+                                    name: data.description,
+                                    estimatedTimeOfArrival: newDateTime,
+                                };
+                                setLocations((oldArray) => [...oldArray, locationObj]);
+                                autocompleteRef.current?.setAddressText('');
+                            }
+                        },
+                    });
+                }
+            },
+        });
     };
     const handleAddLocations = () => {
         if (locations.length < 1) {
@@ -241,7 +240,6 @@ const AddJourneyScreen = ({ route, navigation }) => {
                                 </TouchableOpacity>
                             </View>
                         )}
-
                     </ScrollView>
                 </View>
             </View>
